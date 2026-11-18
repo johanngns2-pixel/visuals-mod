@@ -1,7 +1,6 @@
 {
   "visuals.master.name": "Diese Kategorie aktivieren",
   "visuals.master.tooltip": "Schaltet alle Effekte dieser Kategorie an oder aus. Die Einstellungen bleiben sichtbar und behalten ihre Werte.",
-
   "visuals.tab.general.name": "Allgemein",
   "visuals.tab.general.desc": "Globale Schalter, Sprache, Aussehen dieses Menüs und Performance.",
   "visuals.tab.sky.name": "Himmel",
@@ -34,11 +33,9 @@
   "visuals.tab.afk.desc": "Kino-Modus, Kamerabewegungen und Energiesparen bei Inaktivität.",
   "visuals.tab.spotify.name": "Spotify",
   "visuals.tab.spotify.desc": "Verbindung und Lyrics im Himmel.",
-
   "visuals.group.general.main": "Hauptschalter",
   "visuals.group.general.appearance": "Aussehen",
   "visuals.group.general.performance": "Performance",
-
   "visuals.option.general.modEnabled.name": "Mod aktiv (Notausschalter)",
   "visuals.option.general.modEnabled.tooltip": "Schaltet sofort alle Effekte dieser Mod aus. Deine Einstellungen bleiben erhalten.",
   "visuals.option.general.language.name": "Sprache",
@@ -53,5 +50,22 @@
   "visuals.option.general.performanceMode.name": "Performance-Modus",
   "visuals.option.general.performanceMode.tooltip": "Senkt die Effektqualität automatisch, wenn die Bildrate unter das Ziel fällt.",
   "visuals.option.general.performanceTargetFps.name": "Ziel-Bildrate",
-  "visuals.option.general.performanceTargetFps.tooltip": "Die Effektqualität wird reduziert, solange die Bildrate unter diesem Wert bleibt."
+  "visuals.option.general.performanceTargetFps.tooltip": "Die Effektqualität wird reduziert, solange die Bildrate unter diesem Wert bleibt.",
+  "visuals.gui.title": "Visuals",
+  "visuals.gui.search": "Suchen …",
+  "visuals.gui.killswitch.on": "Mod an",
+  "visuals.gui.killswitch.off": "Mod aus",
+  "visuals.gui.resetTab": "Reiter zurücksetzen",
+  "visuals.gui.resetAll": "Alles zurücksetzen",
+  "visuals.gui.apply": "Übernehmen",
+  "visuals.gui.close": "Schließen",
+  "visuals.gui.previewSoon": "Vorschau folgt",
+  "visuals.gui.previewShow": "Vorschau zeigen",
+  "visuals.gui.previewHide": "Vorschau ausblenden",
+  "visuals.gui.confirm.title": "Ungespeicherte Änderungen",
+  "visuals.gui.confirm.save": "Speichern",
+  "visuals.gui.confirm.discard": "Verwerfen",
+  "visuals.gui.confirm.cancel": "Abbrechen",
+  "key.visuals.open": "Visuals-Menü öffnen",
+  "key.category.visuals.main": "Visuals"
 }
