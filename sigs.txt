@@ -1,0 +1,2292 @@
+Compiled from "AmbientParticle.java"
+public final class net.minecraft.world.attribute.AmbientParticle extends java.lang.Record {
+  private final net.minecraft.core.particles.ParticleOptions particle;
+  private final float probability;
+  public static final com.mojang.serialization.Codec<net.minecraft.world.attribute.AmbientParticle> CODEC;
+  public net.minecraft.world.attribute.AmbientParticle(net.minecraft.core.particles.ParticleOptions, float);
+  public boolean canSpawn(net.minecraft.util.RandomSource);
+  public static java.util.List<net.minecraft.world.attribute.AmbientParticle> of(net.minecraft.core.particles.ParticleOptions, float);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.core.particles.ParticleOptions particle();
+  public float probability();
+  private static com.mojang.datafixers.kinds.App method_75271(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static java.lang.Float method_75272(net.minecraft.world.attribute.AmbientParticle);
+  private static net.minecraft.core.particles.ParticleOptions method_75273(net.minecraft.world.attribute.AmbientParticle);
+  static {};
+}
+Compiled from "WeatherAttributes.java"
+public class net.minecraft.world.attribute.WeatherAttributes {
+  public static final net.minecraft.world.attribute.EnvironmentAttributeMap RAIN;
+  public static final net.minecraft.world.attribute.EnvironmentAttributeMap THUNDER;
+  private static final java.util.Set<net.minecraft.world.attribute.EnvironmentAttribute<?>> WEATHER_ATTRIBUTES;
+  public net.minecraft.world.attribute.WeatherAttributes();
+  public static void addBuiltinLayers(net.minecraft.world.attribute.EnvironmentAttributeSystem$Builder, net.minecraft.world.attribute.WeatherAttributes$WeatherAccess);
+  private static <Value> void addLayer(net.minecraft.world.attribute.EnvironmentAttributeSystem$Builder, net.minecraft.world.attribute.WeatherAttributes$WeatherAccess, net.minecraft.world.attribute.EnvironmentAttribute<Value>);
+  private static java.lang.Object method_76432(net.minecraft.world.attribute.WeatherAttributes$WeatherAccess, net.minecraft.world.attribute.EnvironmentAttributeMap$Entry, net.minecraft.world.attribute.EnvironmentAttribute, net.minecraft.world.attribute.EnvironmentAttributeMap$Entry, java.lang.Object, int);
+  static {};
+}
+Compiled from "MoveToSkySeeingSpot.java"
+public class net.minecraft.world.entity.ai.behavior.MoveToSkySeeingSpot {
+  public net.minecraft.world.entity.ai.behavior.MoveToSkySeeingSpot();
+  public static net.minecraft.world.entity.ai.behavior.OneShot<net.minecraft.world.entity.LivingEntity> create(float);
+  private static net.minecraft.world.phys.Vec3 getOutdoorPosition(net.minecraft.server.level.ServerLevel, net.minecraft.world.entity.LivingEntity);
+  public static boolean hasNoBlocksAbove(net.minecraft.server.level.ServerLevel, net.minecraft.world.entity.LivingEntity, net.minecraft.core.BlockPos);
+  private static com.mojang.datafixers.kinds.App method_46996(float, net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder$Instance);
+  private static net.minecraft.world.entity.ai.behavior.declarative.Trigger method_46997(float, net.minecraft.world.entity.ai.behavior.declarative.MemoryAccessor);
+  private static boolean method_46998(net.minecraft.world.entity.ai.behavior.declarative.MemoryAccessor, float, net.minecraft.server.level.ServerLevel, net.minecraft.world.entity.LivingEntity, long);
+  private static void method_46999(net.minecraft.world.entity.ai.behavior.declarative.MemoryAccessor, float, net.minecraft.world.phys.Vec3);
+}
+Compiled from "WeatheringCopperItems.java"
+public final class net.minecraft.world.item.WeatheringCopperItems extends java.lang.Record {
+  private final net.minecraft.world.item.Item unaffected;
+  private final net.minecraft.world.item.Item exposed;
+  private final net.minecraft.world.item.Item weathered;
+  private final net.minecraft.world.item.Item oxidized;
+  private final net.minecraft.world.item.Item waxed;
+  private final net.minecraft.world.item.Item waxedExposed;
+  private final net.minecraft.world.item.Item waxedWeathered;
+  private final net.minecraft.world.item.Item waxedOxidized;
+  public net.minecraft.world.item.WeatheringCopperItems(net.minecraft.world.item.Item, net.minecraft.world.item.Item, net.minecraft.world.item.Item, net.minecraft.world.item.Item, net.minecraft.world.item.Item, net.minecraft.world.item.Item, net.minecraft.world.item.Item, net.minecraft.world.item.Item);
+  public static net.minecraft.world.item.WeatheringCopperItems create(net.minecraft.world.level.block.WeatheringCopperBlocks, java.util.function.Function<net.minecraft.world.level.block.Block, net.minecraft.world.item.Item>);
+  public com.google.common.collect.ImmutableBiMap<net.minecraft.world.item.Item, net.minecraft.world.item.Item> waxedMapping();
+  public void forEach(java.util.function.Consumer<net.minecraft.world.item.Item>);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.world.item.Item unaffected();
+  public net.minecraft.world.item.Item exposed();
+  public net.minecraft.world.item.Item weathered();
+  public net.minecraft.world.item.Item oxidized();
+  public net.minecraft.world.item.Item waxed();
+  public net.minecraft.world.item.Item waxedExposed();
+  public net.minecraft.world.item.Item waxedWeathered();
+  public net.minecraft.world.item.Item waxedOxidized();
+}
+Compiled from "SpawnParticlesEffect.java"
+public final class net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect extends java.lang.Record implements net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect {
+  private final net.minecraft.core.particles.ParticleOptions particle;
+  private final net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$PositionSource horizontalPosition;
+  private final net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$PositionSource verticalPosition;
+  private final net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$VelocitySource horizontalVelocity;
+  private final net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$VelocitySource verticalVelocity;
+  private final net.minecraft.util.valueproviders.FloatProvider speed;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect> CODEC;
+  public net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect(net.minecraft.core.particles.ParticleOptions, net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$PositionSource, net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$PositionSource, net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$VelocitySource, net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$VelocitySource, net.minecraft.util.valueproviders.FloatProvider);
+  public static net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$PositionSource offsetFromEntityPosition(float);
+  public static net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$PositionSource inBoundingBox();
+  public static net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$VelocitySource movementScaled(float);
+  public static net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$VelocitySource fixedVelocity(net.minecraft.util.valueproviders.FloatProvider);
+  public void apply(net.minecraft.server.level.ServerLevel, int, net.minecraft.world.item.enchantment.EnchantedItemInUse, net.minecraft.world.entity.Entity, net.minecraft.world.phys.Vec3);
+  public com.mojang.serialization.MapCodec<net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect> codec();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.core.particles.ParticleOptions particle();
+  public net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$PositionSource horizontalPosition();
+  public net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$PositionSource verticalPosition();
+  public net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$VelocitySource horizontalVelocity();
+  public net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect$VelocitySource verticalVelocity();
+  public net.minecraft.util.valueproviders.FloatProvider speed();
+  private static com.mojang.datafixers.kinds.App method_60251(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "FireflyBushBlock.java"
+public class net.minecraft.world.level.block.FireflyBushBlock extends net.minecraft.world.level.block.VegetationBlock implements net.minecraft.world.level.block.BonemealableBlock {
+  private static final double FIREFLY_CHANCE_PER_TICK;
+  private static final double FIREFLY_HORIZONTAL_RANGE;
+  private static final double FIREFLY_VERTICAL_RANGE;
+  private static final int FIREFLY_SPAWN_MAX_BRIGHTNESS_LEVEL;
+  private static final int FIREFLY_AMBIENT_SOUND_CHANCE_ONE_IN;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.FireflyBushBlock> CODEC;
+  public net.minecraft.world.level.block.FireflyBushBlock(net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.block.FireflyBushBlock> codec();
+  public void animateTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  public boolean isValidBonemealTarget(net.minecraft.world.level.LevelReader, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState);
+  public boolean isBonemealSuccess(net.minecraft.world.level.Level, net.minecraft.util.RandomSource, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState);
+  public void performBonemeal(net.minecraft.server.level.ServerLevel, net.minecraft.util.RandomSource, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState);
+  private void method_67680(net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos);
+  static {};
+}
+Compiled from "TintedParticleLeavesBlock.java"
+public class net.minecraft.world.level.block.TintedParticleLeavesBlock extends net.minecraft.world.level.block.LeavesBlock {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.TintedParticleLeavesBlock> CODEC;
+  public net.minecraft.world.level.block.TintedParticleLeavesBlock(float, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void spawnFallingLeavesParticle(net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.block.TintedParticleLeavesBlock> codec();
+  private static com.mojang.datafixers.kinds.App method_67237(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static java.lang.Float method_67238(net.minecraft.world.level.block.TintedParticleLeavesBlock);
+  static {};
+}
+Compiled from "UntintedParticleLeavesBlock.java"
+public class net.minecraft.world.level.block.UntintedParticleLeavesBlock extends net.minecraft.world.level.block.LeavesBlock {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.UntintedParticleLeavesBlock> CODEC;
+  protected final net.minecraft.core.particles.ParticleOptions leafParticle;
+  public net.minecraft.world.level.block.UntintedParticleLeavesBlock(float, net.minecraft.core.particles.ParticleOptions, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void spawnFallingLeavesParticle(net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.UntintedParticleLeavesBlock> codec();
+  private static com.mojang.datafixers.kinds.App method_67239(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static net.minecraft.core.particles.ParticleOptions method_67240(net.minecraft.world.level.block.UntintedParticleLeavesBlock);
+  private static java.lang.Float method_67241(net.minecraft.world.level.block.UntintedParticleLeavesBlock);
+  static {};
+}
+Compiled from "WeatheringCopperBarsBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperBarsBlock extends net.minecraft.world.level.block.IronBarsBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperBarsBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperBarsBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperBarsBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_73120(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringCopperBulbBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperBulbBlock extends net.minecraft.world.level.block.CopperBulbBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperBulbBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  protected com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperBulbBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperBulbBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_54767(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringCopper.java"
+public interface net.minecraft.world.level.block.WeatheringCopper extends net.minecraft.world.level.block.ChangeOverTimeBlock<net.minecraft.world.level.block.WeatheringCopper$WeatherState> {
+  public static final java.util.function.Supplier<com.google.common.collect.BiMap<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block>> NEXT_BY_BLOCK;
+  public static final java.util.function.Supplier<com.google.common.collect.BiMap<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block>> PREVIOUS_BY_BLOCK;
+  public static java.util.Optional<net.minecraft.world.level.block.Block> getPrevious(net.minecraft.world.level.block.Block);
+  public static net.minecraft.world.level.block.Block getFirst(net.minecraft.world.level.block.Block);
+  public static java.util.Optional<net.minecraft.world.level.block.state.BlockState> getPrevious(net.minecraft.world.level.block.state.BlockState);
+  public static java.util.Optional<net.minecraft.world.level.block.Block> getNext(net.minecraft.world.level.block.Block);
+  public static net.minecraft.world.level.block.state.BlockState getFirst(net.minecraft.world.level.block.state.BlockState);
+  public default java.util.Optional<net.minecraft.world.level.block.state.BlockState> getNext(net.minecraft.world.level.block.state.BlockState);
+  public default float getChanceModifier();
+  private static net.minecraft.world.level.block.state.BlockState method_34733(net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.Block);
+  private static net.minecraft.world.level.block.state.BlockState method_34736(net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.Block);
+  private static com.google.common.collect.BiMap method_34739();
+  private static com.google.common.collect.BiMap method_34740();
+  static {};
+}
+Compiled from "WeatheringCopperChestBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperChestBlock extends net.minecraft.world.level.block.CopperChestBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperChestBlock> CODEC;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperChestBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperChestBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundEvent, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public boolean isWaxed();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_72645(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringCopperBlocks.java"
+public final class net.minecraft.world.level.block.WeatheringCopperBlocks extends java.lang.Record {
+  private final net.minecraft.world.level.block.Block unaffected;
+  private final net.minecraft.world.level.block.Block exposed;
+  private final net.minecraft.world.level.block.Block weathered;
+  private final net.minecraft.world.level.block.Block oxidized;
+  private final net.minecraft.world.level.block.Block waxed;
+  private final net.minecraft.world.level.block.Block waxedExposed;
+  private final net.minecraft.world.level.block.Block waxedWeathered;
+  private final net.minecraft.world.level.block.Block waxedOxidized;
+  public net.minecraft.world.level.block.WeatheringCopperBlocks(net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block);
+  public static <WaxedBlock extends net.minecraft.world.level.block.Block, WeatheringBlock extends net.minecraft.world.level.block.Block & net.minecraft.world.level.block.WeatheringCopper> net.minecraft.world.level.block.WeatheringCopperBlocks create(java.lang.String, org.apache.commons.lang3.function.TriFunction<java.lang.String, java.util.function.Function<net.minecraft.world.level.block.state.BlockBehaviour$Properties, net.minecraft.world.level.block.Block>, net.minecraft.world.level.block.state.BlockBehaviour$Properties, net.minecraft.world.level.block.Block>, java.util.function.Function<net.minecraft.world.level.block.state.BlockBehaviour$Properties, WaxedBlock>, java.util.function.BiFunction<net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties, WeatheringBlock>, java.util.function.Function<net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties>);
+  public com.google.common.collect.ImmutableBiMap<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> weatheringMapping();
+  public com.google.common.collect.ImmutableBiMap<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> waxedMapping();
+  public com.google.common.collect.ImmutableList<net.minecraft.world.level.block.Block> asList();
+  public void forEach(java.util.function.Consumer<net.minecraft.world.level.block.Block>);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.world.level.block.Block unaffected();
+  public net.minecraft.world.level.block.Block exposed();
+  public net.minecraft.world.level.block.Block weathered();
+  public net.minecraft.world.level.block.Block oxidized();
+  public net.minecraft.world.level.block.Block waxed();
+  public net.minecraft.world.level.block.Block waxedExposed();
+  public net.minecraft.world.level.block.Block waxedWeathered();
+  public net.minecraft.world.level.block.Block waxedOxidized();
+  private static net.minecraft.world.level.block.Block method_73124(java.util.function.BiFunction, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  private static net.minecraft.world.level.block.Block method_73127(java.util.function.BiFunction, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  private static net.minecraft.world.level.block.Block method_73129(java.util.function.BiFunction, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  private static net.minecraft.world.level.block.Block method_73130(java.util.function.BiFunction, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+}
+Compiled from "WeatheringCopperChainBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperChainBlock extends net.minecraft.world.level.block.ChainBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperChainBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperChainBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperChainBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_73131(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringCopperFullBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperFullBlock extends net.minecraft.world.level.block.Block implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperFullBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperFullBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperFullBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_54068(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringCopperGrateBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperGrateBlock extends net.minecraft.world.level.block.WaterloggedTransparentBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperGrateBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  protected com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperGrateBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperGrateBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_54771(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringCopperSlabBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperSlabBlock extends net.minecraft.world.level.block.SlabBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperSlabBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperSlabBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperSlabBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_54069(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringCopperGolemStatueBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperGolemStatueBlock extends net.minecraft.world.level.block.CopperGolemStatueBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperGolemStatueBlock> CODEC;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperGolemStatueBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperGolemStatueBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  protected net.minecraft.world.InteractionResult useItemOn(net.minecraft.world.item.ItemStack, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.world.entity.player.Player, net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult);
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_72647(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringCopperTrapDoorBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperTrapDoorBlock extends net.minecraft.world.level.block.TrapDoorBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperTrapDoorBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperTrapDoorBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperTrapDoorBlock(net.minecraft.world.level.block.state.properties.BlockSetType, net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_54773(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringLightningRodBlock.java"
+public class net.minecraft.world.level.block.WeatheringLightningRodBlock extends net.minecraft.world.level.block.LightningRodBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringLightningRodBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringLightningRodBlock> codec();
+  public net.minecraft.world.level.block.WeatheringLightningRodBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_72649(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringLanternBlock.java"
+public class net.minecraft.world.level.block.WeatheringLanternBlock extends net.minecraft.world.level.block.LanternBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringLanternBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringLanternBlock> codec();
+  public net.minecraft.world.level.block.WeatheringLanternBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_73133(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "WeatheringCopperStairBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperStairBlock extends net.minecraft.world.level.block.StairBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperStairBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperStairBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperStairBlock(net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_54070(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static net.minecraft.world.level.block.state.BlockState method_54071(net.minecraft.world.level.block.WeatheringCopperStairBlock);
+  static {};
+}
+Compiled from "WeatheringCopperDoorBlock.java"
+public class net.minecraft.world.level.block.WeatheringCopperDoorBlock extends net.minecraft.world.level.block.DoorBlock implements net.minecraft.world.level.block.WeatheringCopper {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperDoorBlock> CODEC;
+  private final net.minecraft.world.level.block.WeatheringCopper$WeatherState weatherState;
+  public com.mojang.serialization.MapCodec<net.minecraft.world.level.block.WeatheringCopperDoorBlock> codec();
+  public net.minecraft.world.level.block.WeatheringCopperDoorBlock(net.minecraft.world.level.block.state.properties.BlockSetType, net.minecraft.world.level.block.WeatheringCopper$WeatherState, net.minecraft.world.level.block.state.BlockBehaviour$Properties);
+  protected void randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource);
+  protected boolean isRandomlyTicking(net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.world.level.block.WeatheringCopper$WeatherState getAge();
+  public java.lang.Enum getAge();
+  private static com.mojang.datafixers.kinds.App method_54769(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "ChunkSkyLightSources.java"
+public class net.minecraft.world.level.lighting.ChunkSkyLightSources {
+  private static final int SIZE;
+  public static final int NEGATIVE_INFINITY;
+  private final int minY;
+  private final net.minecraft.util.BitStorage heightmap;
+  private final net.minecraft.core.BlockPos$MutableBlockPos mutablePos1;
+  private final net.minecraft.core.BlockPos$MutableBlockPos mutablePos2;
+  public net.minecraft.world.level.lighting.ChunkSkyLightSources(net.minecraft.world.level.LevelHeightAccessor);
+  public void fillFrom(net.minecraft.world.level.chunk.ChunkAccess);
+  private int findLowestSourceY(net.minecraft.world.level.chunk.ChunkAccess, int, int, int);
+  public boolean update(net.minecraft.world.level.BlockGetter, int, int, int);
+  private boolean updateEdge(net.minecraft.world.level.BlockGetter, int, int, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState);
+  private int findLowestSourceBelow(net.minecraft.world.level.BlockGetter, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState);
+  private static boolean isEdgeOccluded(net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.state.BlockState);
+  public int getLowestSourceY(int, int);
+  public int getHighestLowestSourceY();
+  private void fill(int);
+  private void set(int, int);
+  private int get(int);
+  private int extendSourcesBelowWorld(int);
+  private static int index(int, int);
+}
+Compiled from "SkyLightSectionStorage.java"
+public class net.minecraft.world.level.lighting.SkyLightSectionStorage extends net.minecraft.world.level.lighting.LayerLightSectionStorage<net.minecraft.world.level.lighting.SkyLightSectionStorage$SkyDataLayerStorageMap> {
+  protected net.minecraft.world.level.lighting.SkyLightSectionStorage(net.minecraft.world.level.chunk.LightChunkGetter);
+  protected int getLightValue(long);
+  protected int getLightValue(long, boolean);
+  protected void onNodeAdded(long);
+  protected void onNodeRemoved(long);
+  protected net.minecraft.world.level.chunk.DataLayer createDataLayer(long);
+  private static net.minecraft.world.level.chunk.DataLayer repeatFirstLayer(net.minecraft.world.level.chunk.DataLayer);
+  protected boolean hasLightDataAtOrBelow(int);
+  protected boolean isAboveData(long);
+  protected int getTopSectionY(long);
+  protected int getBottomSectionY();
+}
+Compiled from "SkyLightEngine.java"
+public final class net.minecraft.world.level.lighting.SkyLightEngine extends net.minecraft.world.level.lighting.LightEngine<net.minecraft.world.level.lighting.SkyLightSectionStorage$SkyDataLayerStorageMap, net.minecraft.world.level.lighting.SkyLightSectionStorage> {
+  private static final long REMOVE_TOP_SKY_SOURCE_ENTRY;
+  private static final long REMOVE_SKY_SOURCE_ENTRY;
+  private static final long ADD_SKY_SOURCE_ENTRY;
+  private final net.minecraft.core.BlockPos$MutableBlockPos mutablePos;
+  private final net.minecraft.world.level.lighting.ChunkSkyLightSources emptyChunkSources;
+  public net.minecraft.world.level.lighting.SkyLightEngine(net.minecraft.world.level.chunk.LightChunkGetter);
+  protected net.minecraft.world.level.lighting.SkyLightEngine(net.minecraft.world.level.chunk.LightChunkGetter, net.minecraft.world.level.lighting.SkyLightSectionStorage);
+  private static boolean isSourceLevel(int);
+  private int getLowestSourceY(int, int, int);
+  private net.minecraft.world.level.lighting.ChunkSkyLightSources getChunkSources(int, int);
+  protected void checkNode(long);
+  private void updateSourcesInColumn(int, int, int);
+  private void removeSourcesBelow(int, int, int, int);
+  private void addSourcesAbove(int, int, int, int);
+  protected void propagateIncrease(long, long, int);
+  protected void propagateDecrease(long, long);
+  private int countEmptySectionsBelowIfAtBorder(long);
+  private void propagateFromEmptySections(long, net.minecraft.core.Direction, int, boolean, int);
+  private static boolean crossedSectionEdge(net.minecraft.core.Direction, int, int);
+  public void setLightEnabled(net.minecraft.world.level.ChunkPos, boolean);
+  public void propagateLightSources(net.minecraft.world.level.ChunkPos);
+  static {};
+}
+Compiled from "FogType.java"
+public final class net.minecraft.world.level.material.FogType extends java.lang.Enum<net.minecraft.world.level.material.FogType> {
+  public static final net.minecraft.world.level.material.FogType LAVA;
+  public static final net.minecraft.world.level.material.FogType WATER;
+  public static final net.minecraft.world.level.material.FogType POWDER_SNOW;
+  public static final net.minecraft.world.level.material.FogType ATMOSPHERIC;
+  public static final net.minecraft.world.level.material.FogType NONE;
+  private static final net.minecraft.world.level.material.FogType[] $VALUES;
+  public static net.minecraft.world.level.material.FogType[] values();
+  public static net.minecraft.world.level.material.FogType valueOf(java.lang.String);
+  private net.minecraft.world.level.material.FogType();
+  private static net.minecraft.world.level.material.FogType[] $values();
+  static {};
+}
+Compiled from "ParticleArgument.java"
+public class net.minecraft.commands.arguments.ParticleArgument implements com.mojang.brigadier.arguments.ArgumentType<net.minecraft.core.particles.ParticleOptions> {
+  private static final java.util.Collection<java.lang.String> EXAMPLES;
+  public static final com.mojang.brigadier.exceptions.DynamicCommandExceptionType ERROR_UNKNOWN_PARTICLE;
+  public static final com.mojang.brigadier.exceptions.DynamicCommandExceptionType ERROR_INVALID_OPTIONS;
+  private final net.minecraft.core.HolderLookup$Provider registries;
+  private static final net.minecraft.nbt.TagParser<?> VALUE_PARSER;
+  public net.minecraft.commands.arguments.ParticleArgument(net.minecraft.commands.CommandBuildContext);
+  public static net.minecraft.commands.arguments.ParticleArgument particle(net.minecraft.commands.CommandBuildContext);
+  public static net.minecraft.core.particles.ParticleOptions getParticle(com.mojang.brigadier.context.CommandContext<net.minecraft.commands.CommandSourceStack>, java.lang.String);
+  public net.minecraft.core.particles.ParticleOptions parse(com.mojang.brigadier.StringReader) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  public java.util.Collection<java.lang.String> getExamples();
+  public static net.minecraft.core.particles.ParticleOptions readParticle(com.mojang.brigadier.StringReader, net.minecraft.core.HolderLookup$Provider) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static net.minecraft.core.particles.ParticleType<?> readParticleType(com.mojang.brigadier.StringReader, net.minecraft.core.HolderLookup<net.minecraft.core.particles.ParticleType<?>>) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static <T extends net.minecraft.core.particles.ParticleOptions, O> T readParticle(net.minecraft.nbt.TagParser<O>, com.mojang.brigadier.StringReader, net.minecraft.core.particles.ParticleType<T>, net.minecraft.core.HolderLookup$Provider) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  public <S> java.util.concurrent.CompletableFuture<com.mojang.brigadier.suggestion.Suggestions> listSuggestions(com.mojang.brigadier.context.CommandContext<S>, com.mojang.brigadier.suggestion.SuggestionsBuilder);
+  public java.lang.Object parse(com.mojang.brigadier.StringReader) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static com.mojang.brigadier.exceptions.CommandSyntaxException method_45582(com.mojang.brigadier.StringReader, net.minecraft.resources.Identifier);
+  private static com.mojang.brigadier.Message method_59751(java.lang.Object);
+  private static com.mojang.brigadier.Message method_9419(java.lang.Object);
+  static {};
+}
+Compiled from "WeatherCheck.java"
+public final class net.minecraft.world.level.storage.loot.predicates.WeatherCheck extends java.lang.Record implements net.minecraft.world.level.storage.loot.predicates.LootItemCondition {
+  private final java.util.Optional<java.lang.Boolean> isRaining;
+  private final java.util.Optional<java.lang.Boolean> isThundering;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.world.level.storage.loot.predicates.WeatherCheck> CODEC;
+  public net.minecraft.world.level.storage.loot.predicates.WeatherCheck(java.util.Optional<java.lang.Boolean>, java.util.Optional<java.lang.Boolean>);
+  public net.minecraft.world.level.storage.loot.predicates.LootItemConditionType getType();
+  public boolean test(net.minecraft.world.level.storage.loot.LootContext);
+  public static net.minecraft.world.level.storage.loot.predicates.WeatherCheck$Builder weather();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public java.util.Optional<java.lang.Boolean> isRaining();
+  public java.util.Optional<java.lang.Boolean> isThundering();
+  public boolean test(java.lang.Object);
+  private static com.mojang.datafixers.kinds.App method_53429(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "BlockParticleOption.java"
+public class net.minecraft.core.particles.BlockParticleOption implements net.minecraft.core.particles.ParticleOptions,net.fabricmc.fabric.api.particle.v1.FabricBlockStateParticleEffect {
+  private static final com.mojang.serialization.Codec<net.minecraft.world.level.block.state.BlockState> BLOCK_STATE_CODEC;
+  private final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption> type;
+  private final net.minecraft.world.level.block.state.BlockState state;
+  public static com.mojang.serialization.MapCodec<net.minecraft.core.particles.BlockParticleOption> codec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption>);
+  public static net.minecraft.network.codec.StreamCodec<? super net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.BlockParticleOption> streamCodec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption>);
+  public net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption>, net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption> getType();
+  public net.minecraft.world.level.block.state.BlockState getState();
+  private static net.minecraft.world.level.block.state.BlockState method_56168(net.minecraft.core.particles.BlockParticleOption);
+  private static net.minecraft.core.particles.BlockParticleOption method_56169(net.minecraft.core.particles.ParticleType, net.minecraft.world.level.block.state.BlockState);
+  private static net.minecraft.world.level.block.state.BlockState method_29127(net.minecraft.core.particles.BlockParticleOption);
+  private static net.minecraft.core.particles.BlockParticleOption method_29129(net.minecraft.core.particles.ParticleType, net.minecraft.world.level.block.state.BlockState);
+  static {};
+}
+Compiled from "ColorParticleOption.java"
+public class net.minecraft.core.particles.ColorParticleOption implements net.minecraft.core.particles.ParticleOptions {
+  private final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption> type;
+  private final int color;
+  public static com.mojang.serialization.MapCodec<net.minecraft.core.particles.ColorParticleOption> codec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption>);
+  public static net.minecraft.network.codec.StreamCodec<? super io.netty.buffer.ByteBuf, net.minecraft.core.particles.ColorParticleOption> streamCodec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption>);
+  private net.minecraft.core.particles.ColorParticleOption(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption>, int);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption> getType();
+  public float getRed();
+  public float getGreen();
+  public float getBlue();
+  public float getAlpha();
+  public static net.minecraft.core.particles.ColorParticleOption create(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption>, int);
+  public static net.minecraft.core.particles.ColorParticleOption create(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption>, float, float, float);
+  private static java.lang.Integer method_58253(net.minecraft.core.particles.ColorParticleOption);
+  private static net.minecraft.core.particles.ColorParticleOption method_58258(net.minecraft.core.particles.ParticleType, java.lang.Integer);
+  private static java.lang.Integer method_58260(net.minecraft.core.particles.ColorParticleOption);
+  private static net.minecraft.core.particles.ColorParticleOption method_58262(net.minecraft.core.particles.ParticleType, java.lang.Integer);
+}
+Compiled from "DustColorTransitionOptions.java"
+public class net.minecraft.core.particles.DustColorTransitionOptions extends net.minecraft.core.particles.ScalableParticleOptionsBase {
+  public static final int SCULK_PARTICLE_COLOR;
+  public static final net.minecraft.core.particles.DustColorTransitionOptions SCULK_TO_REDSTONE;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.core.particles.DustColorTransitionOptions> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.DustColorTransitionOptions> STREAM_CODEC;
+  private final int fromColor;
+  private final int toColor;
+  public net.minecraft.core.particles.DustColorTransitionOptions(int, int, float);
+  public org.joml.Vector3f getFromColor();
+  public org.joml.Vector3f getToColor();
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.DustColorTransitionOptions> getType();
+  private static java.lang.Integer method_65030(net.minecraft.core.particles.DustColorTransitionOptions);
+  private static java.lang.Integer method_65031(net.minecraft.core.particles.DustColorTransitionOptions);
+  private static com.mojang.datafixers.kinds.App method_33107(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static java.lang.Integer method_65032(net.minecraft.core.particles.DustColorTransitionOptions);
+  private static java.lang.Integer method_65033(net.minecraft.core.particles.DustColorTransitionOptions);
+  static {};
+}
+Compiled from "DustParticleOptions.java"
+public class net.minecraft.core.particles.DustParticleOptions extends net.minecraft.core.particles.ScalableParticleOptionsBase {
+  public static final int REDSTONE_PARTICLE_COLOR;
+  public static final net.minecraft.core.particles.DustParticleOptions REDSTONE;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.core.particles.DustParticleOptions> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.DustParticleOptions> STREAM_CODEC;
+  private final int color;
+  public net.minecraft.core.particles.DustParticleOptions(int, float);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.DustParticleOptions> getType();
+  public org.joml.Vector3f getColor();
+  private static java.lang.Integer method_65034(net.minecraft.core.particles.DustParticleOptions);
+  private static com.mojang.datafixers.kinds.App method_33115(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static java.lang.Integer method_65035(net.minecraft.core.particles.DustParticleOptions);
+  static {};
+}
+Compiled from "ExplosionParticleInfo.java"
+public final class net.minecraft.core.particles.ExplosionParticleInfo extends java.lang.Record {
+  private final net.minecraft.core.particles.ParticleOptions particle;
+  private final float scaling;
+  private final float speed;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.core.particles.ExplosionParticleInfo> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.ExplosionParticleInfo> STREAM_CODEC;
+  public net.minecraft.core.particles.ExplosionParticleInfo(net.minecraft.core.particles.ParticleOptions, float, float);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.core.particles.ParticleOptions particle();
+  public float scaling();
+  public float speed();
+  private static com.mojang.datafixers.kinds.App method_73256(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "ParticleLimit.java"
+public final class net.minecraft.core.particles.ParticleLimit extends java.lang.Record {
+  private final int limit;
+  public static final net.minecraft.core.particles.ParticleLimit SPORE_BLOSSOM;
+  public net.minecraft.core.particles.ParticleLimit(int);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int limit();
+  static {};
+}
+Compiled from "ParticleOptions.java"
+public interface net.minecraft.core.particles.ParticleOptions {
+  public abstract net.minecraft.core.particles.ParticleType<?> getType();
+}
+Compiled from "ItemParticleOption.java"
+public class net.minecraft.core.particles.ItemParticleOption implements net.minecraft.core.particles.ParticleOptions {
+  private static final com.mojang.serialization.Codec<net.minecraft.world.item.ItemStack> ITEM_CODEC;
+  private final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ItemParticleOption> type;
+  private final net.minecraft.world.item.ItemStack itemStack;
+  public static com.mojang.serialization.MapCodec<net.minecraft.core.particles.ItemParticleOption> codec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ItemParticleOption>);
+  public static net.minecraft.network.codec.StreamCodec<? super net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.ItemParticleOption> streamCodec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ItemParticleOption>);
+  public net.minecraft.core.particles.ItemParticleOption(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ItemParticleOption>, net.minecraft.world.item.ItemStack);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ItemParticleOption> getType();
+  public net.minecraft.world.item.ItemStack getItem();
+  private static net.minecraft.world.item.ItemStack method_56176(net.minecraft.core.particles.ItemParticleOption);
+  private static net.minecraft.core.particles.ItemParticleOption method_56177(net.minecraft.core.particles.ParticleType, net.minecraft.world.item.ItemStack);
+  private static net.minecraft.world.item.ItemStack method_29135(net.minecraft.core.particles.ItemParticleOption);
+  private static net.minecraft.core.particles.ItemParticleOption method_29137(net.minecraft.core.particles.ParticleType, net.minecraft.world.item.ItemStack);
+  static {};
+}
+Compiled from "ParticleType.java"
+public abstract class net.minecraft.core.particles.ParticleType<T extends net.minecraft.core.particles.ParticleOptions> {
+  private final boolean overrideLimiter;
+  protected net.minecraft.core.particles.ParticleType(boolean);
+  public boolean getOverrideLimiter();
+  public abstract com.mojang.serialization.MapCodec<T> codec();
+  public abstract net.minecraft.network.codec.StreamCodec<? super net.minecraft.network.RegistryFriendlyByteBuf, T> streamCodec();
+}
+Compiled from "PowerParticleOption.java"
+public class net.minecraft.core.particles.PowerParticleOption implements net.minecraft.core.particles.ParticleOptions {
+  private final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.PowerParticleOption> type;
+  private final float power;
+  public static com.mojang.serialization.MapCodec<net.minecraft.core.particles.PowerParticleOption> codec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.PowerParticleOption>);
+  public static net.minecraft.network.codec.StreamCodec<? super io.netty.buffer.ByteBuf, net.minecraft.core.particles.PowerParticleOption> streamCodec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.PowerParticleOption>);
+  private net.minecraft.core.particles.PowerParticleOption(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.PowerParticleOption>, float);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.PowerParticleOption> getType();
+  public float getPower();
+  public static net.minecraft.core.particles.PowerParticleOption create(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.PowerParticleOption>, float);
+  private static java.lang.Float method_74412(net.minecraft.core.particles.PowerParticleOption);
+  private static net.minecraft.core.particles.PowerParticleOption method_74411(net.minecraft.core.particles.ParticleType, java.lang.Float);
+  private static java.lang.Float method_74416(net.minecraft.core.particles.PowerParticleOption);
+  private static net.minecraft.core.particles.PowerParticleOption method_74415(net.minecraft.core.particles.ParticleType, java.lang.Float);
+}
+Compiled from "ScalableParticleOptionsBase.java"
+public abstract class net.minecraft.core.particles.ScalableParticleOptionsBase implements net.minecraft.core.particles.ParticleOptions {
+  public static final float MIN_SCALE;
+  public static final float MAX_SCALE;
+  protected static final com.mojang.serialization.Codec<java.lang.Float> SCALE;
+  private final float scale;
+  public net.minecraft.core.particles.ScalableParticleOptionsBase(float);
+  public float getScale();
+  private static com.mojang.serialization.DataResult method_59844(java.lang.Float);
+  private static java.lang.String method_59845(java.lang.Float);
+  static {};
+}
+Compiled from "SculkChargeParticleOptions.java"
+public final class net.minecraft.core.particles.SculkChargeParticleOptions extends java.lang.Record implements net.minecraft.core.particles.ParticleOptions {
+  private final float roll;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.core.particles.SculkChargeParticleOptions> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.SculkChargeParticleOptions> STREAM_CODEC;
+  public net.minecraft.core.particles.SculkChargeParticleOptions(float);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SculkChargeParticleOptions> getType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public float roll();
+  private static java.lang.Float method_56185(net.minecraft.core.particles.SculkChargeParticleOptions);
+  private static com.mojang.datafixers.kinds.App method_42024(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static java.lang.Float method_42025(net.minecraft.core.particles.SculkChargeParticleOptions);
+  static {};
+}
+Compiled from "ShriekParticleOption.java"
+public class net.minecraft.core.particles.ShriekParticleOption implements net.minecraft.core.particles.ParticleOptions {
+  public static final com.mojang.serialization.MapCodec<net.minecraft.core.particles.ShriekParticleOption> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.ShriekParticleOption> STREAM_CODEC;
+  private final int delay;
+  public net.minecraft.core.particles.ShriekParticleOption(int);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ShriekParticleOption> getType();
+  public int getDelay();
+  private static java.lang.Integer method_56186(net.minecraft.core.particles.ShriekParticleOption);
+  private static com.mojang.datafixers.kinds.App method_42617(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static java.lang.Integer method_42618(net.minecraft.core.particles.ShriekParticleOption);
+  static {};
+}
+Compiled from "SimpleParticleType.java"
+public class net.minecraft.core.particles.SimpleParticleType extends net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SimpleParticleType> implements net.minecraft.core.particles.ParticleOptions {
+  private final com.mojang.serialization.MapCodec<net.minecraft.core.particles.SimpleParticleType> codec;
+  private final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.SimpleParticleType> streamCodec;
+  protected net.minecraft.core.particles.SimpleParticleType(boolean);
+  public net.minecraft.core.particles.SimpleParticleType getType();
+  public com.mojang.serialization.MapCodec<net.minecraft.core.particles.SimpleParticleType> codec();
+  public net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.SimpleParticleType> streamCodec();
+  public net.minecraft.core.particles.ParticleType getType();
+}
+Compiled from "TrailParticleOption.java"
+public final class net.minecraft.core.particles.TrailParticleOption extends java.lang.Record implements net.minecraft.core.particles.ParticleOptions {
+  private final net.minecraft.world.phys.Vec3 target;
+  private final int color;
+  private final int duration;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.core.particles.TrailParticleOption> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.TrailParticleOption> STREAM_CODEC;
+  public net.minecraft.core.particles.TrailParticleOption(net.minecraft.world.phys.Vec3, int, int);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.TrailParticleOption> getType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.world.phys.Vec3 target();
+  public int color();
+  public int duration();
+  private static com.mojang.datafixers.kinds.App method_64928(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "SpellParticleOption.java"
+public class net.minecraft.core.particles.SpellParticleOption implements net.minecraft.core.particles.ParticleOptions {
+  private final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SpellParticleOption> type;
+  private final int color;
+  private final float power;
+  public static com.mojang.serialization.MapCodec<net.minecraft.core.particles.SpellParticleOption> codec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SpellParticleOption>);
+  public static net.minecraft.network.codec.StreamCodec<? super io.netty.buffer.ByteBuf, net.minecraft.core.particles.SpellParticleOption> streamCodec(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SpellParticleOption>);
+  private net.minecraft.core.particles.SpellParticleOption(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SpellParticleOption>, int, float);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SpellParticleOption> getType();
+  public float getRed();
+  public float getGreen();
+  public float getBlue();
+  public float getPower();
+  public static net.minecraft.core.particles.SpellParticleOption create(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SpellParticleOption>, int, float);
+  public static net.minecraft.core.particles.SpellParticleOption create(net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SpellParticleOption>, float, float, float, float);
+  private static net.minecraft.core.particles.SpellParticleOption method_74421(net.minecraft.core.particles.ParticleType, java.lang.Integer, java.lang.Float);
+  private static java.lang.Float method_74422(net.minecraft.core.particles.SpellParticleOption);
+  private static java.lang.Integer method_74426(net.minecraft.core.particles.SpellParticleOption);
+  private static com.mojang.datafixers.kinds.App method_74420(net.minecraft.core.particles.ParticleType, com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static net.minecraft.core.particles.SpellParticleOption method_74425(net.minecraft.core.particles.ParticleType, java.lang.Integer, java.lang.Float);
+  private static java.lang.Float method_74428(net.minecraft.core.particles.SpellParticleOption);
+  private static java.lang.Integer method_74430(net.minecraft.core.particles.SpellParticleOption);
+}
+Compiled from "package-info.java"
+interface net.minecraft.core.particles.package-info {
+}
+Compiled from "VibrationParticleOption.java"
+public class net.minecraft.core.particles.VibrationParticleOption implements net.minecraft.core.particles.ParticleOptions {
+  private static final com.mojang.serialization.Codec<net.minecraft.world.level.gameevent.PositionSource> SAFE_POSITION_SOURCE_CODEC;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.core.particles.VibrationParticleOption> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.VibrationParticleOption> STREAM_CODEC;
+  private final net.minecraft.world.level.gameevent.PositionSource destination;
+  private final int arrivalInTicks;
+  public net.minecraft.core.particles.VibrationParticleOption(net.minecraft.world.level.gameevent.PositionSource, int);
+  public net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.VibrationParticleOption> getType();
+  public net.minecraft.world.level.gameevent.PositionSource getDestination();
+  public int getArrivalInTicks();
+  private static com.mojang.datafixers.kinds.App method_42622(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static com.mojang.serialization.DataResult method_59773(net.minecraft.world.level.gameevent.PositionSource);
+  private static java.lang.String method_59774();
+  static {};
+}
+Compiled from "ParticleTypes.java"
+public class net.minecraft.core.particles.ParticleTypes {
+  public static final net.minecraft.core.particles.SimpleParticleType ANGRY_VILLAGER;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption> BLOCK;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption> BLOCK_MARKER;
+  public static final net.minecraft.core.particles.SimpleParticleType BUBBLE;
+  public static final net.minecraft.core.particles.SimpleParticleType CLOUD;
+  public static final net.minecraft.core.particles.SimpleParticleType COPPER_FIRE_FLAME;
+  public static final net.minecraft.core.particles.SimpleParticleType CRIT;
+  public static final net.minecraft.core.particles.SimpleParticleType DAMAGE_INDICATOR;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.PowerParticleOption> DRAGON_BREATH;
+  public static final net.minecraft.core.particles.SimpleParticleType DRIPPING_LAVA;
+  public static final net.minecraft.core.particles.SimpleParticleType FALLING_LAVA;
+  public static final net.minecraft.core.particles.SimpleParticleType LANDING_LAVA;
+  public static final net.minecraft.core.particles.SimpleParticleType DRIPPING_WATER;
+  public static final net.minecraft.core.particles.SimpleParticleType FALLING_WATER;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.DustParticleOptions> DUST;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.DustColorTransitionOptions> DUST_COLOR_TRANSITION;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SpellParticleOption> EFFECT;
+  public static final net.minecraft.core.particles.SimpleParticleType ELDER_GUARDIAN;
+  public static final net.minecraft.core.particles.SimpleParticleType ENCHANTED_HIT;
+  public static final net.minecraft.core.particles.SimpleParticleType ENCHANT;
+  public static final net.minecraft.core.particles.SimpleParticleType END_ROD;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption> ENTITY_EFFECT;
+  public static final net.minecraft.core.particles.SimpleParticleType EXPLOSION_EMITTER;
+  public static final net.minecraft.core.particles.SimpleParticleType EXPLOSION;
+  public static final net.minecraft.core.particles.SimpleParticleType GUST;
+  public static final net.minecraft.core.particles.SimpleParticleType SMALL_GUST;
+  public static final net.minecraft.core.particles.SimpleParticleType GUST_EMITTER_LARGE;
+  public static final net.minecraft.core.particles.SimpleParticleType GUST_EMITTER_SMALL;
+  public static final net.minecraft.core.particles.SimpleParticleType SONIC_BOOM;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption> FALLING_DUST;
+  public static final net.minecraft.core.particles.SimpleParticleType FIREWORK;
+  public static final net.minecraft.core.particles.SimpleParticleType FISHING;
+  public static final net.minecraft.core.particles.SimpleParticleType FLAME;
+  public static final net.minecraft.core.particles.SimpleParticleType INFESTED;
+  public static final net.minecraft.core.particles.SimpleParticleType CHERRY_LEAVES;
+  public static final net.minecraft.core.particles.SimpleParticleType PALE_OAK_LEAVES;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption> TINTED_LEAVES;
+  public static final net.minecraft.core.particles.SimpleParticleType SCULK_SOUL;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SculkChargeParticleOptions> SCULK_CHARGE;
+  public static final net.minecraft.core.particles.SimpleParticleType SCULK_CHARGE_POP;
+  public static final net.minecraft.core.particles.SimpleParticleType SOUL_FIRE_FLAME;
+  public static final net.minecraft.core.particles.SimpleParticleType SOUL;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ColorParticleOption> FLASH;
+  public static final net.minecraft.core.particles.SimpleParticleType HAPPY_VILLAGER;
+  public static final net.minecraft.core.particles.SimpleParticleType COMPOSTER;
+  public static final net.minecraft.core.particles.SimpleParticleType HEART;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.SpellParticleOption> INSTANT_EFFECT;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ItemParticleOption> ITEM;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.VibrationParticleOption> VIBRATION;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.TrailParticleOption> TRAIL;
+  public static final net.minecraft.core.particles.SimpleParticleType ITEM_SLIME;
+  public static final net.minecraft.core.particles.SimpleParticleType ITEM_COBWEB;
+  public static final net.minecraft.core.particles.SimpleParticleType ITEM_SNOWBALL;
+  public static final net.minecraft.core.particles.SimpleParticleType LARGE_SMOKE;
+  public static final net.minecraft.core.particles.SimpleParticleType LAVA;
+  public static final net.minecraft.core.particles.SimpleParticleType MYCELIUM;
+  public static final net.minecraft.core.particles.SimpleParticleType NOTE;
+  public static final net.minecraft.core.particles.SimpleParticleType POOF;
+  public static final net.minecraft.core.particles.SimpleParticleType PORTAL;
+  public static final net.minecraft.core.particles.SimpleParticleType RAIN;
+  public static final net.minecraft.core.particles.SimpleParticleType SMOKE;
+  public static final net.minecraft.core.particles.SimpleParticleType WHITE_SMOKE;
+  public static final net.minecraft.core.particles.SimpleParticleType SNEEZE;
+  public static final net.minecraft.core.particles.SimpleParticleType SPIT;
+  public static final net.minecraft.core.particles.SimpleParticleType SQUID_INK;
+  public static final net.minecraft.core.particles.SimpleParticleType SWEEP_ATTACK;
+  public static final net.minecraft.core.particles.SimpleParticleType TOTEM_OF_UNDYING;
+  public static final net.minecraft.core.particles.SimpleParticleType UNDERWATER;
+  public static final net.minecraft.core.particles.SimpleParticleType SPLASH;
+  public static final net.minecraft.core.particles.SimpleParticleType WITCH;
+  public static final net.minecraft.core.particles.SimpleParticleType BUBBLE_POP;
+  public static final net.minecraft.core.particles.SimpleParticleType CURRENT_DOWN;
+  public static final net.minecraft.core.particles.SimpleParticleType BUBBLE_COLUMN_UP;
+  public static final net.minecraft.core.particles.SimpleParticleType NAUTILUS;
+  public static final net.minecraft.core.particles.SimpleParticleType DOLPHIN;
+  public static final net.minecraft.core.particles.SimpleParticleType CAMPFIRE_COSY_SMOKE;
+  public static final net.minecraft.core.particles.SimpleParticleType CAMPFIRE_SIGNAL_SMOKE;
+  public static final net.minecraft.core.particles.SimpleParticleType DRIPPING_HONEY;
+  public static final net.minecraft.core.particles.SimpleParticleType FALLING_HONEY;
+  public static final net.minecraft.core.particles.SimpleParticleType LANDING_HONEY;
+  public static final net.minecraft.core.particles.SimpleParticleType FALLING_NECTAR;
+  public static final net.minecraft.core.particles.SimpleParticleType FALLING_SPORE_BLOSSOM;
+  public static final net.minecraft.core.particles.SimpleParticleType ASH;
+  public static final net.minecraft.core.particles.SimpleParticleType CRIMSON_SPORE;
+  public static final net.minecraft.core.particles.SimpleParticleType WARPED_SPORE;
+  public static final net.minecraft.core.particles.SimpleParticleType SPORE_BLOSSOM_AIR;
+  public static final net.minecraft.core.particles.SimpleParticleType DRIPPING_OBSIDIAN_TEAR;
+  public static final net.minecraft.core.particles.SimpleParticleType FALLING_OBSIDIAN_TEAR;
+  public static final net.minecraft.core.particles.SimpleParticleType LANDING_OBSIDIAN_TEAR;
+  public static final net.minecraft.core.particles.SimpleParticleType REVERSE_PORTAL;
+  public static final net.minecraft.core.particles.SimpleParticleType WHITE_ASH;
+  public static final net.minecraft.core.particles.SimpleParticleType SMALL_FLAME;
+  public static final net.minecraft.core.particles.SimpleParticleType SNOWFLAKE;
+  public static final net.minecraft.core.particles.SimpleParticleType DRIPPING_DRIPSTONE_LAVA;
+  public static final net.minecraft.core.particles.SimpleParticleType FALLING_DRIPSTONE_LAVA;
+  public static final net.minecraft.core.particles.SimpleParticleType DRIPPING_DRIPSTONE_WATER;
+  public static final net.minecraft.core.particles.SimpleParticleType FALLING_DRIPSTONE_WATER;
+  public static final net.minecraft.core.particles.SimpleParticleType GLOW_SQUID_INK;
+  public static final net.minecraft.core.particles.SimpleParticleType GLOW;
+  public static final net.minecraft.core.particles.SimpleParticleType WAX_ON;
+  public static final net.minecraft.core.particles.SimpleParticleType WAX_OFF;
+  public static final net.minecraft.core.particles.SimpleParticleType ELECTRIC_SPARK;
+  public static final net.minecraft.core.particles.SimpleParticleType SCRAPE;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.ShriekParticleOption> SHRIEK;
+  public static final net.minecraft.core.particles.SimpleParticleType EGG_CRACK;
+  public static final net.minecraft.core.particles.SimpleParticleType DUST_PLUME;
+  public static final net.minecraft.core.particles.SimpleParticleType TRIAL_SPAWNER_DETECTED_PLAYER;
+  public static final net.minecraft.core.particles.SimpleParticleType TRIAL_SPAWNER_DETECTED_PLAYER_OMINOUS;
+  public static final net.minecraft.core.particles.SimpleParticleType VAULT_CONNECTION;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption> DUST_PILLAR;
+  public static final net.minecraft.core.particles.SimpleParticleType OMINOUS_SPAWNING;
+  public static final net.minecraft.core.particles.SimpleParticleType RAID_OMEN;
+  public static final net.minecraft.core.particles.SimpleParticleType TRIAL_OMEN;
+  public static final net.minecraft.core.particles.ParticleType<net.minecraft.core.particles.BlockParticleOption> BLOCK_CRUMBLE;
+  public static final net.minecraft.core.particles.SimpleParticleType FIREFLY;
+  public static final com.mojang.serialization.Codec<net.minecraft.core.particles.ParticleOptions> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.particles.ParticleOptions> STREAM_CODEC;
+  public net.minecraft.core.particles.ParticleTypes();
+  private static net.minecraft.core.particles.SimpleParticleType register(java.lang.String, boolean);
+  private static <T extends net.minecraft.core.particles.ParticleOptions> net.minecraft.core.particles.ParticleType<T> register(java.lang.String, boolean, java.util.function.Function<net.minecraft.core.particles.ParticleType<T>, com.mojang.serialization.MapCodec<T>>, java.util.function.Function<net.minecraft.core.particles.ParticleType<T>, net.minecraft.network.codec.StreamCodec<? super net.minecraft.network.RegistryFriendlyByteBuf, T>>);
+  private static net.minecraft.network.codec.StreamCodec method_56180(net.minecraft.core.particles.ParticleType);
+  private static com.mojang.serialization.MapCodec method_42616(net.minecraft.core.particles.ParticleType);
+  private static net.minecraft.network.codec.StreamCodec method_64926(net.minecraft.core.particles.ParticleType);
+  private static com.mojang.serialization.MapCodec method_64927(net.minecraft.core.particles.ParticleType);
+  private static net.minecraft.network.codec.StreamCodec method_56181(net.minecraft.core.particles.ParticleType);
+  private static com.mojang.serialization.MapCodec method_33121(net.minecraft.core.particles.ParticleType);
+  private static net.minecraft.network.codec.StreamCodec method_56182(net.minecraft.core.particles.ParticleType);
+  private static com.mojang.serialization.MapCodec method_42023(net.minecraft.core.particles.ParticleType);
+  private static net.minecraft.network.codec.StreamCodec method_56183(net.minecraft.core.particles.ParticleType);
+  private static com.mojang.serialization.MapCodec method_33122(net.minecraft.core.particles.ParticleType);
+  private static net.minecraft.network.codec.StreamCodec method_56184(net.minecraft.core.particles.ParticleType);
+  private static com.mojang.serialization.MapCodec method_29139(net.minecraft.core.particles.ParticleType);
+  static {};
+}
+Compiled from "DebugEntryParticleRenderStats.java"
+public class net.minecraft.client.gui.components.debug.DebugEntryParticleRenderStats implements net.minecraft.client.gui.components.debug.DebugScreenEntry {
+  public net.minecraft.client.gui.components.debug.DebugEntryParticleRenderStats();
+  public void display(net.minecraft.client.gui.components.debug.DebugScreenDisplayer, net.minecraft.world.level.Level, net.minecraft.world.level.chunk.LevelChunk, net.minecraft.world.level.chunk.LevelChunk);
+}
+Compiled from "GuardianParticleModel.java"
+public class net.minecraft.client.model.monster.guardian.GuardianParticleModel extends net.minecraft.client.model.Model<net.minecraft.util.Unit> {
+  public net.minecraft.client.model.monster.guardian.GuardianParticleModel(net.minecraft.client.model.geom.ModelPart);
+}
+Compiled from "ClientLevel.java"
+public class net.minecraft.client.multiplayer.ClientLevel extends net.minecraft.world.level.Level implements net.minecraft.client.multiplayer.CacheSlot$Cleaner<net.minecraft.client.multiplayer.ClientLevel> {
+  private static final org.slf4j.Logger LOGGER;
+  public static final net.minecraft.network.chat.Component DEFAULT_QUIT_MESSAGE;
+  private static final double FLUID_PARTICLE_SPAWN_OFFSET;
+  private static final int NORMAL_LIGHT_UPDATES_PER_FRAME;
+  private static final int LIGHT_UPDATE_QUEUE_SIZE_THRESHOLD;
+  final net.minecraft.world.level.entity.EntityTickList tickingEntities;
+  private final net.minecraft.world.level.entity.TransientEntitySectionManager<net.minecraft.world.entity.Entity> entityStorage;
+  private final net.minecraft.client.multiplayer.ClientPacketListener connection;
+  private final net.minecraft.client.renderer.LevelRenderer levelRenderer;
+  private final net.minecraft.client.renderer.LevelEventHandler levelEventHandler;
+  private final net.minecraft.client.multiplayer.ClientLevel$ClientLevelData clientLevelData;
+  private final net.minecraft.world.TickRateManager tickRateManager;
+  private final net.minecraft.client.renderer.EndFlashState endFlashState;
+  private final net.minecraft.client.Minecraft minecraft;
+  final java.util.List<net.minecraft.client.player.AbstractClientPlayer> players;
+  final java.util.List<net.minecraft.world.entity.boss.enderdragon.EnderDragonPart> dragonParts;
+  private final java.util.Map<net.minecraft.world.level.saveddata.maps.MapId, net.minecraft.world.level.saveddata.maps.MapItemSavedData> mapData;
+  private int skyFlashTime;
+  private final it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap<net.minecraft.world.level.ColorResolver, net.minecraft.client.color.block.BlockTintCache> tintCaches;
+  private final net.minecraft.client.multiplayer.ClientChunkCache chunkSource;
+  private final java.util.Deque<java.lang.Runnable> lightUpdateQueue;
+  private int serverSimulationDistance;
+  private final net.minecraft.client.multiplayer.prediction.BlockStatePredictionHandler blockStatePredictionHandler;
+  private final java.util.Set<net.minecraft.world.level.block.entity.BlockEntity> globallyRenderedBlockEntities;
+  private final net.minecraft.client.multiplayer.ClientExplosionTracker explosionTracker;
+  private final net.minecraft.world.level.border.WorldBorder worldBorder;
+  private final net.minecraft.world.attribute.EnvironmentAttributeSystem environmentAttributes;
+  private final int seaLevel;
+  private boolean tickDayTime;
+  private static final java.util.Set<net.minecraft.world.item.Item> MARKER_PARTICLE_ITEMS;
+  public void handleBlockChangedAck(int);
+  public void onBlockEntityAdded(net.minecraft.world.level.block.entity.BlockEntity);
+  public java.util.Set<net.minecraft.world.level.block.entity.BlockEntity> getGloballyRenderedBlockEntities();
+  public void setServerVerifiedBlockState(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, int);
+  public void syncBlockState(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.phys.Vec3);
+  net.minecraft.client.multiplayer.prediction.BlockStatePredictionHandler getBlockStatePredictionHandler();
+  public boolean setBlock(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, int, int);
+  public net.minecraft.client.multiplayer.ClientLevel(net.minecraft.client.multiplayer.ClientPacketListener, net.minecraft.client.multiplayer.ClientLevel$ClientLevelData, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>, net.minecraft.core.Holder<net.minecraft.world.level.dimension.DimensionType>, int, int, net.minecraft.client.renderer.LevelRenderer, boolean, long, int);
+  private net.minecraft.world.attribute.EnvironmentAttributeSystem$Builder addEnvironmentAttributeLayers(net.minecraft.world.attribute.EnvironmentAttributeSystem$Builder);
+  public void queueLightUpdate(java.lang.Runnable);
+  public void pollLightUpdates();
+  public net.minecraft.client.renderer.EndFlashState endFlashState();
+  public void tick(java.util.function.BooleanSupplier);
+  private void tickTime();
+  public void setTimeFromServer(long, long, boolean);
+  public java.lang.Iterable<net.minecraft.world.entity.Entity> entitiesForRendering();
+  public void tickEntities();
+  public boolean isTickingEntity(net.minecraft.world.entity.Entity);
+  public boolean shouldTickDeath(net.minecraft.world.entity.Entity);
+  public void tickNonPassenger(net.minecraft.world.entity.Entity);
+  private void tickPassenger(net.minecraft.world.entity.Entity, net.minecraft.world.entity.Entity);
+  public void unload(net.minecraft.world.level.chunk.LevelChunk);
+  public void onChunkLoaded(net.minecraft.world.level.ChunkPos);
+  public void onSectionBecomingNonEmpty(long);
+  public void clearTintCaches();
+  public boolean hasChunk(int, int);
+  public int getEntityCount();
+  public void addEntity(net.minecraft.world.entity.Entity);
+  public void removeEntity(int, net.minecraft.world.entity.Entity$RemovalReason);
+  public java.util.List<net.minecraft.world.entity.Entity> getPushableEntities(net.minecraft.world.entity.Entity, net.minecraft.world.phys.AABB);
+  public net.minecraft.world.entity.Entity getEntity(int);
+  public void disconnect(net.minecraft.network.chat.Component);
+  public void animateTick(int, int, int);
+  private net.minecraft.world.level.block.Block getMarkerParticleTarget();
+  public void doAnimateTick(int, int, int, int, net.minecraft.util.RandomSource, net.minecraft.world.level.block.Block, net.minecraft.core.BlockPos$MutableBlockPos);
+  private void trySpawnDripParticles(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.particles.ParticleOptions, boolean);
+  private void spawnParticle(net.minecraft.core.BlockPos, net.minecraft.core.particles.ParticleOptions, net.minecraft.world.phys.shapes.VoxelShape, double);
+  private void spawnFluidParticle(double, double, double, double, double, net.minecraft.core.particles.ParticleOptions);
+  public net.minecraft.CrashReportCategory fillReportDetails(net.minecraft.CrashReport);
+  public void playSeededSound(net.minecraft.world.entity.Entity, double, double, double, net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent>, net.minecraft.sounds.SoundSource, float, float, long);
+  public void playSeededSound(net.minecraft.world.entity.Entity, net.minecraft.world.entity.Entity, net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent>, net.minecraft.sounds.SoundSource, float, float, long);
+  public void playLocalSound(net.minecraft.world.entity.Entity, net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, float, float);
+  public void playPlayerSound(net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, float, float);
+  public void playLocalSound(double, double, double, net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, float, float, boolean);
+  private void playSound(double, double, double, net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, float, float, boolean, long);
+  public void createFireworks(double, double, double, double, double, double, java.util.List<net.minecraft.world.item.component.FireworkExplosion>);
+  public void sendPacketToServer(net.minecraft.network.protocol.Packet<?>);
+  public net.minecraft.world.level.border.WorldBorder getWorldBorder();
+  public net.minecraft.world.item.crafting.RecipeAccess recipeAccess();
+  public net.minecraft.world.TickRateManager tickRateManager();
+  public net.minecraft.world.attribute.EnvironmentAttributeSystem environmentAttributes();
+  public net.minecraft.world.ticks.LevelTickAccess<net.minecraft.world.level.block.Block> getBlockTicks();
+  public net.minecraft.world.ticks.LevelTickAccess<net.minecraft.world.level.material.Fluid> getFluidTicks();
+  public net.minecraft.client.multiplayer.ClientChunkCache getChunkSource();
+  public net.minecraft.world.level.saveddata.maps.MapItemSavedData getMapData(net.minecraft.world.level.saveddata.maps.MapId);
+  public void overrideMapData(net.minecraft.world.level.saveddata.maps.MapId, net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  public net.minecraft.world.scores.Scoreboard getScoreboard();
+  public void sendBlockUpdated(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.state.BlockState, int);
+  public void setBlocksDirty(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.state.BlockState);
+  public void setSectionDirtyWithNeighbors(int, int, int);
+  public void setSectionRangeDirty(int, int, int, int, int, int);
+  public void destroyBlockProgress(int, net.minecraft.core.BlockPos, int);
+  public void globalLevelEvent(int, net.minecraft.core.BlockPos, int);
+  public void levelEvent(net.minecraft.world.entity.Entity, int, net.minecraft.core.BlockPos, int);
+  public void addParticle(net.minecraft.core.particles.ParticleOptions, double, double, double, double, double, double);
+  public void addParticle(net.minecraft.core.particles.ParticleOptions, boolean, boolean, double, double, double, double, double, double);
+  public void addAlwaysVisibleParticle(net.minecraft.core.particles.ParticleOptions, double, double, double, double, double, double);
+  public void addAlwaysVisibleParticle(net.minecraft.core.particles.ParticleOptions, boolean, double, double, double, double, double, double);
+  private void doAddParticle(net.minecraft.core.particles.ParticleOptions, boolean, boolean, double, double, double, double, double, double);
+  private net.minecraft.server.level.ParticleStatus calculateParticleLevel(boolean);
+  public java.util.List<net.minecraft.client.player.AbstractClientPlayer> players();
+  public java.util.List<net.minecraft.world.entity.boss.enderdragon.EnderDragonPart> dragonParts();
+  public net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome> getUncachedNoiseBiome(int, int, int);
+  private int getSkyFlashTime();
+  public void setSkyFlashTime(int);
+  public float getShade(net.minecraft.core.Direction, boolean);
+  public int getBlockTint(net.minecraft.core.BlockPos, net.minecraft.world.level.ColorResolver);
+  public int calculateBlockTint(net.minecraft.core.BlockPos, net.minecraft.world.level.ColorResolver);
+  public void setRespawnData(net.minecraft.world.level.storage.LevelData$RespawnData);
+  public net.minecraft.world.level.storage.LevelData$RespawnData getRespawnData();
+  public java.lang.String toString();
+  public net.minecraft.client.multiplayer.ClientLevel$ClientLevelData getLevelData();
+  public void gameEvent(net.minecraft.core.Holder<net.minecraft.world.level.gameevent.GameEvent>, net.minecraft.world.phys.Vec3, net.minecraft.world.level.gameevent.GameEvent$Context);
+  protected java.util.Map<net.minecraft.world.level.saveddata.maps.MapId, net.minecraft.world.level.saveddata.maps.MapItemSavedData> getAllMapData();
+  protected void addMapData(java.util.Map<net.minecraft.world.level.saveddata.maps.MapId, net.minecraft.world.level.saveddata.maps.MapItemSavedData>);
+  protected net.minecraft.world.level.entity.LevelEntityGetter<net.minecraft.world.entity.Entity> getEntities();
+  public java.lang.String gatherChunkSourceStats();
+  public void addDestroyBlockEffect(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState);
+  public void addBreakingBlockEffect(net.minecraft.core.BlockPos, net.minecraft.core.Direction);
+  public void setServerSimulationDistance(int);
+  public int getServerSimulationDistance();
+  public net.minecraft.world.flag.FeatureFlagSet enabledFeatures();
+  public net.minecraft.world.item.alchemy.PotionBrewing potionBrewing();
+  public net.minecraft.world.level.block.entity.FuelValues fuelValues();
+  public void explode(net.minecraft.world.entity.Entity, net.minecraft.world.damagesource.DamageSource, net.minecraft.world.level.ExplosionDamageCalculator, double, double, double, float, boolean, net.minecraft.world.level.Level$ExplosionInteraction, net.minecraft.core.particles.ParticleOptions, net.minecraft.core.particles.ParticleOptions, net.minecraft.util.random.WeightedList<net.minecraft.core.particles.ExplosionParticleInfo>, net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent>);
+  public int getSeaLevel();
+  public int getClientLeafTintColor(net.minecraft.core.BlockPos);
+  public void registerForCleaning(net.minecraft.client.multiplayer.CacheSlot<net.minecraft.client.multiplayer.ClientLevel, ?>);
+  public void trackExplosionEffects(net.minecraft.world.phys.Vec3, float, int, net.minecraft.util.random.WeightedList<net.minecraft.core.particles.ExplosionParticleInfo>);
+  public net.minecraft.world.level.storage.LevelData getLevelData();
+  public java.util.Collection dragonParts();
+  public net.minecraft.world.level.chunk.ChunkSource getChunkSource();
+  public net.minecraft.world.attribute.EnvironmentAttributeReader environmentAttributes();
+  private void method_74253(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, double, double, double, double, double, double);
+  private java.lang.String method_74916(double, double, double) throws java.lang.Exception;
+  private java.lang.String method_74917(net.minecraft.core.particles.ParticleOptions) throws java.lang.Exception;
+  private java.lang.String method_54633() throws java.lang.Exception;
+  private java.lang.String method_2933() throws java.lang.Exception;
+  private java.lang.String method_2946() throws java.lang.Exception;
+  private static void method_23779(net.minecraft.world.level.ColorResolver, net.minecraft.client.color.block.BlockTintCache);
+  private static void method_32121(net.minecraft.world.level.ChunkPos, net.minecraft.world.level.ColorResolver, net.minecraft.client.color.block.BlockTintCache);
+  private static java.lang.String method_18649(net.minecraft.world.entity.Entity);
+  private void method_32124(net.minecraft.world.entity.Entity);
+  private java.lang.Float method_76542(java.lang.Float, int);
+  private java.lang.Integer method_76540(int, java.lang.Integer, int);
+  private void method_23778(it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap);
+  private int method_38535(net.minecraft.core.BlockPos);
+  private int method_68160(net.minecraft.core.BlockPos);
+  private int method_38537(net.minecraft.core.BlockPos);
+  private int method_38538(net.minecraft.core.BlockPos);
+  static {};
+}
+Compiled from "AttackSweepParticle.java"
+public class net.minecraft.client.particle.AttackSweepParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  net.minecraft.client.particle.AttackSweepParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public int getLightColor(float);
+  public void tick();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+}
+Compiled from "AshParticle.java"
+public class net.minecraft.client.particle.AshParticle extends net.minecraft.client.particle.BaseAshSmokeParticle {
+  protected net.minecraft.client.particle.AshParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, float, net.minecraft.client.particle.SpriteSet);
+}
+Compiled from "BlockMarker.java"
+public class net.minecraft.client.particle.BlockMarker extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SingleQuadParticle$Layer layer;
+  net.minecraft.client.particle.BlockMarker(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public float getQuadSize(float);
+}
+Compiled from "BaseAshSmokeParticle.java"
+public abstract class net.minecraft.client.particle.BaseAshSmokeParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  protected net.minecraft.client.particle.BaseAshSmokeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, float, float, float, double, double, double, float, net.minecraft.client.particle.SpriteSet, float, int, float, boolean);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public float getQuadSize(float);
+  public void tick();
+}
+Compiled from "BubbleColumnUpParticle.java"
+public class net.minecraft.client.particle.BubbleColumnUpParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  net.minecraft.client.particle.BubbleColumnUpParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public void tick();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+}
+Compiled from "BreakingItemParticle.java"
+public class net.minecraft.client.particle.BreakingItemParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final float uo;
+  private final float vo;
+  private final net.minecraft.client.particle.SingleQuadParticle$Layer layer;
+  net.minecraft.client.particle.BreakingItemParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  protected net.minecraft.client.particle.BreakingItemParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  protected float getU0();
+  protected float getU1();
+  protected float getV0();
+  protected float getV1();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+}
+Compiled from "BubblePopParticle.java"
+public class net.minecraft.client.particle.BubblePopParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  net.minecraft.client.particle.BubblePopParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public void tick();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+}
+Compiled from "BubbleParticle.java"
+public class net.minecraft.client.particle.BubbleParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  net.minecraft.client.particle.BubbleParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public void tick();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+}
+Compiled from "CritParticle.java"
+public class net.minecraft.client.particle.CritParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  net.minecraft.client.particle.CritParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public float getQuadSize(float);
+  public void tick();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+}
+Compiled from "CampfireSmokeParticle.java"
+public class net.minecraft.client.particle.CampfireSmokeParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  net.minecraft.client.particle.CampfireSmokeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, boolean, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public void tick();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+}
+Compiled from "DustParticle.java"
+public class net.minecraft.client.particle.DustParticle extends net.minecraft.client.particle.DustParticleBase<net.minecraft.core.particles.DustParticleOptions> {
+  protected net.minecraft.client.particle.DustParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.core.particles.DustParticleOptions, net.minecraft.client.particle.SpriteSet);
+}
+Compiled from "DragonBreathParticle.java"
+public class net.minecraft.client.particle.DragonBreathParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private static final int COLOR_MIN;
+  private static final int COLOR_MAX;
+  private static final float COLOR_MIN_RED;
+  private static final float COLOR_MIN_GREEN;
+  private static final float COLOR_MIN_BLUE;
+  private static final float COLOR_MAX_RED;
+  private static final float COLOR_MAX_GREEN;
+  private static final float COLOR_MAX_BLUE;
+  private boolean hasHitGround;
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  net.minecraft.client.particle.DragonBreathParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public void tick();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public float getQuadSize(float);
+}
+Compiled from "DripParticle.java"
+public class net.minecraft.client.particle.DripParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.world.level.material.Fluid type;
+  protected boolean isGlowing;
+  net.minecraft.client.particle.DripParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.world.level.material.Fluid, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  protected net.minecraft.world.level.material.Fluid getType();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public int getLightColor(float);
+  public void tick();
+  protected void preMoveUpdate();
+  protected void postMoveUpdate();
+}
+Compiled from "DustPlumeParticle.java"
+public class net.minecraft.client.particle.DustPlumeParticle extends net.minecraft.client.particle.BaseAshSmokeParticle {
+  private static final int COLOR_RGB24;
+  protected net.minecraft.client.particle.DustPlumeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, float, net.minecraft.client.particle.SpriteSet);
+  public void tick();
+}
+Compiled from "DustColorTransitionParticle.java"
+public class net.minecraft.client.particle.DustColorTransitionParticle extends net.minecraft.client.particle.DustParticleBase<net.minecraft.core.particles.DustColorTransitionOptions> {
+  private final org.joml.Vector3f fromColor;
+  private final org.joml.Vector3f toColor;
+  protected net.minecraft.client.particle.DustColorTransitionParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.core.particles.DustColorTransitionOptions, net.minecraft.client.particle.SpriteSet);
+  private org.joml.Vector3f randomizeColor(org.joml.Vector3f, float);
+  private void lerpColors(float);
+  public void extract(net.minecraft.client.renderer.state.QuadParticleRenderState, net.minecraft.client.Camera, float);
+}
+Compiled from "DustParticleBase.java"
+public class net.minecraft.client.particle.DustParticleBase<T extends net.minecraft.core.particles.ScalableParticleOptionsBase> extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  protected net.minecraft.client.particle.DustParticleBase(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, T, net.minecraft.client.particle.SpriteSet);
+  protected float randomizeColor(float, float);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public float getQuadSize(float);
+  public void tick();
+}
+Compiled from "ElderGuardianParticle.java"
+public class net.minecraft.client.particle.ElderGuardianParticle extends net.minecraft.client.particle.Particle {
+  protected final net.minecraft.client.model.monster.guardian.GuardianParticleModel model;
+  protected final net.minecraft.client.renderer.rendertype.RenderType renderType;
+  net.minecraft.client.particle.ElderGuardianParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double);
+  public net.minecraft.client.particle.ParticleRenderType getGroup();
+}
+Compiled from "ElderGuardianParticleGroup.java"
+public class net.minecraft.client.particle.ElderGuardianParticleGroup extends net.minecraft.client.particle.ParticleGroup<net.minecraft.client.particle.ElderGuardianParticle> {
+  public net.minecraft.client.particle.ElderGuardianParticleGroup(net.minecraft.client.particle.ParticleEngine);
+  public net.minecraft.client.renderer.state.ParticleGroupRenderState extractRenderState(net.minecraft.client.renderer.culling.Frustum, net.minecraft.client.Camera, float);
+  private static net.minecraft.client.particle.ElderGuardianParticleGroup$ElderGuardianParticleRenderState method_74275(net.minecraft.client.Camera, float, net.minecraft.client.particle.ElderGuardianParticle);
+}
+Compiled from "ExplodeParticle.java"
+public class net.minecraft.client.particle.ExplodeParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  protected net.minecraft.client.particle.ExplodeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "EndRodParticle.java"
+public class net.minecraft.client.particle.EndRodParticle extends net.minecraft.client.particle.SimpleAnimatedParticle {
+  net.minecraft.client.particle.EndRodParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public void move(double, double, double);
+}
+Compiled from "FireworkParticles.java"
+public class net.minecraft.client.particle.FireworkParticles {
+  public net.minecraft.client.particle.FireworkParticles();
+}
+Compiled from "FallingLeavesParticle.java"
+public class net.minecraft.client.particle.FallingLeavesParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private static final float ACCELERATION_SCALE;
+  private static final int INITIAL_LIFETIME;
+  private static final int CURVE_ENDPOINT_TIME;
+  private float rotSpeed;
+  private final float spinAcceleration;
+  private final float windBig;
+  private final boolean swirl;
+  private final boolean flowAway;
+  private final double xaFlowScale;
+  private final double zaFlowScale;
+  private final double swirlPeriod;
+  protected net.minecraft.client.particle.FallingLeavesParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite, float, float, boolean, boolean, float, float);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "FallingDustParticle.java"
+public class net.minecraft.client.particle.FallingDustParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final float rotSpeed;
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  net.minecraft.client.particle.FallingDustParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, float, float, float, net.minecraft.client.particle.SpriteSet);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public float getQuadSize(float);
+  public void tick();
+}
+Compiled from "FireflyParticle.java"
+public class net.minecraft.client.particle.FireflyParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private static final float PARTICLE_FADE_OUT_LIGHT_TIME;
+  private static final float PARTICLE_FADE_IN_LIGHT_TIME;
+  private static final float PARTICLE_FADE_OUT_ALPHA_TIME;
+  private static final float PARTICLE_FADE_IN_ALPHA_TIME;
+  private static final int PARTICLE_MIN_LIFETIME;
+  private static final int PARTICLE_MAX_LIFETIME;
+  net.minecraft.client.particle.FireflyParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public int getLightColor(float);
+  public void tick();
+  private float getLifetimeProgress(float);
+  private static float getFadeAmount(float, float, float);
+}
+Compiled from "FlameParticle.java"
+public class net.minecraft.client.particle.FlameParticle extends net.minecraft.client.particle.RisingParticle {
+  net.minecraft.client.particle.FlameParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void move(double, double, double);
+  public float getQuadSize(float);
+  public int getLightColor(float);
+}
+Compiled from "FlyStraightTowardsParticle.java"
+public class net.minecraft.client.particle.FlyStraightTowardsParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final double xStart;
+  private final double yStart;
+  private final double zStart;
+  private final int startColor;
+  private final int endColor;
+  net.minecraft.client.particle.FlyStraightTowardsParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, int, int, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void move(double, double, double);
+  public int getLightColor(float);
+  public void tick();
+}
+Compiled from "FlyTowardsPositionParticle.java"
+public class net.minecraft.client.particle.FlyTowardsPositionParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final double xStart;
+  private final double yStart;
+  private final double zStart;
+  private final boolean isGlowing;
+  private final net.minecraft.client.particle.Particle$LifetimeAlpha lifetimeAlpha;
+  net.minecraft.client.particle.FlyTowardsPositionParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  net.minecraft.client.particle.FlyTowardsPositionParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, boolean, net.minecraft.client.particle.Particle$LifetimeAlpha, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void move(double, double, double);
+  public int getLightColor(float);
+  public void tick();
+  public void extract(net.minecraft.client.renderer.state.QuadParticleRenderState, net.minecraft.client.Camera, float);
+}
+Compiled from "GustParticle.java"
+public class net.minecraft.client.particle.GustParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  protected net.minecraft.client.particle.GustParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public int getLightColor(float);
+  public void tick();
+}
+Compiled from "HeartParticle.java"
+public class net.minecraft.client.particle.HeartParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  net.minecraft.client.particle.HeartParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public float getQuadSize(float);
+}
+Compiled from "GlowParticle.java"
+public class net.minecraft.client.particle.GlowParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  net.minecraft.client.particle.GlowParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public int getLightColor(float);
+  public void tick();
+}
+Compiled from "HugeExplosionSeedParticle.java"
+public class net.minecraft.client.particle.HugeExplosionSeedParticle extends net.minecraft.client.particle.NoRenderParticle {
+  net.minecraft.client.particle.HugeExplosionSeedParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double);
+  public void tick();
+}
+Compiled from "GustSeedParticle.java"
+public class net.minecraft.client.particle.GustSeedParticle extends net.minecraft.client.particle.NoRenderParticle {
+  private final double scale;
+  private final int tickDelayInBetween;
+  net.minecraft.client.particle.GustSeedParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, int, int);
+  public void tick();
+}
+Compiled from "HugeExplosionParticle.java"
+public class net.minecraft.client.particle.HugeExplosionParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  protected net.minecraft.client.particle.HugeExplosionParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public int getLightColor(float);
+  public void tick();
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+}
+Compiled from "ItemPickupParticleGroup.java"
+public class net.minecraft.client.particle.ItemPickupParticleGroup extends net.minecraft.client.particle.ParticleGroup<net.minecraft.client.particle.ItemPickupParticle> {
+  public net.minecraft.client.particle.ItemPickupParticleGroup(net.minecraft.client.particle.ParticleEngine);
+  public net.minecraft.client.renderer.state.ParticleGroupRenderState extractRenderState(net.minecraft.client.renderer.culling.Frustum, net.minecraft.client.Camera, float);
+  private static net.minecraft.client.particle.ItemPickupParticleGroup$ParticleInstance method_74278(net.minecraft.client.Camera, float, net.minecraft.client.particle.ItemPickupParticle);
+}
+Compiled from "ItemPickupParticle.java"
+public class net.minecraft.client.particle.ItemPickupParticle extends net.minecraft.client.particle.Particle {
+  protected static final int LIFE_TIME;
+  private final net.minecraft.world.entity.Entity target;
+  protected int life;
+  protected final net.minecraft.client.renderer.entity.state.EntityRenderState itemRenderState;
+  protected double targetX;
+  protected double targetY;
+  protected double targetZ;
+  protected double targetXOld;
+  protected double targetYOld;
+  protected double targetZOld;
+  public net.minecraft.client.particle.ItemPickupParticle(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.client.renderer.entity.state.EntityRenderState, net.minecraft.world.entity.Entity, net.minecraft.world.phys.Vec3);
+  public void tick();
+  public net.minecraft.client.particle.ParticleRenderType getGroup();
+  private void updatePosition();
+  private void saveOldPosition();
+}
+Compiled from "LavaParticle.java"
+public class net.minecraft.client.particle.LavaParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  net.minecraft.client.particle.LavaParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public int getLightColor(float);
+  public float getQuadSize(float);
+  public void tick();
+}
+Compiled from "LargeSmokeParticle.java"
+public class net.minecraft.client.particle.LargeSmokeParticle extends net.minecraft.client.particle.SmokeParticle {
+  protected net.minecraft.client.particle.LargeSmokeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+}
+Compiled from "NoRenderParticle.java"
+public class net.minecraft.client.particle.NoRenderParticle extends net.minecraft.client.particle.Particle {
+  protected net.minecraft.client.particle.NoRenderParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double);
+  protected net.minecraft.client.particle.NoRenderParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double);
+  public net.minecraft.client.particle.ParticleRenderType getGroup();
+}
+Compiled from "NoRenderParticleGroup.java"
+public class net.minecraft.client.particle.NoRenderParticleGroup extends net.minecraft.client.particle.ParticleGroup<net.minecraft.client.particle.NoRenderParticle> {
+  private static final net.minecraft.client.renderer.state.ParticleGroupRenderState EMPTY_RENDER_STATE;
+  public net.minecraft.client.particle.NoRenderParticleGroup(net.minecraft.client.particle.ParticleEngine);
+  public net.minecraft.client.renderer.state.ParticleGroupRenderState extractRenderState(net.minecraft.client.renderer.culling.Frustum, net.minecraft.client.Camera, float);
+  private static void method_74280(net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  static {};
+}
+Compiled from "NoteParticle.java"
+public class net.minecraft.client.particle.NoteParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  net.minecraft.client.particle.NoteParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public float getQuadSize(float);
+}
+Compiled from "ParticleDescription.java"
+public class net.minecraft.client.particle.ParticleDescription {
+  private final java.util.List<net.minecraft.resources.Identifier> textures;
+  private net.minecraft.client.particle.ParticleDescription(java.util.List<net.minecraft.resources.Identifier>);
+  public java.util.List<net.minecraft.resources.Identifier> getTextures();
+  public static net.minecraft.client.particle.ParticleDescription fromJson(com.google.gson.JsonObject);
+  private static java.lang.String method_18827(com.google.gson.JsonElement);
+}
+Compiled from "Particle.java"
+public abstract class net.minecraft.client.particle.Particle {
+  private static final net.minecraft.world.phys.AABB INITIAL_AABB;
+  private static final double MAXIMUM_COLLISION_VELOCITY_SQUARED;
+  protected final net.minecraft.client.multiplayer.ClientLevel level;
+  protected double xo;
+  protected double yo;
+  protected double zo;
+  protected double x;
+  protected double y;
+  protected double z;
+  protected double xd;
+  protected double yd;
+  protected double zd;
+  private net.minecraft.world.phys.AABB bb;
+  protected boolean onGround;
+  protected boolean hasPhysics;
+  private boolean stoppedByCollision;
+  protected boolean removed;
+  protected float bbWidth;
+  protected float bbHeight;
+  protected final net.minecraft.util.RandomSource random;
+  protected int age;
+  protected int lifetime;
+  protected float gravity;
+  protected float friction;
+  protected boolean speedUpWhenYMotionIsBlocked;
+  protected net.minecraft.client.particle.Particle(net.minecraft.client.multiplayer.ClientLevel, double, double, double);
+  public net.minecraft.client.particle.Particle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double);
+  public net.minecraft.client.particle.Particle setPower(float);
+  public void setParticleSpeed(double, double, double);
+  public net.minecraft.client.particle.Particle scale(float);
+  public void setLifetime(int);
+  public int getLifetime();
+  public void tick();
+  public abstract net.minecraft.client.particle.ParticleRenderType getGroup();
+  public java.lang.String toString();
+  public void remove();
+  protected void setSize(float, float);
+  public void setPos(double, double, double);
+  public void move(double, double, double);
+  protected void setLocationFromBoundingbox();
+  protected int getLightColor(float);
+  public boolean isAlive();
+  public net.minecraft.world.phys.AABB getBoundingBox();
+  public void setBoundingBox(net.minecraft.world.phys.AABB);
+  public java.util.Optional<net.minecraft.core.particles.ParticleLimit> getParticleLimit();
+  static {};
+}
+Compiled from "ParticleProvider.java"
+public interface net.minecraft.client.particle.ParticleProvider<T extends net.minecraft.core.particles.ParticleOptions> {
+  public abstract net.minecraft.client.particle.Particle createParticle(T, net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.util.RandomSource);
+}
+Compiled from "ParticleEngine.java"
+public class net.minecraft.client.particle.ParticleEngine {
+  private static final java.util.List<net.minecraft.client.particle.ParticleRenderType> RENDER_ORDER;
+  protected net.minecraft.client.multiplayer.ClientLevel level;
+  private final java.util.Map<net.minecraft.client.particle.ParticleRenderType, net.minecraft.client.particle.ParticleGroup<?>> particles;
+  private final java.util.Queue<net.minecraft.client.particle.TrackingEmitter> trackingEmitters;
+  private final java.util.Queue<net.minecraft.client.particle.Particle> particlesToAdd;
+  private final it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap<net.minecraft.core.particles.ParticleLimit> trackedParticleCounts;
+  private final net.minecraft.client.particle.ParticleResources resourceManager;
+  private final net.minecraft.util.RandomSource random;
+  public net.minecraft.client.particle.ParticleEngine(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.client.particle.ParticleResources);
+  public void createTrackingEmitter(net.minecraft.world.entity.Entity, net.minecraft.core.particles.ParticleOptions);
+  public void createTrackingEmitter(net.minecraft.world.entity.Entity, net.minecraft.core.particles.ParticleOptions, int);
+  public net.minecraft.client.particle.Particle createParticle(net.minecraft.core.particles.ParticleOptions, double, double, double, double, double, double);
+  private <T extends net.minecraft.core.particles.ParticleOptions> net.minecraft.client.particle.Particle makeParticle(T, double, double, double, double, double, double);
+  public void add(net.minecraft.client.particle.Particle);
+  public void tick();
+  private net.minecraft.client.particle.ParticleGroup<?> createParticleGroup(net.minecraft.client.particle.ParticleRenderType);
+  protected void updateCount(net.minecraft.core.particles.ParticleLimit, int);
+  public void extract(net.minecraft.client.renderer.state.ParticlesRenderState, net.minecraft.client.renderer.culling.Frustum, net.minecraft.client.Camera, float);
+  public void setLevel(net.minecraft.client.multiplayer.ClientLevel);
+  public java.lang.String countParticles();
+  private boolean hasSpaceInParticleLimit(net.minecraft.core.particles.ParticleLimit);
+  public void clearParticles();
+  private static void method_74282(net.minecraft.client.particle.ParticleRenderType, net.minecraft.client.particle.ParticleGroup);
+  static {};
+}
+Compiled from "ParticleGroup.java"
+public abstract class net.minecraft.client.particle.ParticleGroup<P extends net.minecraft.client.particle.Particle> {
+  private static final int MAX_PARTICLES;
+  protected final net.minecraft.client.particle.ParticleEngine engine;
+  protected final java.util.Queue<P> particles;
+  public net.minecraft.client.particle.ParticleGroup(net.minecraft.client.particle.ParticleEngine);
+  public boolean isEmpty();
+  public void tickParticles();
+  private void tickParticle(net.minecraft.client.particle.Particle);
+  public void add(net.minecraft.client.particle.Particle);
+  public int size();
+  public abstract net.minecraft.client.renderer.state.ParticleGroupRenderState extractRenderState(net.minecraft.client.renderer.culling.Frustum, net.minecraft.client.Camera, float);
+  public java.util.Queue<P> getAll();
+  private void method_74286(net.minecraft.core.particles.ParticleLimit);
+}
+Compiled from "ParticleRenderType.java"
+public final class net.minecraft.client.particle.ParticleRenderType extends java.lang.Record {
+  private final java.lang.String name;
+  public static final net.minecraft.client.particle.ParticleRenderType SINGLE_QUADS;
+  public static final net.minecraft.client.particle.ParticleRenderType ITEM_PICKUP;
+  public static final net.minecraft.client.particle.ParticleRenderType ELDER_GUARDIANS;
+  public static final net.minecraft.client.particle.ParticleRenderType NO_RENDER;
+  public net.minecraft.client.particle.ParticleRenderType(java.lang.String);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public java.lang.String name();
+  static {};
+}
+Compiled from "PortalParticle.java"
+public class net.minecraft.client.particle.PortalParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final double xStart;
+  private final double yStart;
+  private final double zStart;
+  protected net.minecraft.client.particle.PortalParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void move(double, double, double);
+  public float getQuadSize(float);
+  public int getLightColor(float);
+  public void tick();
+}
+Compiled from "PlayerCloudParticle.java"
+public class net.minecraft.client.particle.PlayerCloudParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  net.minecraft.client.particle.PlayerCloudParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public float getQuadSize(float);
+  public void tick();
+}
+Compiled from "RisingParticle.java"
+public abstract class net.minecraft.client.particle.RisingParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  protected net.minecraft.client.particle.RisingParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+}
+Compiled from "QuadParticleGroup.java"
+public class net.minecraft.client.particle.QuadParticleGroup extends net.minecraft.client.particle.ParticleGroup<net.minecraft.client.particle.SingleQuadParticle> {
+  private final net.minecraft.client.particle.ParticleRenderType particleType;
+  final net.minecraft.client.renderer.state.QuadParticleRenderState particleTypeRenderState;
+  public net.minecraft.client.particle.QuadParticleGroup(net.minecraft.client.particle.ParticleEngine, net.minecraft.client.particle.ParticleRenderType);
+  public net.minecraft.client.renderer.state.ParticleGroupRenderState extractRenderState(net.minecraft.client.renderer.culling.Frustum, net.minecraft.client.Camera, float);
+}
+Compiled from "ReversePortalParticle.java"
+public class net.minecraft.client.particle.ReversePortalParticle extends net.minecraft.client.particle.PortalParticle {
+  net.minecraft.client.particle.ReversePortalParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public float getQuadSize(float);
+  public void tick();
+}
+Compiled from "SculkChargePopParticle.java"
+public class net.minecraft.client.particle.SculkChargePopParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  net.minecraft.client.particle.SculkChargePopParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public int getLightColor(float);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "SculkChargeParticle.java"
+public class net.minecraft.client.particle.SculkChargeParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  net.minecraft.client.particle.SculkChargeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public int getLightColor(float);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "SimpleAnimatedParticle.java"
+public abstract class net.minecraft.client.particle.SimpleAnimatedParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  protected final net.minecraft.client.particle.SpriteSet sprites;
+  private float fadeR;
+  private float fadeG;
+  private float fadeB;
+  private boolean hasFade;
+  protected net.minecraft.client.particle.SimpleAnimatedParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.particle.SpriteSet, float);
+  public void setColor(int);
+  public void setFadeColor(int);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+  public int getLightColor(float);
+}
+Compiled from "SmokeParticle.java"
+public class net.minecraft.client.particle.SmokeParticle extends net.minecraft.client.particle.BaseAshSmokeParticle {
+  protected net.minecraft.client.particle.SmokeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, float, net.minecraft.client.particle.SpriteSet);
+}
+Compiled from "ShriekParticle.java"
+public class net.minecraft.client.particle.ShriekParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private static final float MAGICAL_X_ROT;
+  private int delay;
+  net.minecraft.client.particle.ShriekParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, int, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public float getQuadSize(float);
+  public void extract(net.minecraft.client.renderer.state.QuadParticleRenderState, net.minecraft.client.Camera, float);
+  public int getLightColor(float);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "SonicBoomParticle.java"
+public class net.minecraft.client.particle.SonicBoomParticle extends net.minecraft.client.particle.HugeExplosionParticle {
+  protected net.minecraft.client.particle.SonicBoomParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+}
+Compiled from "SnowflakeParticle.java"
+public class net.minecraft.client.particle.SnowflakeParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  protected net.minecraft.client.particle.SnowflakeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "SingleQuadParticle.java"
+public abstract class net.minecraft.client.particle.SingleQuadParticle extends net.minecraft.client.particle.Particle {
+  protected float quadSize;
+  protected float rCol;
+  protected float gCol;
+  protected float bCol;
+  protected float alpha;
+  protected float roll;
+  protected float oRoll;
+  protected net.minecraft.client.renderer.texture.TextureAtlasSprite sprite;
+  protected net.minecraft.client.particle.SingleQuadParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  protected net.minecraft.client.particle.SingleQuadParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$FacingCameraMode getFacingCameraMode();
+  public void extract(net.minecraft.client.renderer.state.QuadParticleRenderState, net.minecraft.client.Camera, float);
+  protected void extractRotatedQuad(net.minecraft.client.renderer.state.QuadParticleRenderState, net.minecraft.client.Camera, org.joml.Quaternionf, float);
+  protected void extractRotatedQuad(net.minecraft.client.renderer.state.QuadParticleRenderState, org.joml.Quaternionf, float, float, float, float);
+  public float getQuadSize(float);
+  public net.minecraft.client.particle.Particle scale(float);
+  public net.minecraft.client.particle.ParticleRenderType getGroup();
+  public void setSpriteFromAge(net.minecraft.client.particle.SpriteSet);
+  protected void setSprite(net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  protected float getU0();
+  protected float getU1();
+  protected float getV0();
+  protected float getV1();
+  protected abstract net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void setColor(float, float, float);
+  protected void setAlpha(float);
+  public java.lang.String toString();
+}
+Compiled from "SpellParticle.java"
+public class net.minecraft.client.particle.SpellParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private static final net.minecraft.util.RandomSource RANDOM;
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  private float originalAlpha;
+  net.minecraft.client.particle.SpellParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+  protected void setAlpha(float);
+  private boolean isCloseToScopingPlayer();
+  static {};
+}
+Compiled from "SoulParticle.java"
+public class net.minecraft.client.particle.SoulParticle extends net.minecraft.client.particle.RisingParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  protected boolean isGlowing;
+  net.minecraft.client.particle.SoulParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public int getLightColor(float);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "SplashParticle.java"
+public class net.minecraft.client.particle.SplashParticle extends net.minecraft.client.particle.WaterDropParticle {
+  net.minecraft.client.particle.SplashParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+}
+Compiled from "SpitParticle.java"
+public class net.minecraft.client.particle.SpitParticle extends net.minecraft.client.particle.ExplodeParticle {
+  net.minecraft.client.particle.SpitParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+}
+Compiled from "SquidInkParticle.java"
+public class net.minecraft.client.particle.SquidInkParticle extends net.minecraft.client.particle.SimpleAnimatedParticle {
+  net.minecraft.client.particle.SquidInkParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, int, net.minecraft.client.particle.SpriteSet);
+  public void tick();
+}
+Compiled from "ParticleResources.java"
+public class net.minecraft.client.particle.ParticleResources implements net.minecraft.server.packs.resources.PreparableReloadListener {
+  private static final org.slf4j.Logger LOGGER;
+  private static final net.minecraft.resources.FileToIdConverter PARTICLE_LISTER;
+  private final java.util.Map<net.minecraft.resources.Identifier, net.minecraft.client.particle.ParticleResources$MutableSpriteSet> spriteSets;
+  private final it.unimi.dsi.fastutil.ints.Int2ObjectMap<net.minecraft.client.particle.ParticleProvider<?>> providers;
+  private java.lang.Runnable onReload;
+  public net.minecraft.client.particle.ParticleResources();
+  public void onReload(java.lang.Runnable);
+  private void registerProviders();
+  private <T extends net.minecraft.core.particles.ParticleOptions> void register(net.minecraft.core.particles.ParticleType<T>, net.minecraft.client.particle.ParticleProvider<T>);
+  private <T extends net.minecraft.core.particles.ParticleOptions> void register(net.minecraft.core.particles.ParticleType<T>, net.minecraft.client.particle.ParticleResources$SpriteParticleRegistration<T>);
+  public java.util.concurrent.CompletableFuture<java.lang.Void> reload(net.minecraft.server.packs.resources.PreparableReloadListener$SharedState, java.util.concurrent.Executor, net.minecraft.server.packs.resources.PreparableReloadListener$PreparationBarrier, java.util.concurrent.Executor);
+  private java.util.Optional<java.util.List<net.minecraft.resources.Identifier>> loadParticleDescription(net.minecraft.resources.Identifier, net.minecraft.server.packs.resources.Resource);
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<net.minecraft.client.particle.ParticleProvider<?>> getProviders();
+  private void method_74298(java.util.concurrent.CompletableFuture, java.util.concurrent.CompletableFuture, java.lang.Void);
+  private void method_74295(net.minecraft.client.renderer.texture.SpriteLoader$Preparations, java.util.Set, net.minecraft.client.renderer.texture.TextureAtlasSprite, net.minecraft.client.particle.ParticleResources$1ParticleDefinition);
+  private java.util.concurrent.CompletionStage method_74299(java.util.concurrent.Executor, java.util.Map);
+  private void method_74297(java.util.List, java.util.concurrent.Executor, net.minecraft.resources.Identifier, net.minecraft.server.packs.resources.Resource);
+  private net.minecraft.client.particle.ParticleResources$1ParticleDefinition method_74303(net.minecraft.resources.Identifier, net.minecraft.server.packs.resources.Resource);
+  private static java.util.Map method_74294(net.minecraft.server.packs.resources.ResourceManager);
+  static {};
+}
+Compiled from "SpriteSet.java"
+public interface net.minecraft.client.particle.SpriteSet {
+  public abstract net.minecraft.client.renderer.texture.TextureAtlasSprite get(int, int);
+  public abstract net.minecraft.client.renderer.texture.TextureAtlasSprite get(net.minecraft.util.RandomSource);
+  public abstract net.minecraft.client.renderer.texture.TextureAtlasSprite first();
+}
+Compiled from "TotemParticle.java"
+public class net.minecraft.client.particle.TotemParticle extends net.minecraft.client.particle.SimpleAnimatedParticle {
+  net.minecraft.client.particle.TotemParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+}
+Compiled from "SuspendedParticle.java"
+public class net.minecraft.client.particle.SuspendedParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  net.minecraft.client.particle.SuspendedParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  net.minecraft.client.particle.SuspendedParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+}
+Compiled from "SuspendedTownParticle.java"
+public class net.minecraft.client.particle.SuspendedTownParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  net.minecraft.client.particle.SuspendedTownParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void move(double, double, double);
+  public void tick();
+}
+Compiled from "TrailParticle.java"
+public class net.minecraft.client.particle.TrailParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.world.phys.Vec3 target;
+  net.minecraft.client.particle.TrailParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.world.phys.Vec3, int, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+  public int getLightColor(float);
+}
+Compiled from "TrackingEmitter.java"
+public class net.minecraft.client.particle.TrackingEmitter extends net.minecraft.client.particle.NoRenderParticle {
+  private final net.minecraft.world.entity.Entity entity;
+  private int life;
+  private final int lifeTime;
+  private final net.minecraft.core.particles.ParticleOptions particleType;
+  public net.minecraft.client.particle.TrackingEmitter(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.world.entity.Entity, net.minecraft.core.particles.ParticleOptions);
+  public net.minecraft.client.particle.TrackingEmitter(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.world.entity.Entity, net.minecraft.core.particles.ParticleOptions, int);
+  private net.minecraft.client.particle.TrackingEmitter(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.world.entity.Entity, net.minecraft.core.particles.ParticleOptions, int, net.minecraft.world.phys.Vec3);
+  public void tick();
+}
+Compiled from "TerrainParticle.java"
+public class net.minecraft.client.particle.TerrainParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SingleQuadParticle$Layer layer;
+  private final net.minecraft.core.BlockPos pos;
+  private final float uo;
+  private final float vo;
+  public net.minecraft.client.particle.TerrainParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.world.level.block.state.BlockState);
+  public net.minecraft.client.particle.TerrainParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.BlockPos);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  protected float getU0();
+  protected float getU1();
+  protected float getV0();
+  protected float getV1();
+  public int getLightColor(float);
+  static net.minecraft.client.particle.TerrainParticle createTerrainParticle(net.minecraft.core.particles.BlockParticleOption, net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double);
+}
+Compiled from "VibrationSignalParticle.java"
+public class net.minecraft.client.particle.VibrationSignalParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.world.level.gameevent.PositionSource target;
+  private float rot;
+  private float rotO;
+  private float pitch;
+  private float pitchO;
+  net.minecraft.client.particle.VibrationSignalParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.world.level.gameevent.PositionSource, int, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public void extract(net.minecraft.client.renderer.state.QuadParticleRenderState, net.minecraft.client.Camera, float);
+  public int getLightColor(float);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "TrialSpawnerDetectionParticle.java"
+public class net.minecraft.client.particle.TrialSpawnerDetectionParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  private static final int BASE_LIFETIME;
+  protected net.minecraft.client.particle.TrialSpawnerDetectionParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, float, net.minecraft.client.particle.SpriteSet);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public int getLightColor(float);
+  public net.minecraft.client.particle.SingleQuadParticle$FacingCameraMode getFacingCameraMode();
+  public void tick();
+  public float getQuadSize(float);
+}
+Compiled from "WaterCurrentDownParticle.java"
+public class net.minecraft.client.particle.WaterCurrentDownParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private float angle;
+  net.minecraft.client.particle.WaterCurrentDownParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "WhiteSmokeParticle.java"
+public class net.minecraft.client.particle.WhiteSmokeParticle extends net.minecraft.client.particle.BaseAshSmokeParticle {
+  private static final int COLOR_RGB24;
+  protected net.minecraft.client.particle.WhiteSmokeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, float, net.minecraft.client.particle.SpriteSet);
+}
+Compiled from "WakeParticle.java"
+public class net.minecraft.client.particle.WakeParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  private final net.minecraft.client.particle.SpriteSet sprites;
+  net.minecraft.client.particle.WakeParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, net.minecraft.client.particle.SpriteSet);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "WaterDropParticle.java"
+public class net.minecraft.client.particle.WaterDropParticle extends net.minecraft.client.particle.SingleQuadParticle {
+  protected net.minecraft.client.particle.WaterDropParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public net.minecraft.client.particle.SingleQuadParticle$Layer getLayer();
+  public void tick();
+}
+Compiled from "WhiteAshParticle.java"
+public class net.minecraft.client.particle.WhiteAshParticle extends net.minecraft.client.particle.BaseAshSmokeParticle {
+  private static final int COLOR_RGB24;
+  protected net.minecraft.client.particle.WhiteAshParticle(net.minecraft.client.multiplayer.ClientLevel, double, double, double, double, double, double, float, net.minecraft.client.particle.SpriteSet);
+}
+Compiled from "package-info.java"
+interface net.minecraft.client.particle.package-info {
+}
+Compiled from "LevelRenderer.java"
+public class net.minecraft.client.renderer.LevelRenderer implements net.minecraft.server.packs.resources.ResourceManagerReloadListener,java.lang.AutoCloseable {
+  private static final net.minecraft.resources.Identifier TRANSPARENCY_POST_CHAIN_ID;
+  private static final net.minecraft.resources.Identifier ENTITY_OUTLINE_POST_CHAIN_ID;
+  public static final int SECTION_SIZE;
+  public static final int HALF_SECTION_SIZE;
+  public static final int NEARBY_SECTION_DISTANCE_IN_BLOCKS;
+  private static final int MINIMUM_TRANSPARENT_SORT_COUNT;
+  private static final float CHUNK_VISIBILITY_THRESHOLD;
+  private final net.minecraft.client.Minecraft minecraft;
+  private final net.minecraft.client.renderer.entity.EntityRenderDispatcher entityRenderDispatcher;
+  private final net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher blockEntityRenderDispatcher;
+  private final net.minecraft.client.renderer.RenderBuffers renderBuffers;
+  private net.minecraft.client.renderer.SkyRenderer skyRenderer;
+  private final net.minecraft.client.renderer.CloudRenderer cloudRenderer;
+  private final net.minecraft.client.renderer.WorldBorderRenderer worldBorderRenderer;
+  private final net.minecraft.client.renderer.WeatherEffectRenderer weatherEffectRenderer;
+  private final net.minecraft.client.renderer.state.ParticlesRenderState particlesRenderState;
+  public final net.minecraft.client.renderer.debug.DebugRenderer debugRenderer;
+  public final net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer gameTestBlockHighlightRenderer;
+  private net.minecraft.client.multiplayer.ClientLevel level;
+  private final net.minecraft.client.renderer.SectionOcclusionGraph sectionOcclusionGraph;
+  private final it.unimi.dsi.fastutil.objects.ObjectArrayList<net.minecraft.client.renderer.chunk.SectionRenderDispatcher$RenderSection> visibleSections;
+  private final it.unimi.dsi.fastutil.objects.ObjectArrayList<net.minecraft.client.renderer.chunk.SectionRenderDispatcher$RenderSection> nearbyVisibleSections;
+  private net.minecraft.client.renderer.ViewArea viewArea;
+  private int ticks;
+  private final it.unimi.dsi.fastutil.ints.Int2ObjectMap<net.minecraft.server.level.BlockDestructionProgress> destroyingBlocks;
+  private final it.unimi.dsi.fastutil.longs.Long2ObjectMap<java.util.SortedSet<net.minecraft.server.level.BlockDestructionProgress>> destructionProgress;
+  private com.mojang.blaze3d.pipeline.RenderTarget entityOutlineTarget;
+  private final net.minecraft.client.renderer.LevelTargetBundle targets;
+  private int lastCameraSectionX;
+  private int lastCameraSectionY;
+  private int lastCameraSectionZ;
+  private double prevCamX;
+  private double prevCamY;
+  private double prevCamZ;
+  private double prevCamRotX;
+  private double prevCamRotY;
+  private net.minecraft.client.renderer.chunk.SectionRenderDispatcher sectionRenderDispatcher;
+  private int lastViewDistance;
+  private boolean captureFrustum;
+  private net.minecraft.client.renderer.culling.Frustum capturedFrustum;
+  private net.minecraft.core.BlockPos lastTranslucentSortBlockPos;
+  private int translucencyResortIterationIndex;
+  private final net.minecraft.client.renderer.state.LevelRenderState levelRenderState;
+  private final net.minecraft.client.renderer.SubmitNodeStorage submitNodeStorage;
+  private final net.minecraft.client.renderer.feature.FeatureRenderDispatcher featureRenderDispatcher;
+  private com.mojang.blaze3d.textures.GpuSampler chunkLayerSampler;
+  private final net.minecraft.gizmos.SimpleGizmoCollector collectedGizmos;
+  private net.minecraft.client.renderer.LevelRenderer$FinalizedGizmos finalizedGizmos;
+  public net.minecraft.client.renderer.LevelRenderer(net.minecraft.client.Minecraft, net.minecraft.client.renderer.entity.EntityRenderDispatcher, net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher, net.minecraft.client.renderer.RenderBuffers, net.minecraft.client.renderer.state.LevelRenderState, net.minecraft.client.renderer.feature.FeatureRenderDispatcher);
+  public void close();
+  public void onResourceManagerReload(net.minecraft.server.packs.resources.ResourceManager);
+  public void initOutline();
+  private net.minecraft.client.renderer.PostChain getTransparencyChain();
+  public void doEntityOutline();
+  protected boolean shouldShowEntityOutlines();
+  public void setLevel(net.minecraft.client.multiplayer.ClientLevel);
+  private void clearVisibleSections();
+  public void allChanged();
+  public void resize(int, int);
+  public java.lang.String getSectionStatistics();
+  public net.minecraft.client.renderer.chunk.SectionRenderDispatcher getSectionRenderDispatcher();
+  public double getTotalSections();
+  public double getLastViewDistance();
+  public int countRenderedSections();
+  public void resetSampler();
+  public java.lang.String getEntityStatistics();
+  private void cullTerrain(net.minecraft.client.Camera, net.minecraft.client.renderer.culling.Frustum, boolean);
+  public static net.minecraft.client.renderer.culling.Frustum offsetFrustum(net.minecraft.client.renderer.culling.Frustum);
+  private void applyFrustum(net.minecraft.client.renderer.culling.Frustum);
+  public void addRecentlyCompiledSection(net.minecraft.client.renderer.chunk.SectionRenderDispatcher$RenderSection);
+  private net.minecraft.client.renderer.culling.Frustum prepareCullFrustum(org.joml.Matrix4f, org.joml.Matrix4f, net.minecraft.world.phys.Vec3);
+  public void renderLevel(com.mojang.blaze3d.resource.GraphicsResourceAllocator, net.minecraft.client.DeltaTracker, boolean, net.minecraft.client.Camera, org.joml.Matrix4f, org.joml.Matrix4f, org.joml.Matrix4f, com.mojang.blaze3d.buffers.GpuBufferSlice, org.joml.Vector4f, boolean);
+  private void addMainPass(com.mojang.blaze3d.framegraph.FrameGraphBuilder, net.minecraft.client.renderer.culling.Frustum, org.joml.Matrix4f, com.mojang.blaze3d.buffers.GpuBufferSlice, boolean, net.minecraft.client.renderer.state.LevelRenderState, net.minecraft.client.DeltaTracker, net.minecraft.util.profiling.ProfilerFiller);
+  private void addParticlesPass(com.mojang.blaze3d.framegraph.FrameGraphBuilder, com.mojang.blaze3d.buffers.GpuBufferSlice);
+  private void addCloudsPass(com.mojang.blaze3d.framegraph.FrameGraphBuilder, net.minecraft.client.CloudStatus, net.minecraft.world.phys.Vec3, long, float, int, float);
+  private void addWeatherPass(com.mojang.blaze3d.framegraph.FrameGraphBuilder, com.mojang.blaze3d.buffers.GpuBufferSlice);
+  private void addLateDebugPass(com.mojang.blaze3d.framegraph.FrameGraphBuilder, net.minecraft.client.renderer.state.CameraRenderState, com.mojang.blaze3d.buffers.GpuBufferSlice, org.joml.Matrix4f);
+  private void extractVisibleEntities(net.minecraft.client.Camera, net.minecraft.client.renderer.culling.Frustum, net.minecraft.client.DeltaTracker, net.minecraft.client.renderer.state.LevelRenderState);
+  private void submitEntities(com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.state.LevelRenderState, net.minecraft.client.renderer.SubmitNodeCollector);
+  private void extractVisibleBlockEntities(net.minecraft.client.Camera, float, net.minecraft.client.renderer.state.LevelRenderState);
+  private void submitBlockEntities(com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.state.LevelRenderState, net.minecraft.client.renderer.SubmitNodeStorage);
+  private void extractBlockDestroyAnimation(net.minecraft.client.Camera, net.minecraft.client.renderer.state.LevelRenderState);
+  private void renderBlockDestroyAnimation(com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.MultiBufferSource$BufferSource, net.minecraft.client.renderer.state.LevelRenderState);
+  private void extractBlockOutline(net.minecraft.client.Camera, net.minecraft.client.renderer.state.LevelRenderState);
+  private void renderBlockOutline(net.minecraft.client.renderer.MultiBufferSource$BufferSource, com.mojang.blaze3d.vertex.PoseStack, boolean, net.minecraft.client.renderer.state.LevelRenderState);
+  private void checkPoseStack(com.mojang.blaze3d.vertex.PoseStack);
+  private net.minecraft.client.renderer.entity.state.EntityRenderState extractEntity(net.minecraft.world.entity.Entity, float);
+  private void scheduleTranslucentSectionResort(net.minecraft.world.phys.Vec3);
+  private void scheduleResort(net.minecraft.client.renderer.chunk.SectionRenderDispatcher$RenderSection, net.minecraft.client.renderer.chunk.TranslucencyPointOfView, net.minecraft.world.phys.Vec3, boolean, boolean);
+  private net.minecraft.client.renderer.chunk.ChunkSectionsToRender prepareChunkRenders(org.joml.Matrix4fc, double, double, double);
+  public void endFrame();
+  public void captureFrustum();
+  public void killFrustum();
+  public void tick(net.minecraft.client.Camera);
+  private void removeBlockBreakingProgress();
+  private void removeProgress(net.minecraft.server.level.BlockDestructionProgress);
+  private void addSkyPass(com.mojang.blaze3d.framegraph.FrameGraphBuilder, net.minecraft.client.Camera, com.mojang.blaze3d.buffers.GpuBufferSlice);
+  private boolean doesMobEffectBlockSky(net.minecraft.client.Camera);
+  private void compileSections(net.minecraft.client.Camera);
+  private void renderHitOutline(com.mojang.blaze3d.vertex.PoseStack, com.mojang.blaze3d.vertex.VertexConsumer, double, double, double, net.minecraft.client.renderer.state.BlockOutlineRenderState, int, float);
+  public void blockChanged(net.minecraft.world.level.BlockGetter, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.state.BlockState, int);
+  private void setBlockDirty(net.minecraft.core.BlockPos, boolean);
+  public void setBlocksDirty(int, int, int, int, int, int);
+  public void setBlockDirty(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.state.BlockState);
+  public void setSectionDirtyWithNeighbors(int, int, int);
+  public void setSectionRangeDirty(int, int, int, int, int, int);
+  public void setSectionDirty(int, int, int);
+  private void setSectionDirty(int, int, int, boolean);
+  public void onSectionBecomingNonEmpty(long);
+  public void destroyBlockProgress(int, net.minecraft.core.BlockPos, int);
+  public boolean hasRenderedAllSections();
+  public void onChunkReadyToRender(net.minecraft.world.level.ChunkPos);
+  public void needsUpdate();
+  public static int getLightColor(net.minecraft.world.level.BlockAndTintGetter, net.minecraft.core.BlockPos);
+  public static int getLightColor(net.minecraft.client.renderer.LevelRenderer$BrightnessGetter, net.minecraft.world.level.BlockAndTintGetter, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.BlockPos);
+  public boolean isSectionCompiledAndVisible(net.minecraft.core.BlockPos);
+  public com.mojang.blaze3d.pipeline.RenderTarget entityOutlineTarget();
+  public com.mojang.blaze3d.pipeline.RenderTarget getTranslucentTarget();
+  public com.mojang.blaze3d.pipeline.RenderTarget getItemEntityTarget();
+  public com.mojang.blaze3d.pipeline.RenderTarget getParticlesTarget();
+  public com.mojang.blaze3d.pipeline.RenderTarget getWeatherTarget();
+  public com.mojang.blaze3d.pipeline.RenderTarget getCloudsTarget();
+  public it.unimi.dsi.fastutil.objects.ObjectArrayList<net.minecraft.client.renderer.chunk.SectionRenderDispatcher$RenderSection> getVisibleSections();
+  public net.minecraft.client.renderer.SectionOcclusionGraph getSectionOcclusionGraph();
+  public net.minecraft.client.renderer.culling.Frustum getCapturedFrustum();
+  public net.minecraft.client.renderer.CloudRenderer getCloudRenderer();
+  public net.minecraft.gizmos.Gizmos$TemporaryCollection collectPerFrameGizmos();
+  private void finalizeGizmoCollection();
+  private static java.util.SortedSet method_22988(long);
+  private static void method_62215(com.mojang.blaze3d.buffers.GpuBufferSlice, net.minecraft.client.renderer.state.SkyRenderState, net.minecraft.client.renderer.SkyRenderer);
+  private static void method_72156(int, com.mojang.blaze3d.buffers.GpuBufferSlice[], com.mojang.blaze3d.systems.RenderPass$UniformUploader);
+  private void method_75413(com.mojang.blaze3d.buffers.GpuBufferSlice, com.mojang.blaze3d.resource.ResourceHandle, net.minecraft.client.renderer.state.CameraRenderState, org.joml.Matrix4f);
+  private void method_62216(com.mojang.blaze3d.buffers.GpuBufferSlice, int, float);
+  private void method_62205(int, net.minecraft.client.CloudStatus, float, net.minecraft.world.phys.Vec3, long, float);
+  private void method_62213(com.mojang.blaze3d.buffers.GpuBufferSlice, com.mojang.blaze3d.resource.ResourceHandle, com.mojang.blaze3d.resource.ResourceHandle);
+  private void method_62214(com.mojang.blaze3d.buffers.GpuBufferSlice, net.minecraft.client.renderer.state.LevelRenderState, net.minecraft.util.profiling.ProfilerFiller, org.joml.Matrix4f, com.mojang.blaze3d.resource.ResourceHandle, com.mojang.blaze3d.resource.ResourceHandle, boolean, com.mojang.blaze3d.resource.ResourceHandle, com.mojang.blaze3d.resource.ResourceHandle);
+  private void method_62218(org.joml.Vector4f);
+  static {};
+}
+Compiled from "SkyRenderer.java"
+public class net.minecraft.client.renderer.SkyRenderer implements java.lang.AutoCloseable {
+  private static final net.minecraft.resources.Identifier SUN_SPRITE;
+  private static final net.minecraft.resources.Identifier END_FLASH_SPRITE;
+  private static final net.minecraft.resources.Identifier END_SKY_LOCATION;
+  private static final float SKY_DISC_RADIUS;
+  private static final int SKY_VERTICES;
+  private static final int STAR_COUNT;
+  private static final float SUN_SIZE;
+  private static final float SUN_HEIGHT;
+  private static final float MOON_SIZE;
+  private static final float MOON_HEIGHT;
+  private static final int SUNRISE_STEPS;
+  private static final int END_SKY_QUAD_COUNT;
+  private static final float END_FLASH_HEIGHT;
+  private static final float END_FLASH_SCALE;
+  private final net.minecraft.client.renderer.texture.TextureAtlas celestialsAtlas;
+  private final com.mojang.blaze3d.buffers.GpuBuffer starBuffer;
+  private final com.mojang.blaze3d.buffers.GpuBuffer topSkyBuffer;
+  private final com.mojang.blaze3d.buffers.GpuBuffer bottomSkyBuffer;
+  private final com.mojang.blaze3d.buffers.GpuBuffer endSkyBuffer;
+  private final com.mojang.blaze3d.buffers.GpuBuffer sunBuffer;
+  private final com.mojang.blaze3d.buffers.GpuBuffer moonBuffer;
+  private final com.mojang.blaze3d.buffers.GpuBuffer sunriseBuffer;
+  private final com.mojang.blaze3d.buffers.GpuBuffer endFlashBuffer;
+  private final com.mojang.blaze3d.systems.RenderSystem$AutoStorageIndexBuffer quadIndices;
+  private final net.minecraft.client.renderer.texture.AbstractTexture endSkyTexture;
+  private int starIndexCount;
+  public net.minecraft.client.renderer.SkyRenderer(net.minecraft.client.renderer.texture.TextureManager, net.minecraft.client.resources.model.AtlasManager);
+  private net.minecraft.client.renderer.texture.AbstractTexture getTexture(net.minecraft.client.renderer.texture.TextureManager, net.minecraft.resources.Identifier);
+  private com.mojang.blaze3d.buffers.GpuBuffer buildSunriseFan();
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildSunQuad(net.minecraft.client.renderer.texture.TextureAtlas);
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildEndFlashQuad(net.minecraft.client.renderer.texture.TextureAtlas);
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildCelestialQuad(java.lang.String, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildMoonPhases(net.minecraft.client.renderer.texture.TextureAtlas);
+  private com.mojang.blaze3d.buffers.GpuBuffer buildStars();
+  private void buildSkyDisc(com.mojang.blaze3d.vertex.VertexConsumer, float);
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildEndSky();
+  public void renderSkyDisc(int);
+  public void extractRenderState(net.minecraft.client.multiplayer.ClientLevel, float, net.minecraft.client.Camera, net.minecraft.client.renderer.state.SkyRenderState);
+  private boolean shouldRenderDarkDisc(float, net.minecraft.client.multiplayer.ClientLevel);
+  public void renderDarkDisc();
+  public void renderSunMoonAndStars(com.mojang.blaze3d.vertex.PoseStack, float, float, float, net.minecraft.world.level.MoonPhase, float, float);
+  private void renderSun(float, com.mojang.blaze3d.vertex.PoseStack);
+  private void renderMoon(net.minecraft.world.level.MoonPhase, float, com.mojang.blaze3d.vertex.PoseStack);
+  private void renderStars(float, com.mojang.blaze3d.vertex.PoseStack);
+  public void renderSunriseAndSunset(com.mojang.blaze3d.vertex.PoseStack, float, int);
+  public void renderEndSky();
+  public void renderEndFlash(com.mojang.blaze3d.vertex.PoseStack, float, float, float);
+  public void close();
+  private static java.lang.String method_74762();
+  private static java.lang.String method_71316();
+  private static java.lang.String method_74763();
+  private static java.lang.String method_71317();
+  private static java.lang.String method_74764();
+  private static java.lang.String method_74765();
+  private static java.lang.String method_71318();
+  private static java.lang.String method_71319();
+  private static java.lang.String method_68499();
+  private static java.lang.String method_68500();
+  private static java.lang.String method_74767();
+  private static java.lang.String method_75417(java.lang.String);
+  private static java.lang.String method_74769();
+  private static java.lang.String method_75419();
+  private static java.lang.String method_75420();
+  static {};
+}
+Compiled from "WeatherEffectRenderer.java"
+public class net.minecraft.client.renderer.WeatherEffectRenderer {
+  private static final float RAIN_PARTICLES_PER_BLOCK;
+  private static final int RAIN_RADIUS;
+  private static final net.minecraft.resources.Identifier RAIN_LOCATION;
+  private static final net.minecraft.resources.Identifier SNOW_LOCATION;
+  private static final int RAIN_TABLE_SIZE;
+  private static final int HALF_RAIN_TABLE_SIZE;
+  private int rainSoundTime;
+  private final float[] columnSizeX;
+  private final float[] columnSizeZ;
+  public net.minecraft.client.renderer.WeatherEffectRenderer();
+  public void extractRenderState(net.minecraft.world.level.Level, int, float, net.minecraft.world.phys.Vec3, net.minecraft.client.renderer.state.WeatherRenderState);
+  public void render(net.minecraft.client.renderer.MultiBufferSource, net.minecraft.world.phys.Vec3, net.minecraft.client.renderer.state.WeatherRenderState);
+  private net.minecraft.client.renderer.WeatherEffectRenderer$ColumnInstance createRainColumnInstance(net.minecraft.util.RandomSource, int, int, int, int, int, int, float);
+  private net.minecraft.client.renderer.WeatherEffectRenderer$ColumnInstance createSnowColumnInstance(net.minecraft.util.RandomSource, int, int, int, int, int, int, float);
+  private void renderInstances(com.mojang.blaze3d.vertex.VertexConsumer, java.util.List<net.minecraft.client.renderer.WeatherEffectRenderer$ColumnInstance>, net.minecraft.world.phys.Vec3, float, int, float);
+  public void tickRainParticles(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.client.Camera, int, net.minecraft.server.level.ParticleStatus, int);
+  private net.minecraft.world.level.biome.Biome$Precipitation getPrecipitationAt(net.minecraft.world.level.Level, net.minecraft.core.BlockPos);
+  static {};
+}
+Compiled from "FogData.java"
+public class net.minecraft.client.renderer.fog.FogData {
+  public float environmentalStart;
+  public float renderDistanceStart;
+  public float environmentalEnd;
+  public float renderDistanceEnd;
+  public float skyEnd;
+  public float cloudEnd;
+  public net.minecraft.client.renderer.fog.FogData();
+}
+Compiled from "BlindnessFogEnvironment.java"
+public class net.minecraft.client.renderer.fog.environment.BlindnessFogEnvironment extends net.minecraft.client.renderer.fog.environment.MobEffectFogEnvironment {
+  public net.minecraft.client.renderer.fog.environment.BlindnessFogEnvironment();
+  public net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> getMobEffect();
+  public void setupFog(net.minecraft.client.renderer.fog.FogData, net.minecraft.client.Camera, net.minecraft.client.multiplayer.ClientLevel, float, net.minecraft.client.DeltaTracker);
+  public float getModifiedDarkness(net.minecraft.world.entity.LivingEntity, float, float);
+}
+Compiled from "ParticleFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.ParticleFeatureRenderer implements java.lang.AutoCloseable {
+  private final java.util.Queue<net.minecraft.client.renderer.feature.ParticleFeatureRenderer$ParticleBufferCache> availableBuffers;
+  private final java.util.List<net.minecraft.client.renderer.feature.ParticleFeatureRenderer$ParticleBufferCache> usedBuffers;
+  public net.minecraft.client.renderer.feature.ParticleFeatureRenderer();
+  public void render(net.minecraft.client.renderer.SubmitNodeCollection);
+  public void endFrame();
+  private void prepareRenderPass(com.mojang.blaze3d.systems.RenderPass);
+  public void close();
+  private static java.lang.String method_74832();
+  private static java.lang.String method_74833();
+}
+Compiled from "FogEnvironment.java"
+public abstract class net.minecraft.client.renderer.fog.environment.FogEnvironment {
+  public net.minecraft.client.renderer.fog.environment.FogEnvironment();
+  public abstract void setupFog(net.minecraft.client.renderer.fog.FogData, net.minecraft.client.Camera, net.minecraft.client.multiplayer.ClientLevel, float, net.minecraft.client.DeltaTracker);
+  public boolean providesColor();
+  public int getBaseColor(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.client.Camera, int, float);
+  public boolean modifiesDarkness();
+  public float getModifiedDarkness(net.minecraft.world.entity.LivingEntity, float, float);
+  public abstract boolean isApplicable(net.minecraft.world.level.material.FogType, net.minecraft.world.entity.Entity);
+}
+Compiled from "MobEffectFogEnvironment.java"
+public abstract class net.minecraft.client.renderer.fog.environment.MobEffectFogEnvironment extends net.minecraft.client.renderer.fog.environment.FogEnvironment {
+  public net.minecraft.client.renderer.fog.environment.MobEffectFogEnvironment();
+  public abstract net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> getMobEffect();
+  public boolean providesColor();
+  public boolean modifiesDarkness();
+  public boolean isApplicable(net.minecraft.world.level.material.FogType, net.minecraft.world.entity.Entity);
+}
+Compiled from "DarknessFogEnvironment.java"
+public class net.minecraft.client.renderer.fog.environment.DarknessFogEnvironment extends net.minecraft.client.renderer.fog.environment.MobEffectFogEnvironment {
+  public net.minecraft.client.renderer.fog.environment.DarknessFogEnvironment();
+  public net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> getMobEffect();
+  public void setupFog(net.minecraft.client.renderer.fog.FogData, net.minecraft.client.Camera, net.minecraft.client.multiplayer.ClientLevel, float, net.minecraft.client.DeltaTracker);
+  public float getModifiedDarkness(net.minecraft.world.entity.LivingEntity, float, float);
+}
+Compiled from "AtmosphericFogEnvironment.java"
+public class net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment extends net.minecraft.client.renderer.fog.environment.FogEnvironment {
+  private static final int MIN_RAIN_FOG_SKY_LIGHT;
+  private static final float RAIN_FOG_START_OFFSET;
+  private static final float RAIN_FOG_END_OFFSET;
+  private float rainFogMultiplier;
+  public net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment();
+  public int getBaseColor(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.client.Camera, int, float);
+  private static int applyWeatherDarken(int, float, float);
+  public void setupFog(net.minecraft.client.renderer.fog.FogData, net.minecraft.client.Camera, net.minecraft.client.multiplayer.ClientLevel, float, net.minecraft.client.DeltaTracker);
+  private void updateRainFogState(net.minecraft.client.Camera, net.minecraft.client.multiplayer.ClientLevel, net.minecraft.client.DeltaTracker);
+  public boolean isApplicable(net.minecraft.world.level.material.FogType, net.minecraft.world.entity.Entity);
+}
+Compiled from "LavaFogEnvironment.java"
+public class net.minecraft.client.renderer.fog.environment.LavaFogEnvironment extends net.minecraft.client.renderer.fog.environment.FogEnvironment {
+  private static final int COLOR;
+  public net.minecraft.client.renderer.fog.environment.LavaFogEnvironment();
+  public int getBaseColor(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.client.Camera, int, float);
+  public void setupFog(net.minecraft.client.renderer.fog.FogData, net.minecraft.client.Camera, net.minecraft.client.multiplayer.ClientLevel, float, net.minecraft.client.DeltaTracker);
+  public boolean isApplicable(net.minecraft.world.level.material.FogType, net.minecraft.world.entity.Entity);
+}
+Compiled from "package-info.java"
+interface net.minecraft.client.renderer.fog.environment.package-info {
+}
+Compiled from "FogRenderer.java"
+public class net.minecraft.client.renderer.fog.FogRenderer implements java.lang.AutoCloseable {
+  public static final int FOG_UBO_SIZE;
+  private static final java.util.List<net.minecraft.client.renderer.fog.environment.FogEnvironment> FOG_ENVIRONMENTS;
+  private static boolean fogEnabled;
+  private final com.mojang.blaze3d.buffers.GpuBuffer emptyBuffer;
+  private final net.minecraft.client.renderer.MappableRingBuffer regularBuffer;
+  public net.minecraft.client.renderer.fog.FogRenderer();
+  public void close();
+  public void endFrame();
+  public com.mojang.blaze3d.buffers.GpuBufferSlice getBuffer(net.minecraft.client.renderer.fog.FogRenderer$FogMode);
+  private org.joml.Vector4f computeFogColor(net.minecraft.client.Camera, float, net.minecraft.client.multiplayer.ClientLevel, int, float);
+  public static boolean toggleFog();
+  public org.joml.Vector4f setupFog(net.minecraft.client.Camera, int, net.minecraft.client.DeltaTracker, float, net.minecraft.client.multiplayer.ClientLevel);
+  private net.minecraft.world.level.material.FogType getFogType(net.minecraft.client.Camera);
+  private void updateBuffer(java.nio.ByteBuffer, int, org.joml.Vector4f, float, float, float, float, float, float);
+  private static java.lang.String method_71111();
+  private static java.lang.String method_71308();
+  static {};
+}
+Compiled from "PowderedSnowFogEnvironment.java"
+public class net.minecraft.client.renderer.fog.environment.PowderedSnowFogEnvironment extends net.minecraft.client.renderer.fog.environment.FogEnvironment {
+  private static final int COLOR;
+  public net.minecraft.client.renderer.fog.environment.PowderedSnowFogEnvironment();
+  public int getBaseColor(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.client.Camera, int, float);
+  public void setupFog(net.minecraft.client.renderer.fog.FogData, net.minecraft.client.Camera, net.minecraft.client.multiplayer.ClientLevel, float, net.minecraft.client.DeltaTracker);
+  public boolean isApplicable(net.minecraft.world.level.material.FogType, net.minecraft.world.entity.Entity);
+}
+Compiled from "WaterFogEnvironment.java"
+public class net.minecraft.client.renderer.fog.environment.WaterFogEnvironment extends net.minecraft.client.renderer.fog.environment.FogEnvironment {
+  public net.minecraft.client.renderer.fog.environment.WaterFogEnvironment();
+  public void setupFog(net.minecraft.client.renderer.fog.FogData, net.minecraft.client.Camera, net.minecraft.client.multiplayer.ClientLevel, float, net.minecraft.client.DeltaTracker);
+  public boolean isApplicable(net.minecraft.world.level.material.FogType, net.minecraft.world.entity.Entity);
+  public int getBaseColor(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.client.Camera, int, float);
+}
+Compiled from "package-info.java"
+interface net.minecraft.client.renderer.fog.package-info {
+}
+Compiled from "ParticleGroupRenderState.java"
+public interface net.minecraft.client.renderer.state.ParticleGroupRenderState {
+  public abstract void submit(net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  public default void clear();
+}
+Compiled from "WeatherRenderState.java"
+public class net.minecraft.client.renderer.state.WeatherRenderState implements net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState {
+  public final java.util.List<net.minecraft.client.renderer.WeatherEffectRenderer$ColumnInstance> rainColumns;
+  public final java.util.List<net.minecraft.client.renderer.WeatherEffectRenderer$ColumnInstance> snowColumns;
+  public float intensity;
+  public int radius;
+  public net.minecraft.client.renderer.state.WeatherRenderState();
+  public void reset();
+}
+Compiled from "ParticlesRenderState.java"
+public class net.minecraft.client.renderer.state.ParticlesRenderState {
+  public final java.util.List<net.minecraft.client.renderer.state.ParticleGroupRenderState> particles;
+  public net.minecraft.client.renderer.state.ParticlesRenderState();
+  public void reset();
+  public void add(net.minecraft.client.renderer.state.ParticleGroupRenderState);
+  public void submit(net.minecraft.client.renderer.SubmitNodeStorage, net.minecraft.client.renderer.state.CameraRenderState);
+}
+Compiled from "SkyRenderState.java"
+public class net.minecraft.client.renderer.state.SkyRenderState implements net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState {
+  public net.minecraft.world.level.dimension.DimensionType$Skybox skybox;
+  public boolean shouldRenderDarkDisc;
+  public float sunAngle;
+  public float moonAngle;
+  public float starAngle;
+  public float rainBrightness;
+  public float starBrightness;
+  public int sunriseAndSunsetColor;
+  public net.minecraft.world.level.MoonPhase moonPhase;
+  public int skyColor;
+  public float endFlashIntensity;
+  public float endFlashXAngle;
+  public float endFlashYAngle;
+  public net.minecraft.client.renderer.state.SkyRenderState();
+  public void reset();
+}
+Compiled from "QuadParticleRenderState.java"
+public class net.minecraft.client.renderer.state.QuadParticleRenderState implements net.minecraft.client.renderer.SubmitNodeCollector$ParticleGroupRenderer,net.minecraft.client.renderer.state.ParticleGroupRenderState {
+  private static final int INITIAL_PARTICLE_CAPACITY;
+  private static final int FLOATS_PER_PARTICLE;
+  private static final int INTS_PER_PARTICLE;
+  private final java.util.Map<net.minecraft.client.particle.SingleQuadParticle$Layer, net.minecraft.client.renderer.state.QuadParticleRenderState$Storage> particles;
+  private int particleCount;
+  public net.minecraft.client.renderer.state.QuadParticleRenderState();
+  public void add(net.minecraft.client.particle.SingleQuadParticle$Layer, float, float, float, float, float, float, float, float, float, float, float, float, int, int);
+  public void clear();
+  public net.minecraft.client.renderer.state.QuadParticleRenderState$PreparedBuffers prepare(net.minecraft.client.renderer.feature.ParticleFeatureRenderer$ParticleBufferCache);
+  public void render(net.minecraft.client.renderer.state.QuadParticleRenderState$PreparedBuffers, net.minecraft.client.renderer.feature.ParticleFeatureRenderer$ParticleBufferCache, com.mojang.blaze3d.systems.RenderPass, net.minecraft.client.renderer.texture.TextureManager, boolean);
+  protected void renderRotatedQuad(com.mojang.blaze3d.vertex.VertexConsumer, float, float, float, float, float, float, float, float, float, float, float, float, int, int);
+  private void renderVertex(com.mojang.blaze3d.vertex.VertexConsumer, org.joml.Quaternionf, float, float, float, float, float, float, float, float, int, int);
+  public void submit(net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  private void method_74753(com.mojang.blaze3d.vertex.BufferBuilder, float, float, float, float, float, float, float, float, float, float, float, float, int, int);
+  private static net.minecraft.client.renderer.state.QuadParticleRenderState$Storage method_74754(net.minecraft.client.particle.SingleQuadParticle$Layer);
+}
+Compiled from "ClientboundLevelParticlesPacket.java"
+public class net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket implements net.minecraft.network.protocol.Packet<net.minecraft.network.protocol.game.ClientGamePacketListener> {
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket> STREAM_CODEC;
+  private final double x;
+  private final double y;
+  private final double z;
+  private final float xDist;
+  private final float yDist;
+  private final float zDist;
+  private final float maxSpeed;
+  private final int count;
+  private final boolean overrideLimiter;
+  private final boolean alwaysShow;
+  private final net.minecraft.core.particles.ParticleOptions particle;
+  public <T extends net.minecraft.core.particles.ParticleOptions> net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket(T, boolean, boolean, double, double, double, float, float, float, float, int);
+  private net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket(net.minecraft.network.RegistryFriendlyByteBuf);
+  private void write(net.minecraft.network.RegistryFriendlyByteBuf);
+  public net.minecraft.network.protocol.PacketType<net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket> type();
+  public void handle(net.minecraft.network.protocol.game.ClientGamePacketListener);
+  public boolean isOverrideLimiter();
+  public boolean alwaysShow();
+  public double getX();
+  public double getY();
+  public double getZ();
+  public float getXDist();
+  public float getYDist();
+  public float getZDist();
+  public float getMaxSpeed();
+  public int getCount();
+  public net.minecraft.core.particles.ParticleOptions getParticle();
+  public void handle(net.minecraft.network.PacketListener);
+  static {};
+}
+Compiled from "ParticleCommand.java"
+public class net.minecraft.server.commands.ParticleCommand {
+  private static final com.mojang.brigadier.exceptions.SimpleCommandExceptionType ERROR_FAILED;
+  public net.minecraft.server.commands.ParticleCommand();
+  public static void register(com.mojang.brigadier.CommandDispatcher<net.minecraft.commands.CommandSourceStack>, net.minecraft.commands.CommandBuildContext);
+  private static int sendParticles(net.minecraft.commands.CommandSourceStack, net.minecraft.core.particles.ParticleOptions, net.minecraft.world.phys.Vec3, net.minecraft.world.phys.Vec3, float, int, boolean, java.util.Collection<net.minecraft.server.level.ServerPlayer>) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static net.minecraft.network.chat.Component method_52015(net.minecraft.core.particles.ParticleOptions);
+  private static int method_13489(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13483(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13488(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13484(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13487(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13485(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13492(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  static {};
+}
+Compiled from "WeatherCommand.java"
+public class net.minecraft.server.commands.WeatherCommand {
+  private static final int DEFAULT_TIME;
+  public net.minecraft.server.commands.WeatherCommand();
+  public static void register(com.mojang.brigadier.CommandDispatcher<net.minecraft.commands.CommandSourceStack>);
+  private static int getDuration(net.minecraft.commands.CommandSourceStack, int, net.minecraft.util.valueproviders.IntProvider);
+  private static int setClear(net.minecraft.commands.CommandSourceStack, int);
+  private static int setRain(net.minecraft.commands.CommandSourceStack, int);
+  private static int setThunder(net.minecraft.commands.CommandSourceStack, int);
+  private static net.minecraft.network.chat.Component method_52141();
+  private static net.minecraft.network.chat.Component method_52142();
+  private static net.minecraft.network.chat.Component method_52143();
+  private static int method_13831(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13823(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13830(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13825(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13829(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static int method_13826(com.mojang.brigadier.context.CommandContext) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+}
+Compiled from "ParticleStatus.java"
+public final class net.minecraft.server.level.ParticleStatus extends java.lang.Enum<net.minecraft.server.level.ParticleStatus> {
+  public static final net.minecraft.server.level.ParticleStatus ALL;
+  public static final net.minecraft.server.level.ParticleStatus DECREASED;
+  public static final net.minecraft.server.level.ParticleStatus MINIMAL;
+  private static final java.util.function.IntFunction<net.minecraft.server.level.ParticleStatus> BY_ID;
+  public static final com.mojang.serialization.Codec<net.minecraft.server.level.ParticleStatus> LEGACY_CODEC;
+  private final int id;
+  private final net.minecraft.network.chat.Component caption;
+  private static final net.minecraft.server.level.ParticleStatus[] $VALUES;
+  public static net.minecraft.server.level.ParticleStatus[] values();
+  public static net.minecraft.server.level.ParticleStatus valueOf(java.lang.String);
+  private net.minecraft.server.level.ParticleStatus(int, java.lang.String);
+  public net.minecraft.network.chat.Component caption();
+  private static java.lang.Integer method_76330(net.minecraft.server.level.ParticleStatus);
+  private static int method_76331(net.minecraft.server.level.ParticleStatus);
+  private static net.minecraft.server.level.ParticleStatus[] $values();
+  static {};
+}
+Compiled from "ParticleUtils.java"
+public class net.minecraft.util.ParticleUtils {
+  public net.minecraft.util.ParticleUtils();
+  public static void spawnParticlesOnBlockFaces(net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.core.particles.ParticleOptions, net.minecraft.util.valueproviders.IntProvider);
+  public static void spawnParticlesOnBlockFace(net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.core.particles.ParticleOptions, net.minecraft.util.valueproviders.IntProvider, net.minecraft.core.Direction, java.util.function.Supplier<net.minecraft.world.phys.Vec3>, double);
+  private static net.minecraft.world.phys.Vec3 getRandomSpeedRanges(net.minecraft.util.RandomSource);
+  public static void spawnParticlesAlongAxis(net.minecraft.core.Direction$Axis, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, double, net.minecraft.core.particles.ParticleOptions, net.minecraft.util.valueproviders.UniformInt);
+  public static void spawnParticleOnFace(net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.core.Direction, net.minecraft.core.particles.ParticleOptions, net.minecraft.world.phys.Vec3, double);
+  public static void spawnParticleBelow(net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource, net.minecraft.core.particles.ParticleOptions);
+  public static void spawnParticleInBlock(net.minecraft.world.level.LevelAccessor, net.minecraft.core.BlockPos, int, net.minecraft.core.particles.ParticleOptions);
+  public static void spawnParticles(net.minecraft.world.level.LevelAccessor, net.minecraft.core.BlockPos, int, double, double, boolean, net.minecraft.core.particles.ParticleOptions);
+  public static void spawnSmashAttackParticles(net.minecraft.world.level.LevelAccessor, net.minecraft.core.BlockPos, int);
+  private static net.minecraft.world.phys.Vec3 method_41304(net.minecraft.world.level.Level);
+}
+Compiled from "CopperGolemWeatherStateFix.java"
+public class net.minecraft.util.datafix.fixes.CopperGolemWeatherStateFix extends net.minecraft.util.datafix.fixes.NamedEntityFix {
+  public net.minecraft.util.datafix.fixes.CopperGolemWeatherStateFix(com.mojang.datafixers.schemas.Schema);
+  protected com.mojang.datafixers.Typed<?> fix(com.mojang.datafixers.Typed<?>);
+  private static com.mojang.serialization.Dynamic<?> fixWeatherState(com.mojang.serialization.Dynamic<?>);
+  private static com.mojang.serialization.Dynamic method_73090(com.mojang.serialization.Dynamic);
+}
+Compiled from "ParticleUnflatteningFix.java"
+public class net.minecraft.util.datafix.fixes.ParticleUnflatteningFix extends com.mojang.datafixers.DataFix {
+  private static final org.slf4j.Logger LOGGER;
+  public net.minecraft.util.datafix.fixes.ParticleUnflatteningFix(com.mojang.datafixers.schemas.Schema);
+  protected com.mojang.datafixers.TypeRewriteRule makeRule();
+  private <T> com.mojang.serialization.Dynamic<T> fix(com.mojang.serialization.Dynamic<T>);
+  private <T> com.mojang.serialization.Dynamic<T> updateItem(com.mojang.serialization.Dynamic<T>, java.lang.String);
+  private static <T> com.mojang.serialization.Dynamic<T> parseTag(com.mojang.serialization.DynamicOps<T>, java.lang.String);
+  private <T> com.mojang.serialization.Dynamic<T> updateBlock(com.mojang.serialization.Dynamic<T>, java.lang.String);
+  private static <T> java.util.Map<com.mojang.serialization.Dynamic<T>, com.mojang.serialization.Dynamic<T>> parseBlockProperties(com.mojang.serialization.Dynamic<T>, java.lang.String);
+  private static <T> com.mojang.serialization.Dynamic<T> readVector(com.mojang.serialization.Dynamic<T>, com.mojang.brigadier.StringReader) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private <T> com.mojang.serialization.Dynamic<T> updateDust(com.mojang.serialization.Dynamic<T>, java.lang.String);
+  private <T> com.mojang.serialization.Dynamic<T> updateDustTransition(com.mojang.serialization.Dynamic<T>, java.lang.String);
+  private <T> com.mojang.serialization.Dynamic<T> updateSculkCharge(com.mojang.serialization.Dynamic<T>, java.lang.String);
+  private <T> com.mojang.serialization.Dynamic<T> updateVibration(com.mojang.serialization.Dynamic<T>, java.lang.String);
+  private <T> com.mojang.serialization.Dynamic<T> updateShriek(com.mojang.serialization.Dynamic<T>, java.lang.String);
+  static {};
+}
