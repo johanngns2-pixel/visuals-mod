@@ -1,0 +1,42 @@
+name: dump
+on:
+  push:
+    branches: [dump]
+permissions:
+  contents: write
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build
+        run: chmod +x gradlew && ./gradlew build --stacktrace
+      - name: Signaturen auslesen
+        run: |
+          mkdir -p /tmp/out
+          find . ~/.gradle -name "*.jar" 2>/dev/null | grep -i "minecraft" | grep -v -E "sources|intermediary|visuals|fabric-api" | head -30 > /tmp/out/jars.txt
+          JAR=$(grep -i -E "merged|clientonly|client-only" /tmp/out/jars.txt | head -1)
+          [ -z "$JAR" ] && JAR=$(head -1 /tmp/out/jars.txt)
+          echo "$JAR" > /tmp/out/used-jar.txt
+          unzip -l "$JAR" | awk '{print $4}' | grep -i -E "particle|sky|firefly|lightmap|weather|fog|LevelRenderer|ClientLevel" > /tmp/out/classes.txt || true
+          for c in $(grep -E "\.class$" /tmp/out/classes.txt | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do
+            javap -p -cp "$JAR" "$c" >> /tmp/out/sigs.txt 2>/dev/null || true
+          done
+          for c in net.minecraft.client.Minecraft net.minecraft.world.level.Level net.minecraft.client.multiplayer.ClientLevel net.minecraft.client.color.block.BlockColors net.minecraft.world.level.levelgen.Heightmap\$Types net.minecraft.core.particles.ColorParticleOption net.minecraft.core.particles.DustParticleOptions net.minecraft.client.player.LocalPlayer net.minecraft.world.level.block.state.BlockState net.minecraft.tags.BlockTags net.minecraft.client.renderer.LightTexture net.minecraft.client.Camera; do
+            javap -p -cp "$JAR" "$c" >> /tmp/out/sigs-core.txt 2>/dev/null || true
+          done
+      - name: Auf Branch mc-sigs ablegen
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git checkout --orphan mc-sigs
+          git rm -rf . >/dev/null 2>&1 || true
+          cp /tmp/out/* .
+          git add -A
+          git commit -m "Minecraft-Signaturen"
+          git push -f origin mc-sigs
