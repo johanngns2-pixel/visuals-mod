@@ -9,6 +9,7 @@ import dev.visuals.config.def.MoreOptions;
 import dev.visuals.config.def.SkyOptions;
 import dev.visuals.config.def.Tabs;
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.visuals.effects.Effects;
 import dev.visuals.gui.VisualsScreen;
 import dev.visuals.util.Log;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -52,6 +53,7 @@ public final class VisualsMod implements ClientModInitializer {
         openKey = KeyBindingHelper.registerKeyBinding(new KeyMapping("key.visuals.open", InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_RIGHT_SHIFT, KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "main"))));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            Effects.tick(client);
             while (openKey.consumeClick()) {
                 if (client.screen == null) {
                     client.setScreen(new VisualsScreen(null));

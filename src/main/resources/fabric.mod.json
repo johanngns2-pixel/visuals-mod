@@ -23,5 +23,8 @@
   },
   "suggests": {
     "modmenu": "*"
-  }
+  },
+  "mixins": [
+    "visuals.mixins.json"
+  ]
 }

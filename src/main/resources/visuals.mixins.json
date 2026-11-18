@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.visuals.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SingleQuadParticleAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
