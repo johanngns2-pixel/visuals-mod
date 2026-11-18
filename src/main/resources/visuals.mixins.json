@@ -4,7 +4,8 @@
   "package": "dev.visuals.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "SingleQuadParticleAccessor"
+    "SingleQuadParticleAccessor",
+    "SkyRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
