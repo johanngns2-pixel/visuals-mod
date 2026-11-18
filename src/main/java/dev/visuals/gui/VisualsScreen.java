@@ -4,6 +4,10 @@ import dev.visuals.VisualsMod;
 import dev.visuals.config.ConfigManager;
 import dev.visuals.config.OptionDef;
 import dev.visuals.config.OptionRegistry;
+import dev.visuals.config.Preset;
+import dev.visuals.config.PresetIO;
+import dev.visuals.config.PresetManager;
+import dev.visuals.config.UndoStack;
 import dev.visuals.config.TabDef;
 import dev.visuals.config.def.GeneralOptions;
 import dev.visuals.config.def.Tabs;
@@ -19,8 +23,19 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
+import com.google.gson.JsonObject;
+import net.fabricmc.loader.api.FabricLoader;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Das Einstellungs-Menü. Layout: Reiter-Leiste links, Einstellungen in der Mitte, Vorschau rechts,
@@ -59,6 +74,20 @@ public final class VisualsScreen extends Screen {
     private int maxScroll;
     private boolean previewCollapsed;
     private boolean confirmClose;
+
+    // Suche
+    private record Result(String tabId, String optionId, String label) {
+    }
+
+    private final StringBuilder query = new StringBuilder();
+    private boolean searchFocused;
+    private int searchX;
+    private int searchW;
+    private final List<Hit> searchHits = new ArrayList<>();
+    private String pendingJump;
+
+    // Modales Fenster (Presets, Import/Export)
+    private ModalDialog modal;
 
     public VisualsScreen(Screen parent) {
         super(Component.translatable("visuals.gui.title"));
@@ -100,6 +129,8 @@ public final class VisualsScreen extends Screen {
     @Override
     public void render(GuiGraphics g, int mx, int my, float delta) {
         hits.clear();
+        searchHits.clear();
+        VisualsMod.presets().tick();
         ConfigManager cfg = VisualsMod.config();
         OptionRegistry reg = VisualsMod.registry();
         TabDef tab = reg.tab(activeTab);
@@ -132,8 +163,12 @@ public final class VisualsScreen extends Screen {
 
         // Reiter-Leiste zuletzt, damit sie beim Aufklappen über dem Inhalt liegt
         tabBar.render(g, this.font, mx, my, activeTab);
-        if (!confirmClose) {
+        if (!confirmClose && modal == null) {
             panel.renderOverlay(g, this.font, mx, my, this.width, this.height);
+            renderSearchResults(g, mx, my);
+        }
+        if (modal != null) {
+            modal.render(g, this.font, mx, my, this.width, this.height);
         }
 
         if (confirmClose) {
@@ -142,12 +177,6 @@ public final class VisualsScreen extends Screen {
     }
 
     private void renderTopBar(GuiGraphics g, int mx, int my, int left, ConfigManager cfg) {
-        // Suchleiste (Platzhalter bis Abschnitt 5)
-        int sx = left + 10;
-        int sw = Math.max(80, Math.min(260, this.width - left - 200));
-        g.fill(sx, 5, sx + sw, TOP_H - 5, Theme.ROW);
-        g.drawString(this.font, I18n.get("visuals.gui.search"), sx + 6, 10, Theme.TEXT_DISABLED);
-
         // Notausschalter
         boolean on = cfg.get(GeneralOptions.MOD_ENABLED);
         String label = I18n.get(on ? "visuals.gui.killswitch.on" : "visuals.gui.killswitch.off");
@@ -155,6 +184,94 @@ public final class VisualsScreen extends Screen {
         int bx = this.width - bw - 10;
         button(g, mx, my, bx, 4, bw, TOP_H - 8, label, on ? Theme.accent() : Theme.GRAY,
                 () -> cfg.set(GeneralOptions.MOD_ENABLED, !on));
+
+        // Aktives Preset
+        PresetManager presets = VisualsMod.presets();
+        String name = presets.activeName().isEmpty() ? "-" : presetLabel(presets.activeName(), presets.activeIsBuiltin());
+        String presetText = String.format(I18n.get("visuals.gui.presetActive"), name);
+        int px = bx - 12 - this.font.width(presetText);
+
+        // Suchleiste
+        searchX = left + 10;
+        searchW = Math.max(80, Math.min(260, px - searchX - 10));
+        g.fill(searchX, 5, searchX + searchW, TOP_H - 5, searchFocused ? 0xFF2C2C34 : Theme.ROW);
+        if (searchFocused) {
+            g.fill(searchX, TOP_H - 6, searchX + searchW, TOP_H - 5, Theme.accent());
+        }
+        String shown = query.length() == 0 && !searchFocused ? I18n.get("visuals.gui.search")
+                : query + (searchFocused && (System.currentTimeMillis() / 500) % 2 == 0 ? "_" : "");
+        g.drawString(this.font, this.font.plainSubstrByWidth(shown, searchW - 12), searchX + 6, 10,
+                query.length() == 0 && !searchFocused ? Theme.TEXT_DISABLED : Theme.TEXT);
+
+        if (px > searchX + searchW + 8) {
+            g.drawString(this.font, presetText, px, 10, Theme.TEXT_DIM);
+        }
+    }
+
+    private static String presetLabel(String name, boolean builtin) {
+        return builtin ? I18n.get("visuals.preset." + name) : name;
+    }
+
+    // ------------------------------------------------------------------ Suche
+
+    private List<Result> searchResults() {
+        List<Result> out = new ArrayList<>();
+        String q = query.toString().trim().toLowerCase(Locale.ROOT);
+        if (q.isEmpty()) {
+            return out;
+        }
+        OptionRegistry reg = VisualsMod.registry();
+        for (TabDef tab : reg.tabs()) {
+            String tabName = I18n.get(tab.nameKey());
+            if (tabName.toLowerCase(Locale.ROOT).contains(q)) {
+                out.add(new Result(tab.id(), null, tabName));
+            }
+            for (OptionDef<?> def : reg.optionsOf(tab.id())) {
+                if (def.isMaster()) {
+                    continue;
+                }
+                String name = I18n.get(def.nameKey());
+                String tip = I18n.get(def.tooltipKey());
+                if (name.toLowerCase(Locale.ROOT).contains(q) || (!tip.equals(def.tooltipKey())
+                        && tip.toLowerCase(Locale.ROOT).contains(q))) {
+                    out.add(new Result(tab.id(), def.id(), tabName + " \u203A " + name));
+                }
+            }
+        }
+        return out.size() > 8 ? out.subList(0, 8) : out;
+    }
+
+    private void renderSearchResults(GuiGraphics g, int mx, int my) {
+        if (!searchFocused || query.length() == 0) {
+            return;
+        }
+        List<Result> results = searchResults();
+        int rowH = 16;
+        int h = Math.max(1, results.size()) * rowH + 4;
+        int y = TOP_H - 2;
+        g.fill(searchX - 1, y - 1, searchX + searchW + 1, y + h + 1, Theme.BORDER);
+        g.fill(searchX, y, searchX + searchW, y + h, Theme.PANEL_LIGHT);
+        if (results.isEmpty()) {
+            g.drawString(this.font, I18n.get("visuals.gui.search.none"), searchX + 6, y + 6, Theme.TEXT_DISABLED);
+            return;
+        }
+        for (int i = 0; i < results.size(); i++) {
+            Result r = results.get(i);
+            int ry = y + 2 + i * rowH;
+            boolean hov = Theme.inside(mx, my, searchX, ry, searchW, rowH);
+            if (hov) {
+                g.fill(searchX + 1, ry, searchX + searchW - 1, ry + rowH, Theme.ROW_HOVER);
+            }
+            g.drawString(this.font, this.font.plainSubstrByWidth(r.label(), searchW - 12), searchX + 6, ry + 4, Theme.TEXT);
+            searchHits.add(new Hit(searchX, ry, searchW, rowH, () -> jumpTo(r)));
+        }
+    }
+
+    private void jumpTo(Result r) {
+        selectTab(r.tabId());
+        pendingJump = r.optionId();
+        query.setLength(0);
+        searchFocused = false;
     }
 
     private void renderContent(GuiGraphics g, int mx, int my, int left, int right, int top, int bottom,
@@ -178,7 +295,8 @@ public final class VisualsScreen extends Screen {
         String reset = I18n.get("visuals.gui.resetTab");
         int rw = this.font.width(reset) + 14;
         rx -= rw;
-        button(g, mx, my, rx, top + 8, rw, 16, reset, Theme.GRAY, () -> cfg.resetTab(activeTab));
+        button(g, mx, my, rx, top + 8, rw, 16, reset, Theme.GRAY,
+                () -> VisualsMod.undo().group(() -> cfg.resetTab(activeTab)));
         if (tab.hasMaster()) {
             OptionDef<Boolean> master = reg.masterOf(tab.id()).orElseThrow();
             boolean on = cfg.get(master);
@@ -197,6 +315,14 @@ public final class VisualsScreen extends Screen {
         int endY = panel.render(g, this.font, mx, my, x, startY, w, listTop, bottom, tab.id());
         g.disableScissor();
         maxScroll = Math.max(0, (endY - startY) + 12 - (bottom - listTop));
+        if (pendingJump != null) {
+            Integer off = panel.offsetOf(pendingJump);
+            if (off != null) {
+                scroll = off - 30;
+                panel.highlight(pendingJump);
+                pendingJump = null;
+            }
+        }
         scroll = Math.max(0, Math.min(maxScroll, scroll));
     }
 
@@ -215,9 +341,15 @@ public final class VisualsScreen extends Screen {
     private void renderBottomBar(GuiGraphics g, int mx, int my, int left, int bottom, ConfigManager cfg) {
         int y = bottom + 4;
         int h = BOTTOM_H - 8;
-        String resetAll = I18n.get("visuals.gui.resetAll");
-        int rw = this.font.width(resetAll) + 16;
-        button(g, mx, my, left + 10, y, rw, h, resetAll, Theme.GRAY, cfg::resetAll);
+        int x = left + 10;
+        PresetManager presets = VisualsMod.presets();
+
+        String presetBtn = I18n.get("visuals.gui.preset") + " \u25BE";
+        x = bar(g, mx, my, x, y, h, presetBtn, Theme.accent(), this::openPresetMenu);
+        x = bar(g, mx, my, x, y, h, I18n.get("visuals.gui.preset.save"), Theme.GRAY, this::openSavePreset);
+        x = bar(g, mx, my, x, y, h, I18n.get("visuals.gui.io"), Theme.GRAY, this::openIoMenu);
+        bar(g, mx, my, x, y, h, I18n.get("visuals.gui.resetAll"), Theme.GRAY,
+                () -> VisualsMod.undo().group(cfg::resetAll));
 
         String close = I18n.get("visuals.gui.close");
         String apply = I18n.get("visuals.gui.apply");
@@ -231,8 +363,138 @@ public final class VisualsScreen extends Screen {
         if (this.width >= MIN_W_FOR_PREVIEW) {
             String label = I18n.get(previewCollapsed ? "visuals.gui.previewShow" : "visuals.gui.previewHide");
             int pw = this.font.width(label) + 16;
-            button(g, mx, my, ax - pw - 8, y, pw, h, label, Theme.GRAY, () -> previewCollapsed = !previewCollapsed);
+            int px = ax - pw - 8;
+            if (px > x + 20) {
+                button(g, mx, my, px, y, pw, h, label, Theme.GRAY, () -> previewCollapsed = !previewCollapsed);
+            }
         }
+    }
+
+    /** Zeichnet einen Knopf der unteren Leiste und liefert das x für den nächsten. */
+    private int bar(GuiGraphics g, int mx, int my, int x, int y, int h, String label, int color, Runnable action) {
+        int w = this.font.width(label) + 16;
+        button(g, mx, my, x, y, w, h, label, color, action);
+        return x + w + 6;
+    }
+
+    // ------------------------------------------------------------------ Presets, Import und Export
+
+    private void openPresetMenu() {
+        PresetManager presets = VisualsMod.presets();
+        List<ModalDialog.Button> entries = new ArrayList<>();
+        for (Preset p : presets.all()) {
+            boolean active = p.name().equals(presets.activeName()) && p.builtin() == presets.activeIsBuiltin();
+            String label = (active ? "\u2713 " : "") + presetLabel(p.name(), p.builtin());
+            entries.add(new ModalDialog.Button(label, active ? Theme.accent() : Theme.GRAY, () -> presets.apply(p)));
+        }
+        entries.add(new ModalDialog.Button(I18n.get("visuals.gui.cancel"), Theme.GRAY, () -> {
+        }));
+        modal = ModalDialog.menu(I18n.get("visuals.gui.preset.choose"), entries, () -> {
+        });
+    }
+
+    private void openSavePreset() {
+        modal = ModalDialog.input(I18n.get("visuals.gui.preset.save"), I18n.get("visuals.gui.preset.save.prompt"), 32,
+                I18n.get("visuals.gui.confirm.save"), name -> {
+                    boolean ok = VisualsMod.presets().saveCurrent(name);
+                    info(ok ? I18n.get("visuals.gui.preset.saved") : I18n.get("visuals.gui.preset.saveFailed"));
+                }, I18n.get("visuals.gui.cancel"), () -> {
+                });
+    }
+
+    private void info(String... lines) {
+        modal = ModalDialog.message(I18n.get("visuals.gui.title"), List.of(lines), I18n.get("visuals.gui.ok"), () -> {
+        });
+    }
+
+    private Path dataDir() {
+        return FabricLoader.getInstance().getConfigDir().resolve(VisualsMod.MOD_ID);
+    }
+
+    private void openIoMenu() {
+        List<ModalDialog.Button> entries = new ArrayList<>();
+        entries.add(new ModalDialog.Button(I18n.get("visuals.gui.io.copyCode"), Theme.GRAY, this::exportCode));
+        entries.add(new ModalDialog.Button(I18n.get("visuals.gui.io.exportFile"), Theme.GRAY, this::exportFile));
+        entries.add(new ModalDialog.Button(I18n.get("visuals.gui.io.importCode"), Theme.GRAY, () ->
+                importText(Minecraft.getInstance().keyboardHandler.getClipboard())));
+        entries.add(new ModalDialog.Button(I18n.get("visuals.gui.io.importFile"), Theme.GRAY, this::importFile));
+        entries.add(new ModalDialog.Button(I18n.get("visuals.gui.cancel"), Theme.GRAY, () -> {
+        }));
+        modal = ModalDialog.menu(I18n.get("visuals.gui.io.title"), entries, () -> {
+        });
+    }
+
+    private JsonObject currentExport() {
+        return PresetIO.toJson("", VisualsMod.presets().currentModified(), VisualsMod.registry());
+    }
+
+    private void exportCode() {
+        Minecraft.getInstance().keyboardHandler.setClipboard(PresetIO.toCode(currentExport()));
+        info(I18n.get("visuals.gui.io.copied"));
+    }
+
+    private void exportFile() {
+        Path dir = dataDir().resolve("exports");
+        Path file = dir.resolve("visuals-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".json");
+        try {
+            Files.createDirectories(dir);
+            Files.writeString(file, PresetIO.toPrettyJson(currentExport()), StandardCharsets.UTF_8);
+            info(String.format(I18n.get("visuals.gui.io.exported"), file.toAbsolutePath()));
+        } catch (IOException e) {
+            info(I18n.get("visuals.gui.io.writeFailed"));
+        }
+    }
+
+    private void importFile() {
+        Path file = dataDir().resolve("import.json");
+        if (!Files.isRegularFile(file)) {
+            info(String.format(I18n.get("visuals.gui.io.noFile"), file.toAbsolutePath()));
+            return;
+        }
+        try {
+            importText(Files.readString(file, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            info(I18n.get("visuals.gui.io.invalid"));
+        }
+    }
+
+    /** Prüft den Text und zeigt eine Vorschau der Änderungen, bevor etwas angewendet wird. */
+    private void importText(String text) {
+        OptionRegistry reg = VisualsMod.registry();
+        PresetIO.Parsed parsed;
+        try {
+            parsed = PresetIO.fromJson(PresetIO.parseText(text), reg);
+        } catch (IllegalArgumentException e) {
+            info(I18n.get("visuals.gui.io.invalid"));
+            return;
+        }
+        List<UndoStack.Change> diff = VisualsMod.presets().diff(parsed.values());
+        if (diff.isEmpty()) {
+            info(I18n.get("visuals.gui.io.nothing"));
+            return;
+        }
+        List<String> lines = new ArrayList<>();
+        lines.add(String.format(I18n.get("visuals.gui.io.preview"), diff.size()));
+        int shown = Math.min(8, diff.size());
+        for (int i = 0; i < shown; i++) {
+            UndoStack.Change c = diff.get(i);
+            OptionDef<?> def = reg.get(c.id());
+            lines.add(I18n.get(def.nameKey()) + ": " + OptionPanel.valueText(def, c.oldValue()) + " \u2192 "
+                    + OptionPanel.valueText(def, c.newValue()));
+        }
+        if (diff.size() > shown) {
+            lines.add(String.format(I18n.get("visuals.gui.io.more"), diff.size() - shown));
+        }
+        if (parsed.skipped() > 0) {
+            lines.add(String.format(I18n.get("visuals.gui.io.skipped"), parsed.skipped()));
+        }
+        if (parsed.corrected() > 0) {
+            lines.add(String.format(I18n.get("visuals.gui.io.corrected"), parsed.corrected()));
+        }
+        Map<String, Object> values = parsed.values();
+        modal = ModalDialog.confirm(I18n.get("visuals.gui.io.title"), lines, I18n.get("visuals.gui.io.apply"),
+                () -> VisualsMod.presets().applyValues(values), I18n.get("visuals.gui.cancel"), () -> {
+                });
     }
 
     private void renderConfirm(GuiGraphics g, int mx, int my) {
@@ -292,6 +554,12 @@ public final class VisualsScreen extends Screen {
         double mx = event.x();
         double my = event.y();
         boolean shift = event.hasShiftDown();
+        if (modal != null) {
+            if (button == 0) {
+                runModal(modal.click(mx, my));
+            }
+            return true;
+        }
         if (previewFullscreen) {
             previewFullscreen = false;
             return true;
@@ -301,6 +569,21 @@ public final class VisualsScreen extends Screen {
                 runHit(mx, my);
             }
             return true;
+        }
+        if (button == 0) {
+            for (int i = searchHits.size() - 1; i >= 0; i--) {
+                Hit hit = searchHits.get(i);
+                if (Theme.inside(mx, my, hit.x(), hit.y(), hit.w(), hit.h())) {
+                    hit.action().run();
+                    return true;
+                }
+            }
+            if (Theme.inside(mx, my, searchX, 5, searchW, TOP_H - 10)) {
+                panel.closeAll();
+                searchFocused = true;
+                return true;
+            }
+            searchFocused = false;
         }
         if (panel.popupOpen() || panel.editing()) {
             if (panel.mouseClicked(mx, my, button, shift)) {
@@ -328,6 +611,13 @@ public final class VisualsScreen extends Screen {
             }
         }
         return super.mouseClicked(event, doubleClick);
+    }
+
+    private void runModal(Runnable action) {
+        if (action != null) {
+            modal = null;
+            action.run();
+        }
     }
 
     private boolean runHit(double mx, double my) {
@@ -358,6 +648,16 @@ public final class VisualsScreen extends Screen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
+        if (modal != null) {
+            modal.charTyped(event.codepoint());
+            return true;
+        }
+        if (searchFocused) {
+            if (query.length() < 40 && event.codepoint() >= 32) {
+                query.append(Character.toChars(event.codepoint()));
+            }
+            return true;
+        }
         if (!confirmClose && panel.charTyped(event.codepoint())) {
             return true;
         }
@@ -366,7 +666,7 @@ public final class VisualsScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mx, double my, double scrollX, double scrollY) {
-        if (confirmClose) {
+        if (confirmClose || modal != null) {
             return true;
         }
         if (tabBar.contains(mx, my)) {
@@ -380,13 +680,47 @@ public final class VisualsScreen extends Screen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         int key = event.key();
+        boolean ctrl = event.hasControlDown();
+        if (modal != null) {
+            runModal(modal.key(key, ctrl));
+            return true;
+        }
         if (previewFullscreen) {
             if (key == GLFW.GLFW_KEY_ESCAPE) {
                 previewFullscreen = false;
             }
             return true;
         }
-        if (!confirmClose && panel.keyPressed(key, event.hasControlDown())) {
+        if (searchFocused && !confirmClose) {
+            if (key == GLFW.GLFW_KEY_ESCAPE) {
+                searchFocused = false;
+                query.setLength(0);
+            } else if (key == GLFW.GLFW_KEY_BACKSPACE && query.length() > 0) {
+                query.setLength(query.length() - 1);
+            } else if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) {
+                List<Result> results = searchResults();
+                if (!results.isEmpty()) {
+                    jumpTo(results.get(0));
+                }
+            }
+            return true;
+        }
+        if (!confirmClose && panel.keyPressed(key, ctrl)) {
+            return true;
+        }
+        if (!confirmClose && ctrl && key == GLFW.GLFW_KEY_F) {
+            panel.closeAll();
+            searchFocused = true;
+            return true;
+        }
+        if (!confirmClose && ctrl && (key == GLFW.GLFW_KEY_Z || key == GLFW.GLFW_KEY_Y)) {
+            UndoStack undo = VisualsMod.undo();
+            VisualsMod.presets().finishNow();
+            if (key == GLFW.GLFW_KEY_Y || event.hasShiftDown()) {
+                undo.redo();
+            } else {
+                undo.undo();
+            }
             return true;
         }
         if (key == GLFW.GLFW_KEY_ESCAPE) {
@@ -427,6 +761,12 @@ public final class VisualsScreen extends Screen {
 
     private void closeNow() {
         Minecraft.getInstance().setScreen(parent);
+    }
+
+    @Override
+    public void removed() {
+        VisualsMod.presets().finishNow();
+        super.removed();
     }
 
     @Override

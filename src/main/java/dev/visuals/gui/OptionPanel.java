@@ -74,6 +74,9 @@ public final class OptionPanel {
     private final Map<String, Long> invalid = new HashMap<>();
     private String hoverId;
     private long hoverSince;
+    private final Map<String, Integer> rowOffsets = new HashMap<>();
+    private String highlightId;
+    private long highlightUntil;
 
     // ------------------------------------------------------------------ Zustand
 
@@ -88,6 +91,21 @@ public final class OptionPanel {
     /** True, wenn Esc und Pfeiltasten dem Panel gehören und nicht dem Screen. */
     public boolean blocksInput() {
         return popupOpen() || editing();
+    }
+
+    /** Abstand der Zeile vom Listenanfang (nach dem letzten Zeichnen), oder {@code null}. */
+    public Integer offsetOf(String id) {
+        return rowOffsets.get(id);
+    }
+
+    /** Hebt eine Option kurz hervor (Suche). */
+    public void highlight(String id) {
+        highlightId = id;
+        highlightUntil = System.currentTimeMillis() + 1800;
+    }
+
+    public static String valueText(OptionDef<?> def, Object value) {
+        return toText(def, value);
     }
 
     public void closeAll() {
@@ -111,6 +129,7 @@ public final class OptionPanel {
         OptionRegistry reg = VisualsMod.registry();
         boolean popup = popupOpen();
         String hovered = null;
+        int originY = y;
 
         for (String group : reg.groupsOf(tabId)) {
             g.drawString(font, I18n.get("visuals.group." + tabId + "." + group), x, y + 7, Theme.accent());
@@ -119,6 +138,7 @@ public final class OptionPanel {
                 if (!def.groupId().equals(group)) {
                     continue;
                 }
+                rowOffsets.put(def.id(), y - originY);
                 if (y + ROW_H > clipTop && y < clipBottom) {
                     if (row(g, font, mx, my, x, y, w, def, cfg, popup)) {
                         hovered = def.id();
@@ -144,6 +164,12 @@ public final class OptionPanel {
         boolean modified = cfg.isModified(id);
         if (modified) {
             g.fill(x, y, x + 2, y + ROW_H, Theme.accent());
+        }
+        if (id.equals(highlightId) && System.currentTimeMillis() < highlightUntil) {
+            long left = highlightUntil - System.currentTimeMillis();
+            int a = (int) (0x50 * Math.min(1.0, left / 600.0));
+            g.fill(x, y, x + w, y + ROW_H, (a << 24) | (Theme.accent() & 0xFFFFFF));
+            outline(g, x, y, w, ROW_H, Theme.accent());
         }
         if (invalid.getOrDefault(id, 0L) > System.currentTimeMillis()) {
             outline(g, x, y, w, ROW_H, 0xFFE04848);

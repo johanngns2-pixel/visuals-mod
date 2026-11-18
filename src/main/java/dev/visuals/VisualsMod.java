@@ -2,6 +2,8 @@ package dev.visuals;
 
 import dev.visuals.config.ConfigManager;
 import dev.visuals.config.OptionRegistry;
+import dev.visuals.config.PresetManager;
+import dev.visuals.config.UndoStack;
 import dev.visuals.config.def.GeneralOptions;
 import dev.visuals.config.def.SkyOptions;
 import dev.visuals.config.def.Tabs;
@@ -25,6 +27,8 @@ public final class VisualsMod implements ClientModInitializer {
     private static OptionRegistry registry;
     private static ConfigManager config;
     private static KeyMapping openKey;
+    private static UndoStack undo;
+    private static PresetManager presets;
 
     @Override
     public void onInitializeClient() {
@@ -38,6 +42,9 @@ public final class VisualsMod implements ClientModInitializer {
         config = new ConfigManager(
                 FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).resolve("config.json"), registry);
         config.load();
+        undo = new UndoStack(config);
+        presets = new PresetManager(registry, config, undo,
+                FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).resolve("presets"));
 
         // Taste zum Öffnen (Standard: Rechts-Shift, in den Steuerungs-Einstellungen änderbar)
         openKey = KeyBindingHelper.registerKeyBinding(new KeyMapping("key.visuals.open", InputConstants.Type.KEYSYM,
@@ -56,6 +63,14 @@ public final class VisualsMod implements ClientModInitializer {
 
     public static OptionRegistry registry() {
         return registry;
+    }
+
+    public static UndoStack undo() {
+        return undo;
+    }
+
+    public static PresetManager presets() {
+        return presets;
     }
 
     public static ConfigManager config() {
