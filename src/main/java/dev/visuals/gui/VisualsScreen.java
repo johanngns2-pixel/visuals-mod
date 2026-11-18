@@ -4,7 +4,6 @@ import dev.visuals.VisualsMod;
 import dev.visuals.config.ConfigManager;
 import dev.visuals.config.OptionDef;
 import dev.visuals.config.OptionRegistry;
-import dev.visuals.config.OptionType;
 import dev.visuals.config.TabDef;
 import dev.visuals.config.def.GeneralOptions;
 import dev.visuals.config.def.Tabs;
@@ -12,6 +11,7 @@ import dev.visuals.gui.widgets.TabBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
@@ -46,6 +46,9 @@ public final class VisualsScreen extends Screen {
     private final Screen parent;
     private final List<Hit> hits = new ArrayList<>();
     private final Anim masterKnob = new Anim(0);
+    private final OptionPanel panel = new OptionPanel();
+    private int listTop;
+    private int listBottom;
 
     private TabBar tabBar;
     private String activeTab = Tabs.GENERAL;
@@ -119,6 +122,9 @@ public final class VisualsScreen extends Screen {
 
         // Reiter-Leiste zuletzt, damit sie beim Aufklappen über dem Inhalt liegt
         tabBar.render(g, this.font, mx, my, activeTab);
+        if (!confirmClose) {
+            panel.renderOverlay(g, this.font, mx, my, this.width, this.height);
+        }
 
         if (confirmClose) {
             renderConfirm(g, mx, my);
@@ -173,67 +179,15 @@ public final class VisualsScreen extends Screen {
         }
 
         // Optionsliste
-        int listTop = top + headerH;
+        listTop = top + headerH;
+        listBottom = bottom;
         g.fill(x, listTop - 1, x + w, listTop, Theme.BORDER);
         g.enableScissor(left, listTop, right, bottom);
-        int y = listTop - scroll + 6;
-        int startY = y;
-        for (String group : reg.groupsOf(tab.id())) {
-            g.drawString(this.font, I18n.get("visuals.group." + tab.id() + "." + group), x, y + 6, Theme.accent());
-            y += GROUP_H;
-            for (OptionDef<?> def : reg.optionsOf(tab.id())) {
-                if (!def.groupId().equals(group)) {
-                    continue;
-                }
-                renderOption(g, mx, my, x, y, w, def, cfg, listTop, bottom);
-                y += ROW_H + 2;
-            }
-            y += 6;
-        }
+        int startY = listTop - scroll + 6;
+        int endY = panel.render(g, this.font, mx, my, x, startY, w, listTop, bottom, tab.id());
         g.disableScissor();
-        maxScroll = Math.max(0, (y - startY) + 12 - (bottom - listTop));
+        maxScroll = Math.max(0, (endY - startY) + 12 - (bottom - listTop));
         scroll = Math.max(0, Math.min(maxScroll, scroll));
-    }
-
-    private <T> void renderOption(GuiGraphics g, int mx, int my, int x, int y, int w, OptionDef<T> def,
-                                  ConfigManager cfg, int clipTop, int clipBottom) {
-        boolean enabled = cfg.isOptionEnabled(def.id());
-        boolean hovered = enabled && Theme.inside(mx, my, x, y, w, ROW_H) && my >= clipTop && my < clipBottom;
-        g.fill(x, y, x + w, y + ROW_H, hovered ? Theme.ROW_HOVER : Theme.ROW);
-        if (cfg.isModified(def.id())) {
-            g.fill(x, y, x + 2, y + ROW_H, Theme.accent());
-        }
-        int textColor = enabled ? Theme.TEXT : Theme.TEXT_DISABLED;
-        g.drawString(this.font, I18n.get(def.nameKey()), x + 8, y + 6, textColor);
-
-        T value = cfg.get(def);
-        if (def.type() == OptionType.TOGGLE) {
-            boolean on = Boolean.TRUE.equals(value);
-            toggle(g, x + w - 38, y + 3, on, null, enabled);
-            if (enabled && clipTop <= y && y + ROW_H <= clipBottom) {
-                hits.add(new Hit(x, y, w, ROW_H, () -> cfg.set(def.id(), !on)));
-            }
-        } else {
-            String shown = formatValue(def, value);
-            g.drawString(this.font, shown, x + w - 8 - this.font.width(shown), y + 6,
-                    enabled ? Theme.TEXT_DIM : Theme.TEXT_DISABLED);
-        }
-    }
-
-    private static String formatValue(OptionDef<?> def, Object value) {
-        if (value instanceof Double d) {
-            return String.format("%.2f%s", d, def.unit().isEmpty() ? "" : " " + def.unit());
-        }
-        if (value instanceof Integer i && def.type() == OptionType.COLOR) {
-            return String.format("#%06X", i & 0xFFFFFF);
-        }
-        if (value instanceof Integer i) {
-            return i + (def.unit().isEmpty() ? "" : " " + def.unit());
-        }
-        if (def.type() == OptionType.DROPDOWN && value instanceof String s) {
-            return I18n.get(def.choiceKey(s));
-        }
-        return String.valueOf(value);
     }
 
     private void renderPreview(GuiGraphics g, int right, int top, int bottom) {
@@ -323,12 +277,22 @@ public final class VisualsScreen extends Screen {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        if (event.button() != 0) {
-            return super.mouseClicked(event, doubleClick);
-        }
+        int button = event.button();
         double mx = event.x();
         double my = event.y();
-        if (!confirmClose) {
+        boolean shift = event.hasShiftDown();
+        if (confirmClose) {
+            if (button == 0) {
+                runHit(mx, my);
+            }
+            return true;
+        }
+        if (panel.popupOpen() || panel.editing()) {
+            if (panel.mouseClicked(mx, my, button, shift)) {
+                return true;
+            }
+        }
+        if (button == 0) {
             if (tabBar.contains(mx, my)) {
                 String id = tabBar.clicked(mx, my);
                 if (id != null) {
@@ -336,7 +300,19 @@ public final class VisualsScreen extends Screen {
                 }
                 return true;
             }
+            if (runHit(mx, my)) {
+                return true;
+            }
         }
+        if (my >= listTop && my < listBottom && mx >= contentLeft() && mx < contentRight()) {
+            if (panel.mouseClicked(mx, my, button, shift)) {
+                return true;
+            }
+        }
+        return super.mouseClicked(event, doubleClick);
+    }
+
+    private boolean runHit(double mx, double my) {
         for (int i = hits.size() - 1; i >= 0; i--) {
             Hit hit = hits.get(i);
             if (Theme.inside(mx, my, hit.x(), hit.y(), hit.w(), hit.h())) {
@@ -344,7 +320,29 @@ public final class VisualsScreen extends Screen {
                 return true;
             }
         }
-        return confirmClose || super.mouseClicked(event, doubleClick);
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (panel.mouseDragged(event.x(), event.hasShiftDown())) {
+            return true;
+        }
+        return super.mouseDragged(event, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        panel.mouseReleased();
+        return super.mouseReleased(event);
+    }
+
+    @Override
+    public boolean charTyped(CharacterEvent event) {
+        if (!confirmClose && panel.charTyped(event.codepoint())) {
+            return true;
+        }
+        return super.charTyped(event);
     }
 
     @Override
@@ -363,6 +361,9 @@ public final class VisualsScreen extends Screen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         int key = event.key();
+        if (!confirmClose && panel.keyPressed(key, event.hasControlDown())) {
+            return true;
+        }
         if (key == GLFW.GLFW_KEY_ESCAPE) {
             if (confirmClose) {
                 confirmClose = false;
@@ -385,6 +386,7 @@ public final class VisualsScreen extends Screen {
         if (!id.equals(activeTab)) {
             activeTab = id;
             scroll = 0;
+            panel.closeAll();
         }
     }
 
