@@ -59,7 +59,6 @@
   "visuals.gui.resetAll": "Reset all",
   "visuals.gui.apply": "Apply",
   "visuals.gui.close": "Close",
-  "visuals.gui.previewSoon": "Preview coming soon",
   "visuals.gui.previewShow": "Show preview",
   "visuals.gui.previewHide": "Hide preview",
   "visuals.gui.confirm.title": "Unsaved changes",
@@ -116,5 +115,19 @@
   "visuals.option.sky.skyDusk.name": "Dusk",
   "visuals.option.sky.skyDusk.tooltip": "Sky color at sunset.",
   "visuals.option.sky.skyNight.name": "Night",
-  "visuals.option.sky.skyNight.tooltip": "Sky color at night."
+  "visuals.option.sky.skyNight.tooltip": "Sky color at night.",
+  "visuals.gui.preview.time": "Time",
+  "visuals.gui.preview.wind": "Wind",
+  "visuals.gui.preview.fullscreen": "Fullscreen preview",
+  "visuals.gui.preview.compare": "Before/After (hold)",
+  "visuals.gui.preview.vanilla": "Vanilla look",
+  "visuals.gui.preview.exitHint": "Esc or click to return",
+  "visuals.gui.season.spring": "Spring",
+  "visuals.gui.season.summer": "Summer",
+  "visuals.gui.season.autumn": "Autumn",
+  "visuals.gui.season.winter": "Winter",
+  "visuals.gui.weather.clear": "Clear",
+  "visuals.gui.weather.rain": "Rain",
+  "visuals.gui.weather.snow": "Snow",
+  "visuals.gui.weather.storm": "Storm"
 }

@@ -59,7 +59,6 @@
   "visuals.gui.resetAll": "Alles zurücksetzen",
   "visuals.gui.apply": "Übernehmen",
   "visuals.gui.close": "Schließen",
-  "visuals.gui.previewSoon": "Vorschau folgt",
   "visuals.gui.previewShow": "Vorschau zeigen",
   "visuals.gui.previewHide": "Vorschau ausblenden",
   "visuals.gui.confirm.title": "Ungespeicherte Änderungen",
@@ -116,5 +115,19 @@
   "visuals.option.sky.skyDusk.name": "Abend",
   "visuals.option.sky.skyDusk.tooltip": "Himmelsfarbe bei Sonnenuntergang.",
   "visuals.option.sky.skyNight.name": "Nacht",
-  "visuals.option.sky.skyNight.tooltip": "Himmelsfarbe in der Nacht."
+  "visuals.option.sky.skyNight.tooltip": "Himmelsfarbe in der Nacht.",
+  "visuals.gui.preview.time": "Tageszeit",
+  "visuals.gui.preview.wind": "Wind",
+  "visuals.gui.preview.fullscreen": "Vollbild-Vorschau",
+  "visuals.gui.preview.compare": "Vorher/Nachher (halten)",
+  "visuals.gui.preview.vanilla": "Vanilla-Optik",
+  "visuals.gui.preview.exitHint": "Esc oder Klick zum Zurückkehren",
+  "visuals.gui.season.spring": "Frühling",
+  "visuals.gui.season.summer": "Sommer",
+  "visuals.gui.season.autumn": "Herbst",
+  "visuals.gui.season.winter": "Winter",
+  "visuals.gui.weather.clear": "Klar",
+  "visuals.gui.weather.rain": "Regen",
+  "visuals.gui.weather.snow": "Schnee",
+  "visuals.gui.weather.storm": "Gewitter"
 }

@@ -7,6 +7,7 @@ import dev.visuals.config.OptionRegistry;
 import dev.visuals.config.TabDef;
 import dev.visuals.config.def.GeneralOptions;
 import dev.visuals.config.def.Tabs;
+import dev.visuals.gui.preview.PreviewPanel;
 import dev.visuals.gui.widgets.TabBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -47,6 +48,8 @@ public final class VisualsScreen extends Screen {
     private final List<Hit> hits = new ArrayList<>();
     private final Anim masterKnob = new Anim(0);
     private final OptionPanel panel = new OptionPanel();
+    private final PreviewPanel preview = new PreviewPanel();
+    private boolean previewFullscreen;
     private int listTop;
     private int listBottom;
 
@@ -102,6 +105,13 @@ public final class VisualsScreen extends Screen {
         TabDef tab = reg.tab(activeTab);
 
         this.renderBackground(g, mx, my, delta);
+        if (previewFullscreen) {
+            preview.renderSceneOnly(g, 0, 0, this.width, this.height);
+            String hint = I18n.get("visuals.gui.preview.exitHint");
+            g.fill(0, this.height - 16, this.width, this.height, 0x90000000);
+            g.drawString(this.font, hint, this.width / 2 - this.font.width(hint) / 2, this.height - 12, Theme.TEXT);
+            return;
+        }
         g.fill(0, 0, this.width, this.height, Theme.OVERLAY);
         tabBar.setHeight(this.height);
 
@@ -117,7 +127,7 @@ public final class VisualsScreen extends Screen {
 
         renderTopBar(g, mx, my, left, cfg);
         renderContent(g, mx, my, left, right, top, bottom, tab, cfg, reg);
-        renderPreview(g, right, top, bottom);
+        renderPreview(g, mx, my, right, top, bottom);
         renderBottomBar(g, mx, my, left, bottom, cfg);
 
         // Reiter-Leiste zuletzt, damit sie beim Aufklappen über dem Inhalt liegt
@@ -190,15 +200,16 @@ public final class VisualsScreen extends Screen {
         scroll = Math.max(0, Math.min(maxScroll, scroll));
     }
 
-    private void renderPreview(GuiGraphics g, int right, int top, int bottom) {
+    private void renderPreview(GuiGraphics g, int mx, int my, int right, int top, int bottom) {
         if (!previewVisible()) {
             return;
         }
         g.fill(right, top, this.width, bottom, Theme.PANEL_LIGHT);
         g.fill(right, top, right + 1, bottom, Theme.BORDER);
-        String text = I18n.get("visuals.gui.previewSoon");
-        g.drawString(this.font, text, right + (this.width - right) / 2 - this.font.width(text) / 2,
-                (top + bottom) / 2, Theme.TEXT_DISABLED);
+        preview.render(g, this.font, mx, my, right + 1, top, this.width - right - 1, bottom - top);
+        if (preview.consumeFullscreenRequest()) {
+            previewFullscreen = true;
+        }
     }
 
     private void renderBottomBar(GuiGraphics g, int mx, int my, int left, int bottom, ConfigManager cfg) {
@@ -281,6 +292,10 @@ public final class VisualsScreen extends Screen {
         double mx = event.x();
         double my = event.y();
         boolean shift = event.hasShiftDown();
+        if (previewFullscreen) {
+            previewFullscreen = false;
+            return true;
+        }
         if (confirmClose) {
             if (button == 0) {
                 runHit(mx, my);
@@ -304,6 +319,9 @@ public final class VisualsScreen extends Screen {
                 return true;
             }
         }
+        if (button == 0 && previewVisible() && mx >= contentRight() && preview.mouseClicked(mx, my)) {
+            return true;
+        }
         if (my >= listTop && my < listBottom && mx >= contentLeft() && mx < contentRight()) {
             if (panel.mouseClicked(mx, my, button, shift)) {
                 return true;
@@ -325,7 +343,7 @@ public final class VisualsScreen extends Screen {
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-        if (panel.mouseDragged(event.x(), event.hasShiftDown())) {
+        if (panel.mouseDragged(event.x(), event.hasShiftDown()) || preview.mouseDragged(event.x())) {
             return true;
         }
         return super.mouseDragged(event, dragX, dragY);
@@ -334,6 +352,7 @@ public final class VisualsScreen extends Screen {
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
         panel.mouseReleased();
+        preview.mouseReleased();
         return super.mouseReleased(event);
     }
 
@@ -361,6 +380,12 @@ public final class VisualsScreen extends Screen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         int key = event.key();
+        if (previewFullscreen) {
+            if (key == GLFW.GLFW_KEY_ESCAPE) {
+                previewFullscreen = false;
+            }
+            return true;
+        }
         if (!confirmClose && panel.keyPressed(key, event.hasControlDown())) {
             return true;
         }
