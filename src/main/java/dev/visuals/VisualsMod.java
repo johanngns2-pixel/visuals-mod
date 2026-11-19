@@ -10,6 +10,13 @@ import dev.visuals.config.def.SkyOptions;
 import dev.visuals.config.def.Tabs;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.visuals.effects.Effects;
+import dev.visuals.effects.PuddleEffect;
+import dev.visuals.effects.PuddleParticle;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import dev.visuals.gui.VisualsScreen;
 import dev.visuals.util.Log;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -48,6 +55,14 @@ public final class VisualsMod implements ClientModInitializer {
         undo = new UndoStack(config);
         presets = new PresetManager(registry, config, undo,
                 FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).resolve("presets"));
+
+        // Pfützen-Partikel (nur auf dem Client, kein Server nötig)
+        SimpleParticleType puddle = FabricParticleTypes.simple();
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "puddle"), puddle);
+        ParticleFactoryRegistry.getInstance().register(puddle, sprites ->
+                (options, level, x, y, z, xd, yd, zd, random) ->
+                        new PuddleParticle(level, x, y, z, sprites.get(random), 0.5f, 400));
+        PuddleEffect.type = puddle;
 
         // Taste zum Öffnen (Standard: Rechts-Shift, in den Steuerungs-Einstellungen änderbar)
         openKey = KeyBindingHelper.registerKeyBinding(new KeyMapping("key.visuals.open", InputConstants.Type.KEYSYM,

@@ -11,6 +11,7 @@ public final class Effects {
     private static final int MAX_ERRORS = 3;
     private static int fireflyErrors;
     private static int leafErrors;
+    private static int puddleErrors;
 
     private Effects() {
     }
@@ -25,6 +26,14 @@ public final class Effects {
             } catch (RuntimeException e) {
                 fireflyErrors++;
                 Log.error("Glühwürmchen-Effekt Fehler " + fireflyErrors + "/" + MAX_ERRORS, e);
+            }
+        }
+        if (puddleErrors < MAX_ERRORS) {
+            try {
+                PuddleEffect.tick(mc);
+            } catch (RuntimeException e) {
+                puddleErrors++;
+                Log.error("Pfützen-Effekt Fehler " + puddleErrors + "/" + MAX_ERRORS, e);
             }
         }
         if (leafErrors < MAX_ERRORS) {
