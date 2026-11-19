@@ -102,7 +102,6 @@ public final class MoreOptions {
         r.register(OptionDef.slider("puddles.size", 1.0, 0.5, 3.0, 0.05).group("look").build());
         r.register(OptionDef.slider("puddles.amount", 1.0, 0.0, 3.0, 0.05).group("look").build());
         r.register(OptionDef.dropdown("puddles.quality", "medium", "low", "medium", "high").group("look").build());
-        r.register(OptionDef.intSlider("puddles.dryTime", 120, 10, 900).group("look").unit("s").build());
         r.register(OptionDef.toggle("wildlife.butterflies", true).group("species").build());
         r.register(OptionDef.toggle("wildlife.birds", true).group("species").build());
         r.register(OptionDef.toggle("wildlife.dragonflies", true).group("species").build());

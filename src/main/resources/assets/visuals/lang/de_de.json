@@ -363,8 +363,6 @@
   "visuals.option.puddles.quality.choice.low": "Niedrig",
   "visuals.option.puddles.quality.choice.medium": "Mittel",
   "visuals.option.puddles.quality.choice.high": "Hoch",
-  "visuals.option.puddles.dryTime.name": "Trocknungszeit",
-  "visuals.option.puddles.dryTime.tooltip": "Sekunden, bis eine Pfütze trocknet.",
   "visuals.option.wildlife.butterflies.name": "Schmetterlinge",
   "visuals.option.wildlife.butterflies.tooltip": "Schmetterlinge am Tag.",
   "visuals.option.wildlife.birds.name": "Vögel",

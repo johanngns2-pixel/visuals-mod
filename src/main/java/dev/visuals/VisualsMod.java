@@ -61,7 +61,7 @@ public final class VisualsMod implements ClientModInitializer {
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "puddle"), puddle);
         ParticleFactoryRegistry.getInstance().register(puddle, sprites ->
                 (options, level, x, y, z, xd, yd, zd, random) ->
-                        new PuddleParticle(level, x, y, z, sprites.get(random), 0.5f, 400));
+                        new PuddleParticle(level, x, y, z, sprites.get(random), 0.5f));
         PuddleEffect.type = puddle;
 
         // Taste zum Öffnen (Standard: Rechts-Shift, in den Steuerungs-Einstellungen änderbar)

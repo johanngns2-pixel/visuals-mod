@@ -363,8 +363,6 @@
   "visuals.option.puddles.quality.choice.low": "Low",
   "visuals.option.puddles.quality.choice.medium": "Medium",
   "visuals.option.puddles.quality.choice.high": "High",
-  "visuals.option.puddles.dryTime.name": "Drying time",
-  "visuals.option.puddles.dryTime.tooltip": "Seconds until a puddle dries.",
   "visuals.option.wildlife.butterflies.name": "Butterflies",
   "visuals.option.wildlife.butterflies.tooltip": "Butterflies by day.",
   "visuals.option.wildlife.birds.name": "Birds",
