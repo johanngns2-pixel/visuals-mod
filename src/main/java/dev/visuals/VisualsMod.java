@@ -10,6 +10,8 @@ import dev.visuals.config.def.SkyOptions;
 import dev.visuals.config.def.Tabs;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.visuals.effects.Effects;
+import dev.visuals.hud.VisualsHud;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import dev.visuals.effects.PuddleEffect;
 import dev.visuals.effects.Particles;
 import dev.visuals.effects.PuddleParticle;
@@ -58,6 +60,7 @@ public final class VisualsMod implements ClientModInitializer {
                 FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).resolve("presets"));
 
         Particles.register();
+        HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(MOD_ID, "hud"), VisualsHud::render);
 
         // Pfützen-Partikel (nur auf dem Client, kein Server nötig)
         SimpleParticleType puddle = FabricParticleTypes.simple();

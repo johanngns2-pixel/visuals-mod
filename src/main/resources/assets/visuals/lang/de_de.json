@@ -439,8 +439,8 @@
   "visuals.option.touch.footprintStrength.tooltip": "Wie deutlich Spuren sind.",
   "visuals.option.sound.wind.name": "Wind",
   "visuals.option.sound.wind.tooltip": "Lautstärke des Windes.",
-  "visuals.option.sound.rain.name": "Regen",
-  "visuals.option.sound.rain.tooltip": "Lautstärke des Regens.",
+  "visuals.option.sound.rain.name": "Zusätzlicher Regen",
+  "visuals.option.sound.rain.tooltip": "Zusätzliches weiches Regenrauschen (der normale Regen von Minecraft bleibt).",
   "visuals.option.sound.crickets.name": "Zirpen",
   "visuals.option.sound.crickets.tooltip": "Lautstärke des Zirpens.",
   "visuals.option.sound.snow.name": "Schnee",
@@ -567,5 +567,11 @@
   "visuals.event.aurora": "Am Himmel erscheint ein Polarlicht.",
   "visuals.event.bloodMoon": "Ein Blutmond geht auf.",
   "visuals.event.rainbow": "Ein Regenbogen erscheint.",
-  "visuals.event.birds": "Zugvögel ziehen vorbei."
+  "visuals.event.birds": "Zugvögel ziehen vorbei.",
+  "visuals.option.spotify.connected.name": "Mit Spotify verbunden",
+  "visuals.option.spotify.connected.tooltip": "An: Spotify verbinden (der Browser öffnet sich, vorher die Client-ID eintragen). Aus: trennen.",
+  "visuals.spotify.noClientId": "Spotify: Bitte zuerst deine Client-ID eintragen.",
+  "visuals.spotify.failed": "Spotify: Anmeldung fehlgeschlagen.",
+  "visuals.spotify.browser": "Spotify: Melde dich im Browser an. Der Link liegt auch in der Zwischenablage.",
+  "visuals.spotify.connected": "Spotify verbunden."
 }

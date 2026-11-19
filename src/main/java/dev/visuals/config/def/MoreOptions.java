@@ -140,7 +140,7 @@ public final class MoreOptions {
         r.register(OptionDef.intSlider("touch.footprintDuration", 20, 1, 120).group("tuning").unit("s").build());
         r.register(OptionDef.slider("touch.footprintStrength", 0.6, 0.0, 1.0, 0.05).group("tuning").build());
         r.register(OptionDef.slider("sound.wind", 0.5, 0.0, 1.0, 0.05).group("volumes").build());
-        r.register(OptionDef.slider("sound.rain", 0.5, 0.0, 1.0, 0.05).group("volumes").build());
+        r.register(OptionDef.slider("sound.rain", 0.0, 0.0, 1.0, 0.05).group("volumes").build());
         r.register(OptionDef.slider("sound.crickets", 0.4, 0.0, 1.0, 0.05).group("volumes").build());
         r.register(OptionDef.slider("sound.snow", 0.4, 0.0, 1.0, 0.05).group("volumes").build());
         r.register(OptionDef.toggle("sound.reverb", false).group("space").build());
@@ -163,6 +163,7 @@ public final class MoreOptions {
         r.register(OptionDef.toggle("afk.locationTitle", true).group("extras").build());
         r.register(OptionDef.toggle("afk.powerSave", true).group("extras").build());
         r.register(OptionDef.text("spotify.clientId", "", 64).group("connection").build());
+        r.register(OptionDef.toggle("spotify.connected", false).group("connection").build());
         r.register(OptionDef.toggle("spotify.lyrics", true).group("lyrics").build());
         r.register(OptionDef.dropdown("spotify.position", "top", "top", "center", "bottom").group("lyrics").build());
         r.register(OptionDef.slider("spotify.size", 1.0, 0.5, 3.0, 0.05).group("lyrics").build());

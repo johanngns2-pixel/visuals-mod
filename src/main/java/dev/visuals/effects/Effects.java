@@ -42,6 +42,10 @@ public final class Effects {
             new Guard("Tiere", CritterEffect::tick),
             new Guard("Berührung", TouchEffect::tick),
             new Guard("Weltereignisse", EventEffect::tick),
+            new Guard("Sound", SoundEffect::tick),
+            new Guard("AFK", AfkEffect::tick),
+            new Guard("Glint", GlintEffect::tick),
+            new Guard("Spotify", SpotifyEffect::tick),
     };
 
     private Effects() {

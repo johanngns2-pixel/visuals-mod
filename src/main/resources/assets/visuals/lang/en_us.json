@@ -439,8 +439,8 @@
   "visuals.option.touch.footprintStrength.tooltip": "How visible tracks are.",
   "visuals.option.sound.wind.name": "Wind",
   "visuals.option.sound.wind.tooltip": "Wind volume.",
-  "visuals.option.sound.rain.name": "Rain",
-  "visuals.option.sound.rain.tooltip": "Rain volume.",
+  "visuals.option.sound.rain.name": "Extra rain",
+  "visuals.option.sound.rain.tooltip": "Extra soft rain noise (Minecraft's normal rain stays).",
   "visuals.option.sound.crickets.name": "Crickets",
   "visuals.option.sound.crickets.tooltip": "Cricket volume.",
   "visuals.option.sound.snow.name": "Snow",
@@ -567,5 +567,11 @@
   "visuals.event.aurora": "An aurora appears in the sky.",
   "visuals.event.bloodMoon": "A blood moon rises.",
   "visuals.event.rainbow": "A rainbow appears.",
-  "visuals.event.birds": "Migratory birds fly by."
+  "visuals.event.birds": "Migratory birds fly by.",
+  "visuals.option.spotify.connected.name": "Connected to Spotify",
+  "visuals.option.spotify.connected.tooltip": "On: connect Spotify (opens the browser, enter the client ID first). Off: disconnect.",
+  "visuals.spotify.noClientId": "Spotify: Please enter your client ID first.",
+  "visuals.spotify.failed": "Spotify: Login failed.",
+  "visuals.spotify.browser": "Spotify: Sign in in your browser. The link is also in your clipboard.",
+  "visuals.spotify.connected": "Spotify connected."
 }
