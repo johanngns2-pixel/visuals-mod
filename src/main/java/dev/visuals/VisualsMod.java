@@ -11,6 +11,7 @@ import dev.visuals.config.def.Tabs;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.visuals.effects.Effects;
 import dev.visuals.effects.PuddleEffect;
+import dev.visuals.effects.Particles;
 import dev.visuals.effects.PuddleParticle;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -55,6 +56,8 @@ public final class VisualsMod implements ClientModInitializer {
         undo = new UndoStack(config);
         presets = new PresetManager(registry, config, undo,
                 FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).resolve("presets"));
+
+        Particles.register();
 
         // Pfützen-Partikel (nur auf dem Client, kein Server nötig)
         SimpleParticleType puddle = FabricParticleTypes.simple();

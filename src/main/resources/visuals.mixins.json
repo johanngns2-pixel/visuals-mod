@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "SingleQuadParticleAccessor",
-    "SkyRendererMixin"
+    "SkyRendererMixin",
+    "WeatherEffectRendererMixin",
+    "AtmosphericFogEnvironmentMixin"
   ],
   "injectors": {
     "defaultRequire": 1

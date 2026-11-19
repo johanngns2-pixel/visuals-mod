@@ -562,5 +562,10 @@
   "visuals.gui.preview": "Preview",
   "visuals.gui.ctx.enter": "Enter value",
   "visuals.gui.enterValue": "New value (from %s to %s):",
-  "visuals.gui.resetAll.ask": "Really reset all settings to default? You can undo this with Ctrl+Z."
+  "visuals.gui.resetAll.ask": "Really reset all settings to default? You can undo this with Ctrl+Z.",
+  "visuals.event.meteors": "A meteor shower begins!",
+  "visuals.event.aurora": "An aurora appears in the sky.",
+  "visuals.event.bloodMoon": "A blood moon rises.",
+  "visuals.event.rainbow": "A rainbow appears.",
+  "visuals.event.birds": "Migratory birds fly by."
 }

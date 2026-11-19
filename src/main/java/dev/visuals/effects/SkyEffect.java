@@ -43,6 +43,21 @@ public final class SkyEffect {
                     state.skyColor |= 0xFF000000;
                 }
             }
+            // Gewitter: dunkler Himmel (Reiter Wetter)
+            if (Opts.active("weather") && level.isThundering()) {
+                double dark = Math.min(1.0, Opts.num("weather.stormDarkness") * Math.max(level.getRainLevel(partialTick), 0f));
+                if (dark > 0.001 && Math.abs(Opts.num("weather.stormDarkness") - 0.5) > 0.001) {
+                    state.skyColor = (state.skyColor & 0xFF000000)
+                            | SkyColors.mix(state.skyColor & 0xFFFFFF, 0x050508, Math.min(0.85, dark * 0.9));
+                }
+            }
+            // Blutmond: rötlicher Nachthimmel, voller Mond, weniger Sterne
+            double blood = EventEffect.bloodMoon(level);
+            if (blood > 0.0) {
+                state.skyColor = (state.skyColor & 0xFF000000) | SkyColors.mix(state.skyColor & 0xFFFFFF, 0x5A0A0A, blood * 0.85);
+                state.moonPhase = MoonPhase.FULL_MOON;
+                state.starBrightness *= (float) (1.0 - blood * 0.6);
+            }
             // Sterne: Helligkeit und Funkeln
             double twinkle = Opts.num("sky.starTwinkle");
             double amount = Opts.num("sky.starAmount");

@@ -562,5 +562,10 @@
   "visuals.gui.preview": "Vorschau",
   "visuals.gui.ctx.enter": "Wert eingeben",
   "visuals.gui.enterValue": "Neuer Wert (von %s bis %s):",
-  "visuals.gui.resetAll.ask": "Wirklich alle Einstellungen auf den Standard zurücksetzen? Mit Strg+Z kannst du das rückgängig machen."
+  "visuals.gui.resetAll.ask": "Wirklich alle Einstellungen auf den Standard zurücksetzen? Mit Strg+Z kannst du das rückgängig machen.",
+  "visuals.event.meteors": "Ein Meteoritenschauer beginnt!",
+  "visuals.event.aurora": "Am Himmel erscheint ein Polarlicht.",
+  "visuals.event.bloodMoon": "Ein Blutmond geht auf.",
+  "visuals.event.rainbow": "Ein Regenbogen erscheint.",
+  "visuals.event.birds": "Zugvögel ziehen vorbei."
 }

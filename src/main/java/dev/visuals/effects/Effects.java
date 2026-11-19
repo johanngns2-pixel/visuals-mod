@@ -3,15 +3,46 @@ package dev.visuals.effects;
 import dev.visuals.util.Log;
 import net.minecraft.client.Minecraft;
 
+import java.util.function.Consumer;
+
 /**
  * Einstiegspunkt der Welt-Effekte, einmal pro Client-Tick. Jeder Effekt läuft in einem Schutz:
  * Wirft er mehrfach Fehler, wird er für die Sitzung abgeschaltet, statt das Spiel zu stören.
  */
 public final class Effects {
     private static final int MAX_ERRORS = 3;
-    private static int fireflyErrors;
-    private static int leafErrors;
-    private static int puddleErrors;
+
+    private static final class Guard {
+        private final String name;
+        private final Consumer<Minecraft> tick;
+        private int errors;
+
+        Guard(String name, Consumer<Minecraft> tick) {
+            this.name = name;
+            this.tick = tick;
+        }
+
+        void run(Minecraft mc) {
+            if (errors >= MAX_ERRORS) {
+                return;
+            }
+            try {
+                tick.accept(mc);
+            } catch (RuntimeException e) {
+                errors++;
+                Log.error("Effekt " + name + " Fehler " + errors + "/" + MAX_ERRORS, e);
+            }
+        }
+    }
+
+    private static final Guard[] GUARDS = {
+            new Guard("Glühwürmchen", FireflyEffect::tick),
+            new Guard("Pfützen", PuddleEffect::tick),
+            new Guard("Laub", LeafEffect::tick),
+            new Guard("Tiere", CritterEffect::tick),
+            new Guard("Berührung", TouchEffect::tick),
+            new Guard("Weltereignisse", EventEffect::tick),
+    };
 
     private Effects() {
     }
@@ -20,29 +51,8 @@ public final class Effects {
         if (mc.level == null || mc.player == null) {
             return;
         }
-        if (fireflyErrors < MAX_ERRORS) {
-            try {
-                FireflyEffect.tick(mc);
-            } catch (RuntimeException e) {
-                fireflyErrors++;
-                Log.error("Glühwürmchen-Effekt Fehler " + fireflyErrors + "/" + MAX_ERRORS, e);
-            }
-        }
-        if (puddleErrors < MAX_ERRORS) {
-            try {
-                PuddleEffect.tick(mc);
-            } catch (RuntimeException e) {
-                puddleErrors++;
-                Log.error("Pfützen-Effekt Fehler " + puddleErrors + "/" + MAX_ERRORS, e);
-            }
-        }
-        if (leafErrors < MAX_ERRORS) {
-            try {
-                LeafEffect.tick(mc);
-            } catch (RuntimeException e) {
-                leafErrors++;
-                Log.error("Laub-Effekt Fehler " + leafErrors + "/" + MAX_ERRORS, e);
-            }
+        for (Guard g : GUARDS) {
+            g.run(mc);
         }
     }
 }
