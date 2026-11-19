@@ -558,5 +558,11 @@
   "visuals.group.seasons.m_wildlife": "Tiere",
   "visuals.group.seasons.m_touch": "Berührung",
   "visuals.group.seasons.m_fog": "Nebel",
-  "visuals.group.seasons.m_events": "Weltereignisse"
+  "visuals.group.seasons.m_events": "Weltereignisse",
+  "visuals.gui.done": "Fertig",
+  "visuals.gui.previewOpen": "Vorschau",
+  "visuals.gui.preview": "Vorschau",
+  "visuals.gui.ctx.enter": "Wert eingeben",
+  "visuals.gui.enterValue": "Neuer Wert (von %s bis %s):",
+  "visuals.gui.resetAll.ask": "Wirklich alle Einstellungen auf den Standard zurücksetzen? Mit Strg+Z kannst du das rückgängig machen."
 }

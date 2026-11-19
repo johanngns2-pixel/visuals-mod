@@ -64,7 +64,13 @@ public final class ModalDialog {
 
     public static ModalDialog input(String title, String prompt, int max, String okLabel, Consumer<String> ok,
                                     String cancelLabel, Runnable cancel) {
+        return input(title, prompt, max, "", okLabel, ok, cancelLabel, cancel);
+    }
+
+    public static ModalDialog input(String title, String prompt, int max, String initial, String okLabel,
+                                    Consumer<String> ok, String cancelLabel, Runnable cancel) {
         ModalDialog d = new ModalDialog(title, false, true, max);
+        d.input.append(initial);
         d.lines.add(prompt);
         d.buttons.add(new Button(okLabel, Theme.accent(), () -> ok.accept(d.input.toString().trim())));
         d.buttons.add(new Button(cancelLabel, Theme.GRAY, cancel));
@@ -87,28 +93,27 @@ public final class ModalDialog {
             wrapped.addAll(wrap(font, line, W - 24));
         }
         int inputH = hasInput ? 24 : 0;
-        int buttonsH = vertical ? buttons.size() * 20 : 24;
+        int buttonsH = vertical ? buttons.size() * 22 : 26;
         boxW = W;
         boxH = 30 + wrapped.size() * 10 + inputH + buttonsH + 12;
         boxX = (sw - boxW) / 2;
         boxY = Math.max(8, (sh - boxH) / 2);
 
         g.fill(0, 0, sw, sh, 0xB0000000);
-        g.fill(boxX - 1, boxY - 1, boxX + boxW + 1, boxY + boxH + 1, Theme.BORDER);
-        g.fill(boxX, boxY, boxX + boxW, boxY + boxH, Theme.PANEL_LIGHT);
-        g.fill(boxX, boxY, boxX + boxW, boxY + 1, Theme.accent());
-        g.drawString(font, title, boxX + 12, boxY + 12, Theme.TEXT);
+        g.fill(boxX - 1, boxY - 1, boxX + boxW + 1, boxY + boxH + 1, 0xFFFFFFFF);
+        g.fill(boxX, boxY, boxX + boxW, boxY + boxH, 0xFF101010);
+        g.drawString(font, title, boxX + (boxW - font.width(title)) / 2, boxY + 10, Theme.WHITE, true);
 
         int y = boxY + 28;
         for (String line : wrapped) {
-            g.drawString(font, line, boxX + 12, y, Theme.TEXT_DIM);
+            g.drawString(font, line, boxX + 12, y, Theme.GRAY_TEXT, true);
             y += 10;
         }
         if (hasInput) {
             y += 4;
-            g.fill(boxX + 12, y, boxX + boxW - 12, y + 16, Theme.ROW);
+            Theme.field(g, boxX + 12, y, boxW - 24, 18, true);
             String shown = input + ((System.currentTimeMillis() / 500) % 2 == 0 ? "_" : "");
-            g.drawString(font, font.plainSubstrByWidth(shown, boxW - 32), boxX + 16, y + 4, Theme.TEXT);
+            g.drawString(font, font.plainSubstrByWidth(shown, boxW - 32), boxX + 17, y + 5, Theme.WHITE, true);
             y += 22;
         }
         y += 4;
@@ -116,22 +121,20 @@ public final class ModalDialog {
         buttonRects.clear();
         if (vertical) {
             for (int i = 0; i < buttons.size(); i++) {
-                drawButton(g, font, mx, my, boxX + 12, y + i * 20, boxW - 24, 18, buttons.get(i));
+                drawButton(g, font, mx, my, boxX + 12, y + i * 22, boxW - 24, 20, buttons.get(i));
             }
         } else {
             int n = buttons.size();
             int bw = (boxW - 24 - (n - 1) * 6) / n;
             for (int i = 0; i < n; i++) {
-                drawButton(g, font, mx, my, boxX + 12 + i * (bw + 6), y, bw, 18, buttons.get(i));
+                drawButton(g, font, mx, my, boxX + 12 + i * (bw + 6), y, bw, 20, buttons.get(i));
             }
         }
     }
 
     private void drawButton(GuiGraphics g, Font font, int mx, int my, int x, int y, int w, int h, Button b) {
         boolean hov = Theme.inside(mx, my, x, y, w, h);
-        g.fill(x, y, x + w, y + h, Theme.mix(Theme.ROW, b.color(), hov ? 0.6 : 0.3));
-        String text = font.plainSubstrByWidth(b.label(), w - 8);
-        g.drawString(font, text, x + (w - font.width(text)) / 2, y + (h - 8) / 2, Theme.TEXT);
+        Theme.button(g, font, x, y, w, h, b.label(), hov, true, Theme.WHITE);
         buttonRects.add(new int[]{x, y, w, h});
     }
 

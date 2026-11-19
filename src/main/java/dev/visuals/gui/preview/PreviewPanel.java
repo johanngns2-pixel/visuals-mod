@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Rechte Spalte: Szene plus Regler für Tageszeit, Jahreszeit, Wetter und Wind (nur für die Vorschau),
- * dazu "Vollbild-Vorschau" und "Vorher/Nachher" (gedrückt halten).
+ * Vorschau-Bildschirm: Szene plus Regler für Tageszeit, Jahreszeit, Wetter und Wind (nur für die Vorschau),
+ * dazu "Vollbild" und "Vorher/Nachher" (gedrückt halten).
  */
 public final class PreviewPanel {
-    private static final int CONTROLS_H = 104;
+    private static final int CONTROLS_H = 122;
 
     @FunctionalInterface
     private interface Drag {
@@ -33,14 +33,12 @@ public final class PreviewPanel {
         return state;
     }
 
-    /** Wurde "Vollbild-Vorschau" geklickt? Der Aufruf setzt den Wunsch zurück. */
     public boolean consumeFullscreenRequest() {
         boolean r = fullscreenRequested;
         fullscreenRequested = false;
         return r;
     }
 
-    /** Zeichnet die Szene in den ganzen Bereich (Vollbild-Modus, ohne Regler). */
     public void renderSceneOnly(GuiGraphics g, int x, int y, int w, int h) {
         ScenePreview.render(g, x, y, w, h, state);
     }
@@ -48,45 +46,40 @@ public final class PreviewPanel {
     public void render(GuiGraphics g, Font font, int mx, int my, int x, int y, int w, int h) {
         hits.clear();
         int sceneH = Math.max(60, h - CONTROLS_H);
-        ScenePreview.render(g, x + 6, y + 6, w - 12, sceneH - 6, state);
+        g.fill(x - 1, y - 1, x + w + 1, y + sceneH + 1, 0xFF000000);
+        ScenePreview.render(g, x, y, w, sceneH, state);
         if (state.compare) {
             String label = I18n.get("visuals.gui.preview.vanilla");
-            g.fill(x + 10, y + 10, x + 14 + font.width(label) + 6, y + 24, 0xB0000000);
-            g.drawString(font, label, x + 14, y + 13, Theme.TEXT);
+            g.fill(x + 4, y + 4, x + 10 + font.width(label), y + 16, 0xB0000000);
+            g.drawString(font, label, x + 7, y + 6, Theme.WHITE, true);
         }
 
-        int cy = y + sceneH + 6;
-        int lx = x + 8;
-        int cw = w - 16;
+        int cy = y + sceneH + 8;
+        int cw = Math.min(w, 310);
+        int lx = x + (w - cw) / 2;
 
-        // Tageszeit
         slider(g, font, mx, my, lx, cy, cw, I18n.get("visuals.gui.preview.time"), state.hour / 24.0,
                 String.format(Locale.ROOT, "%02d:%02d", (int) state.hour, (int) ((state.hour % 1.0) * 60)),
                 f -> state.hour = Math.round(f * 96.0) / 4.0);
-        cy += 18;
-        // Jahreszeit
+        cy += 22;
         segmented(g, font, mx, my, lx, cy, cw, state.season,
                 new String[]{"visuals.gui.season.spring", "visuals.gui.season.summer", "visuals.gui.season.autumn",
                         "visuals.gui.season.winter"}, i -> state.season = i);
-        cy += 20;
-        // Wetter
+        cy += 22;
         segmented(g, font, mx, my, lx, cy, cw, state.weather,
                 new String[]{"visuals.gui.weather.clear", "visuals.gui.weather.rain", "visuals.gui.weather.snow",
                         "visuals.gui.weather.storm"}, i -> state.weather = i);
-        cy += 20;
-        // Wind
+        cy += 22;
         slider(g, font, mx, my, lx, cy, cw, I18n.get("visuals.gui.preview.wind"), state.wind,
                 String.format(Locale.ROOT, "%d %%", (int) Math.round(state.wind * 100)),
                 f -> state.wind = Math.round(f * 20.0) / 20.0);
-        cy += 20;
+        cy += 22;
 
-        // Knöpfe
-        int bw = (cw - 6) / 2;
-        button(g, font, mx, my, lx, cy, bw, 16, I18n.get("visuals.gui.preview.fullscreen"), false,
+        int bw = (cw - 4) / 2;
+        button(g, font, mx, my, lx, cy, bw, I18n.get("visuals.gui.preview.fullscreen"), false,
                 () -> fullscreenRequested = true);
-        button(g, font, mx, my, lx + bw + 6, cy, bw, 16, I18n.get("visuals.gui.preview.compare"), state.compare, null);
-        // "Vorher/Nachher" gilt nur, solange die Maustaste gehalten wird
-        hits.add(new Hit(lx + bw + 6, cy, bw, 16, () -> {
+        button(g, font, mx, my, lx + bw + 4, cy, bw, I18n.get("visuals.gui.preview.compare"), state.compare, null);
+        hits.add(new Hit(lx + bw + 4, cy, bw, 20, () -> {
             state.compare = true;
             activeDrag = m -> {
             };
@@ -95,48 +88,44 @@ public final class PreviewPanel {
 
     private void slider(GuiGraphics g, Font font, int mx, int my, int x, int y, int w, String label, double frac,
                         String valueText, java.util.function.DoubleConsumer set) {
-        g.drawString(font, label, x, y + 3, Theme.TEXT_DIM);
-        int tx = x + 62;
-        int tw = w - 62 - 40;
-        g.fill(tx, y + 7, tx + tw, y + 9, Theme.BORDER);
-        g.fill(tx, y + 7, tx + (int) Math.round(frac * tw), y + 9, Theme.accent());
-        int kx = tx + (int) Math.round(frac * (tw - 4));
-        g.fill(kx, y + 3, kx + 4, y + 13, 0xFFF4F4F6);
-        g.drawString(font, valueText, x + w - font.width(valueText), y + 3, Theme.TEXT);
-        Drag drag = m -> set.accept(Math.max(0, Math.min(1, (m - tx - 2) / (tw - 4.0))));
-        hits.add(new Hit(tx - 2, y, tw + 4, 14, () -> {
+        g.drawString(font, label, x + 2, y + 6, Theme.WHITE, true);
+        int tx = x + 70;
+        int tw = w - 70;
+        boolean hov = Theme.inside(mx, my, tx, y, tw, 20);
+        Theme.track(g, tx, y, tw, 20, hov);
+        int hx = tx + 1 + (int) Math.round(frac * (tw - 10));
+        Theme.button(g, font, hx, y, 8, 20, "", hov, true, Theme.WHITE);
+        g.drawString(font, valueText, tx + (tw - font.width(valueText)) / 2, y + 6, Theme.WHITE, true);
+        Drag drag = m -> set.accept(Math.max(0, Math.min(1, (m - tx - 5) / (tw - 10.0))));
+        hits.add(new Hit(tx, y, tw, 20, () -> {
         }, drag));
     }
 
     private void segmented(GuiGraphics g, Font font, int mx, int my, int x, int y, int w, int selected, String[] keys,
                            java.util.function.IntConsumer set) {
         int n = keys.length;
-        int sw = w / n;
+        int sw = (w - (n - 1) * 2) / n;
         for (int i = 0; i < n; i++) {
-            int bx = x + i * sw;
+            int bx = x + i * (sw + 2);
             boolean sel = i == selected;
-            boolean hov = Theme.inside(mx, my, bx, y, sw - 2, 16);
-            int bg = sel ? Theme.accent() : Theme.mix(Theme.ROW, Theme.accent(), hov ? 0.3 : 0.0);
-            g.fill(bx, y, bx + sw - 2, y + 16, bg);
-            String text = font.plainSubstrByWidth(I18n.get(keys[i]), sw - 8);
-            g.drawString(font, text, bx + (sw - 2 - font.width(text)) / 2, y + 4, sel ? 0xFF111111 : Theme.TEXT);
+            boolean hov = Theme.inside(mx, my, bx, y, sw, 20);
+            Theme.button(g, font, bx, y, sw, 20, I18n.get(keys[i]), hov, true, sel ? 0xFFFFFF55 : Theme.WHITE);
+            if (sel) {
+                g.fill(bx + 2, y + 17, bx + sw - 2, y + 18, 0xFFFFFF55);
+            }
             final int idx = i;
-            hits.add(new Hit(bx, y, sw - 2, 16, () -> set.accept(idx), null));
+            hits.add(new Hit(bx, y, sw, 20, () -> set.accept(idx), null));
         }
     }
 
-    private void button(GuiGraphics g, Font font, int mx, int my, int x, int y, int w, int h, String label,
-                        boolean pressed, Runnable click) {
-        boolean hov = Theme.inside(mx, my, x, y, w, h);
-        g.fill(x, y, x + w, y + h, Theme.mix(Theme.ROW, Theme.accent(), pressed ? 0.7 : hov ? 0.4 : 0.15));
-        String text = font.plainSubstrByWidth(label, w - 6);
-        g.drawString(font, text, x + (w - font.width(text)) / 2, y + (h - 8) / 2, Theme.TEXT);
+    private void button(GuiGraphics g, Font font, int mx, int my, int x, int y, int w, String label, boolean pressed,
+                        Runnable click) {
+        boolean hov = Theme.inside(mx, my, x, y, w, 20);
+        Theme.button(g, font, x, y, w, 20, label, hov || pressed, true, pressed ? 0xFFFFFF55 : Theme.WHITE);
         if (click != null) {
-            hits.add(new Hit(x, y, w, h, click, null));
+            hits.add(new Hit(x, y, w, 20, click, null));
         }
     }
-
-    // ------------------------------------------------------------------ Eingaben
 
     public boolean mouseClicked(double mx, double my) {
         for (int i = hits.size() - 1; i >= 0; i--) {

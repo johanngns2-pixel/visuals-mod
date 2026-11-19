@@ -1,5 +1,6 @@
 package dev.visuals.gui;
 
+import com.google.gson.JsonObject;
 import dev.visuals.VisualsMod;
 import dev.visuals.config.ConfigManager;
 import dev.visuals.config.OptionDef;
@@ -7,12 +8,10 @@ import dev.visuals.config.OptionRegistry;
 import dev.visuals.config.Preset;
 import dev.visuals.config.PresetIO;
 import dev.visuals.config.PresetManager;
-import dev.visuals.config.UndoStack;
 import dev.visuals.config.TabDef;
-import dev.visuals.config.def.GeneralOptions;
-import dev.visuals.config.def.Tabs;
+import dev.visuals.config.UndoStack;
 import dev.visuals.gui.preview.PreviewPanel;
-import dev.visuals.gui.widgets.TabBar;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,9 +21,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import com.google.gson.JsonObject;
-import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -38,55 +34,39 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Das Einstellungs-Menü. Layout: Reiter-Leiste links, Einstellungen in der Mitte, Vorschau rechts,
- * Suchleiste oben, Aktionsleiste unten.
+ * Das Einstellungs-Menü im Stil der Minecraft-Optionen.
  *
- * <p>Gezeichnet wird im "Immediate Mode": Beim Zeichnen sammelt {@link #hits} alle klickbaren Flächen,
- * {@link #mouseClicked} arbeitet sie von oben nach unten ab. Dadurch gibt es keine Widget-Klassen,
- * die zwischen Minecraft-Versionen brechen können.
+ * <p>Drei Ansichten: <b>Übersicht</b> (Suchfeld und Kategorien als Knöpfe), <b>Kategorie</b> (die Optionen einer
+ * Kategorie als schmale Liste) und <b>Vorschau</b> (Beispielszene mit Reglern). "Fertig" speichert und schließt,
+ * wie in den Vanilla-Optionen. Strg+Z und Strg+Y machen Änderungen rückgängig und wiederholen sie.
  *
- * <p>Stand (Abschnitt 2): Layout, Reiter-Leiste, Kopfbereich mit Master-Schalter und Zurücksetzen,
- * Optionsliste mit Scrollen (Schalter sind bedienbar, andere Typen folgen mit den Widgets in Abschnitt 3),
- * Schließen mit Rückfrage. Suche, Vorschau, Presets und Rückgängig folgen in den Abschnitten 3 bis 5.
+ * <p>Gezeichnet wird im "Immediate Mode": Beim Zeichnen sammelt {@link #hits} alle Knöpfe.
  */
 public final class VisualsScreen extends Screen {
-    private static final int TOP_H = 28;
-    private static final int BOTTOM_H = 28;
-    private static final int MIN_W_FOR_PREVIEW = 520;
-    private static final int ROW_H = 20;
-    private static final int GROUP_H = 22;
+    private enum Mode { MAIN, CATEGORY, PREVIEW }
 
     private record Hit(int x, int y, int w, int h, Runnable action) {
     }
 
-    private final Screen parent;
-    private final List<Hit> hits = new ArrayList<>();
-    private final Anim masterKnob = new Anim(0);
-    private final OptionPanel panel = new OptionPanel();
-    private final PreviewPanel preview = new PreviewPanel();
-    private boolean previewFullscreen;
-    private int listTop;
-    private int listBottom;
-
-    private TabBar tabBar;
-    private String activeTab = Tabs.GENERAL;
-    private int scroll;
-    private int maxScroll;
-    private boolean previewCollapsed;
-    private boolean confirmClose;
-
-    // Suche
     private record Result(String tabId, String optionId, String label) {
     }
 
-    private final StringBuilder query = new StringBuilder();
-    private boolean searchFocused;
-    private int searchX;
-    private int searchW;
-    private final List<Hit> searchHits = new ArrayList<>();
-    private String pendingJump;
+    private static final int COLUMN_W = 310;
 
-    // Modales Fenster (Presets, Import/Export)
+    private final Screen parent;
+    private final List<Hit> hits = new ArrayList<>();
+    private final OptionPanel panel = new OptionPanel();
+    private final PreviewPanel preview = new PreviewPanel();
+    private final StringBuilder query = new StringBuilder();
+
+    private Mode mode = Mode.MAIN;
+    private String activeTab = "general";
+    private int scroll;
+    private int maxScroll;
+    private int listTop;
+    private int listBottom;
+    private boolean previewFullscreen;
+    private String pendingJump;
     private ModalDialog modal;
 
     public VisualsScreen(Screen parent) {
@@ -96,9 +76,7 @@ public final class VisualsScreen extends Screen {
 
     @Override
     protected void init() {
-        OptionRegistry registry = VisualsMod.registry();
-        tabBar = new TabBar(new ArrayList<>(registry.tabs()));
-        tabBar.setHeight(this.height);
+        panel.setValueRequest(this::askValue);
     }
 
     @Override
@@ -108,20 +86,12 @@ public final class VisualsScreen extends Screen {
 
     // ------------------------------------------------------------------ Geometrie
 
-    private boolean previewVisible() {
-        return !previewCollapsed && this.width >= MIN_W_FOR_PREVIEW;
+    private int colW() {
+        return Math.min(COLUMN_W, this.width - 12);
     }
 
-    private int previewW() {
-        return previewVisible() ? (int) (this.width * 0.35) : 0;
-    }
-
-    private int contentLeft() {
-        return TabBar.COLLAPSED_W;
-    }
-
-    private int contentRight() {
-        return this.width - previewW();
+    private int colX() {
+        return (this.width - colW()) / 2;
     }
 
     // ------------------------------------------------------------------ Zeichnen
@@ -129,87 +99,239 @@ public final class VisualsScreen extends Screen {
     @Override
     public void render(GuiGraphics g, int mx, int my, float delta) {
         hits.clear();
-        searchHits.clear();
         VisualsMod.presets().tick();
-        ConfigManager cfg = VisualsMod.config();
-        OptionRegistry reg = VisualsMod.registry();
-        TabDef tab = reg.tab(activeTab);
-
         this.renderBackground(g, mx, my, delta);
         if (previewFullscreen) {
             preview.renderSceneOnly(g, 0, 0, this.width, this.height);
             String hint = I18n.get("visuals.gui.preview.exitHint");
             g.fill(0, this.height - 16, this.width, this.height, 0x90000000);
-            g.drawString(this.font, hint, this.width / 2 - this.font.width(hint) / 2, this.height - 12, Theme.TEXT);
+            g.drawString(this.font, hint, this.width / 2 - this.font.width(hint) / 2, this.height - 12, Theme.WHITE, true);
             return;
         }
-        g.fill(0, 0, this.width, this.height, Theme.OVERLAY);
-        tabBar.setHeight(this.height);
+        g.fill(0, 0, this.width, this.height, 0x70000000);
 
-        int left = contentLeft();
-        int right = contentRight();
-        int top = TOP_H;
-        int bottom = this.height - BOTTOM_H;
+        switch (mode) {
+            case MAIN -> renderMain(g, mx, my);
+            case CATEGORY -> renderCategory(g, mx, my);
+            default -> renderPreviewScreen(g, mx, my);
+        }
 
-        // Flächen
-        g.fill(left, 0, this.width, this.height, Theme.PANEL);
-        g.fill(left, top - 1, this.width, top, Theme.BORDER);
-        g.fill(left, bottom, this.width, bottom + 1, Theme.BORDER);
-
-        renderTopBar(g, mx, my, left, cfg);
-        renderContent(g, mx, my, left, right, top, bottom, tab, cfg, reg);
-        renderPreview(g, mx, my, right, top, bottom);
-        renderBottomBar(g, mx, my, left, bottom, cfg);
-
-        // Reiter-Leiste zuletzt, damit sie beim Aufklappen über dem Inhalt liegt
-        tabBar.render(g, this.font, mx, my, activeTab);
-        if (!confirmClose && modal == null) {
+        if (modal == null && mode == Mode.CATEGORY) {
             panel.renderOverlay(g, this.font, mx, my, this.width, this.height);
-            renderSearchResults(g, mx, my);
         }
         if (modal != null) {
             modal.render(g, this.font, mx, my, this.width, this.height);
         }
-
-        if (confirmClose) {
-            renderConfirm(g, mx, my);
-        }
     }
 
-    private void renderTopBar(GuiGraphics g, int mx, int my, int left, ConfigManager cfg) {
-        // Notausschalter
-        boolean on = cfg.get(GeneralOptions.MOD_ENABLED);
-        String label = I18n.get(on ? "visuals.gui.killswitch.on" : "visuals.gui.killswitch.off");
-        int bw = this.font.width(label) + 16;
-        int bx = this.width - bw - 10;
-        button(g, mx, my, bx, 4, bw, TOP_H - 8, label, on ? Theme.accent() : Theme.GRAY,
-                () -> cfg.set(GeneralOptions.MOD_ENABLED, !on));
+    private void title(GuiGraphics g, String text, int y) {
+        g.drawString(this.font, text, (this.width - this.font.width(text)) / 2, y, Theme.WHITE, true);
+    }
 
-        // Aktives Preset
+    /** Dunkler Listenbereich mit Trennlinien oben und unten, wie in den Vanilla-Listen. */
+    private void listBackground(GuiGraphics g, int top, int bottom) {
+        g.fill(0, top, this.width, bottom, 0x66000000);
+        g.fill(0, top - 2, this.width, top - 1, 0xFF000000);
+        g.fill(0, top - 1, this.width, top, 0xFF373737);
+        g.fill(0, bottom, this.width, bottom + 1, 0xFF000000);
+        g.fill(0, bottom + 1, this.width, bottom + 2, 0xFF373737);
+    }
+
+    private void scrollbar(GuiGraphics g, int x, int top, int bottom, int contentH) {
+        if (maxScroll <= 0) {
+            return;
+        }
+        int trackH = bottom - top;
+        int handleH = Math.max(16, (int) ((long) trackH * trackH / Math.max(trackH, contentH)));
+        int handleY = top + (int) ((long) (trackH - handleH) * scroll / maxScroll);
+        g.fill(x, top, x + 6, bottom, 0xFF000000);
+        g.fill(x, handleY, x + 6, handleY + handleH, 0xFF808080);
+        g.fill(x, handleY, x + 5, handleY + handleH - 1, 0xFFC0C0C0);
+    }
+
+    // ---- Übersicht
+
+    private void renderMain(GuiGraphics g, int mx, int my) {
+        ConfigManager cfg = VisualsMod.config();
+        OptionRegistry reg = VisualsMod.registry();
+        int w = colW();
+        int x = colX();
+
+        title(g, I18n.get("visuals.gui.title"), 10);
+        Theme.field(g, x, 24, w, 20, true);
+        String shown = query.length() == 0 ? I18n.get("visuals.gui.search")
+                : query + ((System.currentTimeMillis() / 500) % 2 == 0 ? "_" : "");
+        g.drawString(this.font, this.font.plainSubstrByWidth(shown, w - 12), x + 5, 30,
+                query.length() == 0 ? Theme.GRAY_TEXT : Theme.WHITE, true);
+
+        listTop = 54;
+        listBottom = this.height - 62;
+        listBackground(g, listTop, listBottom);
+
+        g.enableScissor(0, listTop, this.width, listBottom);
+        int y = listTop + 6 - scroll;
+        int contentH;
+        if (query.length() == 0) {
+            int bw = (w - 6) / 2;
+            int i = 0;
+            for (TabDef tab : reg.tabs()) {
+                int bx = x + (i % 2) * (bw + 6);
+                int by = y + (i / 2) * 24;
+                boolean hov = my >= listTop && my < listBottom && Theme.inside(mx, my, bx, by, bw, 20);
+                Theme.button(g, this.font, bx, by, bw, 20, I18n.get(tab.nameKey()), hov, true, Theme.WHITE);
+                boolean on = cfg.isEffectActive(tab.id());
+                g.fill(bx + bw - 12, by + 7, bx + bw - 6, by + 13, 0xFF000000);
+                g.fill(bx + bw - 11, by + 8, bx + bw - 7, by + 12, on ? Theme.OK_GREEN : 0xFF707070);
+                if (by + 20 > listTop && by < listBottom) {
+                    final String id = tab.id();
+                    hits.add(new Hit(bx, by, bw, 20, () -> openCategory(id, null)));
+                }
+                i++;
+            }
+            contentH = ((i + 1) / 2) * 24 + 12;
+        } else {
+            List<Result> results = searchResults();
+            if (results.isEmpty()) {
+                String none = I18n.get("visuals.gui.search.none");
+                g.drawString(this.font, none, (this.width - this.font.width(none)) / 2, y + 12, Theme.GRAY_TEXT, true);
+            }
+            for (int i = 0; i < results.size(); i++) {
+                Result r = results.get(i);
+                int by = y + i * 24;
+                boolean hov = my >= listTop && my < listBottom && Theme.inside(mx, my, x, by, w, 20);
+                Theme.button(g, this.font, x, by, w, 20, r.label(), hov, true, Theme.WHITE);
+                if (by + 20 > listTop && by < listBottom) {
+                    hits.add(new Hit(x, by, w, 20, () -> openCategory(r.tabId(), r.optionId())));
+                }
+            }
+            contentH = results.size() * 24 + 12;
+        }
+        g.disableScissor();
+        maxScroll = Math.max(0, contentH - (listBottom - listTop));
+        scroll = Math.max(0, Math.min(maxScroll, scroll));
+        scrollbar(g, x + w + 4, listTop, listBottom, contentH);
+
+        // Fußleiste: zwei Reihen mit je drei Knöpfen
+        int bw = (w - 8) / 3;
+        int yA = this.height - 54;
+        int yB = this.height - 30;
         PresetManager presets = VisualsMod.presets();
-        String name = presets.activeName().isEmpty() ? "-" : presetLabel(presets.activeName(), presets.activeIsBuiltin());
-        String presetText = String.format(I18n.get("visuals.gui.presetActive"), name);
-        int px = bx - 12 - this.font.width(presetText);
+        String presetLabel = presets.activeName().isEmpty()
+                ? I18n.get("visuals.gui.preset")
+                : presetLabel(presets.activeName(), presets.activeIsBuiltin());
+        footer(g, mx, my, x, yA, bw, I18n.get("visuals.gui.preset") + ": " + presetLabel, this::openPresetMenu);
+        footer(g, mx, my, x + bw + 4, yA, bw, I18n.get("visuals.gui.preset.save"), this::openSavePreset);
+        footer(g, mx, my, x + (bw + 4) * 2, yA, bw, I18n.get("visuals.gui.io"), this::openIoMenu);
+        footer(g, mx, my, x, yB, bw, I18n.get("visuals.gui.previewOpen"), () -> setMode(Mode.PREVIEW));
+        footer(g, mx, my, x + bw + 4, yB, bw, I18n.get("visuals.gui.resetAll"), this::askResetAll);
+        footer(g, mx, my, x + (bw + 4) * 2, yB, bw, I18n.get("visuals.gui.done"), this::finish);
+    }
 
-        // Suchleiste
-        searchX = left + 10;
-        searchW = Math.max(80, Math.min(260, px - searchX - 10));
-        g.fill(searchX, 5, searchX + searchW, TOP_H - 5, searchFocused ? 0xFF2C2C34 : Theme.ROW);
-        if (searchFocused) {
-            g.fill(searchX, TOP_H - 6, searchX + searchW, TOP_H - 5, Theme.accent());
-        }
-        String shown = query.length() == 0 && !searchFocused ? I18n.get("visuals.gui.search")
-                : query + (searchFocused && (System.currentTimeMillis() / 500) % 2 == 0 ? "_" : "");
-        g.drawString(this.font, this.font.plainSubstrByWidth(shown, searchW - 12), searchX + 6, 10,
-                query.length() == 0 && !searchFocused ? Theme.TEXT_DISABLED : Theme.TEXT);
-
-        if (px > searchX + searchW + 8) {
-            g.drawString(this.font, presetText, px, 10, Theme.TEXT_DIM);
-        }
+    private void footer(GuiGraphics g, int mx, int my, int x, int y, int w, String label, Runnable action) {
+        Theme.button(g, this.font, x, y, w, 20, label, Theme.inside(mx, my, x, y, w, 20), true, Theme.WHITE);
+        hits.add(new Hit(x, y, w, 20, action));
     }
 
     private static String presetLabel(String name, boolean builtin) {
         return builtin ? I18n.get("visuals.preset." + name) : name;
+    }
+
+    // ---- Kategorie
+
+    private void renderCategory(GuiGraphics g, int mx, int my) {
+        ConfigManager cfg = VisualsMod.config();
+        OptionRegistry reg = VisualsMod.registry();
+        TabDef tab = reg.tab(activeTab);
+        int w = colW();
+        int x = colX();
+
+        title(g, I18n.get(tab.nameKey()), 8);
+        String desc = this.font.plainSubstrByWidth(I18n.get(tab.descKey()), w + 40);
+        g.drawString(this.font, desc, (this.width - this.font.width(desc)) / 2, 20, Theme.GRAY_TEXT, true);
+
+        int top = 34;
+        if (tab.hasMaster()) {
+            OptionDef<Boolean> master = reg.masterOf(tab.id()).orElseThrow();
+            boolean on = cfg.get(master);
+            String label = I18n.get(tab.nameKey()) + ": " + I18n.get(on ? "visuals.gui.on" : "visuals.gui.off");
+            Theme.button(g, this.font, x, top, w, 20, label, Theme.inside(mx, my, x, top, w, 20), true,
+                    on ? Theme.OK_GREEN : Theme.OFF_RED);
+            hits.add(new Hit(x, top, w, 20, () -> cfg.set(master, !on)));
+            top += 26;
+        }
+
+        listTop = top + 4;
+        listBottom = this.height - 34;
+        listBackground(g, listTop, listBottom);
+        g.enableScissor(0, listTop, this.width, listBottom);
+        int startY = listTop + 4 - scroll;
+        int endY = panel.render(g, this.font, mx, my, x, startY, w, listTop, listBottom, tab.id());
+        g.disableScissor();
+        int contentH = endY - startY + 8;
+        maxScroll = Math.max(0, contentH - (listBottom - listTop));
+        if (pendingJump != null) {
+            Integer off = panel.offsetOf(pendingJump);
+            if (off != null) {
+                scroll = off - 40;
+                panel.highlight(pendingJump);
+                pendingJump = null;
+            }
+        }
+        scroll = Math.max(0, Math.min(maxScroll, scroll));
+        scrollbar(g, x + w + 4, listTop, listBottom, contentH);
+
+        int y = this.height - 28;
+        int bw = (w - 4) / 2;
+        footer(g, mx, my, x, y, bw, I18n.get("visuals.gui.resetTab"),
+                () -> VisualsMod.undo().group(() -> cfg.resetTab(activeTab)));
+        footer(g, mx, my, x + bw + 4, y, bw, I18n.get("visuals.gui.done"), () -> setMode(Mode.MAIN));
+    }
+
+    // ---- Vorschau
+
+    private void renderPreviewScreen(GuiGraphics g, int mx, int my) {
+        title(g, I18n.get("visuals.gui.preview"), 8);
+        int m = Math.max(8, (this.width - 520) / 2);
+        preview.render(g, this.font, mx, my, m, 24, this.width - m * 2, this.height - 24 - 34);
+        if (preview.consumeFullscreenRequest()) {
+            previewFullscreen = true;
+        }
+        int w = Math.min(200, colW());
+        footer(g, mx, my, (this.width - w) / 2, this.height - 28, w, I18n.get("visuals.gui.done"),
+                () -> setMode(Mode.MAIN));
+    }
+
+    // ------------------------------------------------------------------ Navigation
+
+    private void setMode(Mode m) {
+        mode = m;
+        scroll = 0;
+        panel.closeAll();
+    }
+
+    private void openCategory(String tabId, String optionId) {
+        activeTab = tabId;
+        query.setLength(0);
+        setMode(Mode.CATEGORY);
+        pendingJump = optionId;
+    }
+
+    /** "Fertig" in der Übersicht: speichern und schließen, wie in den Vanilla-Optionen. */
+    private void finish() {
+        VisualsMod.presets().finishNow();
+        VisualsMod.config().commit();
+        Minecraft.getInstance().setScreen(parent);
+    }
+
+    @Override
+    public void removed() {
+        VisualsMod.presets().finishNow();
+        super.removed();
+    }
+
+    @Override
+    public void onClose() {
+        finish();
     }
 
     // ------------------------------------------------------------------ Suche
@@ -238,146 +360,32 @@ public final class VisualsScreen extends Screen {
                 }
             }
         }
-        return out.size() > 8 ? out.subList(0, 8) : out;
+        return out.size() > 30 ? out.subList(0, 30) : out;
     }
 
-    private void renderSearchResults(GuiGraphics g, int mx, int my) {
-        if (!searchFocused || query.length() == 0) {
-            return;
-        }
-        List<Result> results = searchResults();
-        int rowH = 16;
-        int h = Math.max(1, results.size()) * rowH + 4;
-        int y = TOP_H - 2;
-        g.fill(searchX - 1, y - 1, searchX + searchW + 1, y + h + 1, Theme.BORDER);
-        g.fill(searchX, y, searchX + searchW, y + h, Theme.PANEL_LIGHT);
-        if (results.isEmpty()) {
-            g.drawString(this.font, I18n.get("visuals.gui.search.none"), searchX + 6, y + 6, Theme.TEXT_DISABLED);
-            return;
-        }
-        for (int i = 0; i < results.size(); i++) {
-            Result r = results.get(i);
-            int ry = y + 2 + i * rowH;
-            boolean hov = Theme.inside(mx, my, searchX, ry, searchW, rowH);
-            if (hov) {
-                g.fill(searchX + 1, ry, searchX + searchW - 1, ry + rowH, Theme.ROW_HOVER);
-            }
-            g.drawString(this.font, this.font.plainSubstrByWidth(r.label(), searchW - 12), searchX + 6, ry + 4, Theme.TEXT);
-            searchHits.add(new Hit(searchX, ry, searchW, rowH, () -> jumpTo(r)));
-        }
+    // ------------------------------------------------------------------ Modale Fenster
+
+    private void info(String... lines) {
+        modal = ModalDialog.message(I18n.get("visuals.gui.title"), List.of(lines), I18n.get("visuals.gui.ok"), () -> {
+        });
     }
 
-    private void jumpTo(Result r) {
-        selectTab(r.tabId());
-        pendingJump = r.optionId();
-        query.setLength(0);
-        searchFocused = false;
+    private void askValue(OptionDef<?> def) {
+        ConfigManager cfg = VisualsMod.config();
+        String prompt = String.format(Locale.ROOT, I18n.get("visuals.gui.enterValue"),
+                OptionPanel.plainValue(def, def.min()), OptionPanel.plainValue(def, def.max()));
+        modal = ModalDialog.input(I18n.get(def.nameKey()), prompt, 12,
+                OptionPanel.plainValue(def, cfg.getRaw(def.id())), I18n.get("visuals.gui.ok"),
+                text -> panel.applyText(def, text), I18n.get("visuals.gui.cancel"), () -> {
+                });
     }
 
-    private void renderContent(GuiGraphics g, int mx, int my, int left, int right, int top, int bottom,
-                               TabDef tab, ConfigManager cfg, OptionRegistry reg) {
-        int pad = 12;
-        int x = left + pad;
-        int w = right - left - pad * 2;
-
-        // Kopf: Titel, Beschreibung, Master-Schalter, Zurücksetzen
-        g.drawString(this.font, I18n.get(tab.nameKey()), x, top + 10, Theme.TEXT);
-        List<net.minecraft.util.FormattedCharSequence> desc =
-                this.font.split(Component.translatable(tab.descKey()), Math.max(60, w - 150));
-        int dy = top + 24;
-        for (var line : desc) {
-            g.drawString(this.font, line, x, dy, Theme.TEXT_DIM);
-            dy += 10;
-        }
-        int headerH = (dy - top) + 8;
-
-        int rx = right - pad;
-        String reset = I18n.get("visuals.gui.resetTab");
-        int rw = this.font.width(reset) + 14;
-        rx -= rw;
-        button(g, mx, my, rx, top + 8, rw, 16, reset, Theme.GRAY,
-                () -> VisualsMod.undo().group(() -> cfg.resetTab(activeTab)));
-        if (tab.hasMaster()) {
-            OptionDef<Boolean> master = reg.masterOf(tab.id()).orElseThrow();
-            boolean on = cfg.get(master);
-            int sw = 30;
-            rx -= sw + 10;
-            toggle(g, rx, top + 9, on, masterKnob, true);
-            hits.add(new Hit(rx, top + 9, sw, 14, () -> cfg.set(master, !on)));
-        }
-
-        // Optionsliste
-        listTop = top + headerH;
-        listBottom = bottom;
-        g.fill(x, listTop - 1, x + w, listTop, Theme.BORDER);
-        g.enableScissor(left, listTop, right, bottom);
-        int startY = listTop - scroll + 6;
-        int endY = panel.render(g, this.font, mx, my, x, startY, w, listTop, bottom, tab.id());
-        g.disableScissor();
-        maxScroll = Math.max(0, (endY - startY) + 12 - (bottom - listTop));
-        if (pendingJump != null) {
-            Integer off = panel.offsetOf(pendingJump);
-            if (off != null) {
-                scroll = off - 30;
-                panel.highlight(pendingJump);
-                pendingJump = null;
-            }
-        }
-        scroll = Math.max(0, Math.min(maxScroll, scroll));
+    private void askResetAll() {
+        modal = ModalDialog.confirm(I18n.get("visuals.gui.resetAll"), List.of(I18n.get("visuals.gui.resetAll.ask")),
+                I18n.get("visuals.gui.resetAll"), () -> VisualsMod.undo().group(VisualsMod.config()::resetAll),
+                I18n.get("visuals.gui.cancel"), () -> {
+                });
     }
-
-    private void renderPreview(GuiGraphics g, int mx, int my, int right, int top, int bottom) {
-        if (!previewVisible()) {
-            return;
-        }
-        g.fill(right, top, this.width, bottom, Theme.PANEL_LIGHT);
-        g.fill(right, top, right + 1, bottom, Theme.BORDER);
-        preview.render(g, this.font, mx, my, right + 1, top, this.width - right - 1, bottom - top);
-        if (preview.consumeFullscreenRequest()) {
-            previewFullscreen = true;
-        }
-    }
-
-    private void renderBottomBar(GuiGraphics g, int mx, int my, int left, int bottom, ConfigManager cfg) {
-        int y = bottom + 4;
-        int h = BOTTOM_H - 8;
-        int x = left + 10;
-        PresetManager presets = VisualsMod.presets();
-
-        String presetBtn = I18n.get("visuals.gui.preset") + " \u25BE";
-        x = bar(g, mx, my, x, y, h, presetBtn, Theme.accent(), this::openPresetMenu);
-        x = bar(g, mx, my, x, y, h, I18n.get("visuals.gui.preset.save"), Theme.GRAY, this::openSavePreset);
-        x = bar(g, mx, my, x, y, h, I18n.get("visuals.gui.io"), Theme.GRAY, this::openIoMenu);
-        bar(g, mx, my, x, y, h, I18n.get("visuals.gui.resetAll"), Theme.GRAY,
-                () -> VisualsMod.undo().group(cfg::resetAll));
-
-        String close = I18n.get("visuals.gui.close");
-        String apply = I18n.get("visuals.gui.apply");
-        int cw = this.font.width(close) + 20;
-        int aw = this.font.width(apply) + 20;
-        int cx = this.width - cw - 10;
-        int ax = cx - aw - 8;
-        button(g, mx, my, cx, y, cw, h, close, Theme.GRAY, this::requestClose);
-        button(g, mx, my, ax, y, aw, h, apply, Theme.accent(), cfg::commit);
-
-        if (this.width >= MIN_W_FOR_PREVIEW) {
-            String label = I18n.get(previewCollapsed ? "visuals.gui.previewShow" : "visuals.gui.previewHide");
-            int pw = this.font.width(label) + 16;
-            int px = ax - pw - 8;
-            if (px > x + 20) {
-                button(g, mx, my, px, y, pw, h, label, Theme.GRAY, () -> previewCollapsed = !previewCollapsed);
-            }
-        }
-    }
-
-    /** Zeichnet einen Knopf der unteren Leiste und liefert das x für den nächsten. */
-    private int bar(GuiGraphics g, int mx, int my, int x, int y, int h, String label, int color, Runnable action) {
-        int w = this.font.width(label) + 16;
-        button(g, mx, my, x, y, w, h, label, color, action);
-        return x + w + 6;
-    }
-
-    // ------------------------------------------------------------------ Presets, Import und Export
 
     private void openPresetMenu() {
         PresetManager presets = VisualsMod.presets();
@@ -385,7 +393,7 @@ public final class VisualsScreen extends Screen {
         for (Preset p : presets.all()) {
             boolean active = p.name().equals(presets.activeName()) && p.builtin() == presets.activeIsBuiltin();
             String label = (active ? "\u2713 " : "") + presetLabel(p.name(), p.builtin());
-            entries.add(new ModalDialog.Button(label, active ? Theme.accent() : Theme.GRAY, () -> presets.apply(p)));
+            entries.add(new ModalDialog.Button(label, Theme.GRAY, () -> presets.apply(p)));
         }
         entries.add(new ModalDialog.Button(I18n.get("visuals.gui.cancel"), Theme.GRAY, () -> {
         }));
@@ -400,11 +408,6 @@ public final class VisualsScreen extends Screen {
                     info(ok ? I18n.get("visuals.gui.preset.saved") : I18n.get("visuals.gui.preset.saveFailed"));
                 }, I18n.get("visuals.gui.cancel"), () -> {
                 });
-    }
-
-    private void info(String... lines) {
-        modal = ModalDialog.message(I18n.get("visuals.gui.title"), List.of(lines), I18n.get("visuals.gui.ok"), () -> {
-        });
     }
 
     private Path dataDir() {
@@ -497,53 +500,11 @@ public final class VisualsScreen extends Screen {
                 });
     }
 
-    private void renderConfirm(GuiGraphics g, int mx, int my) {
-        hits.clear(); // modal: nur noch die Rückfrage ist klickbar
-        g.fill(0, 0, this.width, this.height, 0xB0000000);
-        int w = 260;
-        int h = 80;
-        int x = (this.width - w) / 2;
-        int y = (this.height - h) / 2;
-        g.fill(x, y, x + w, y + h, Theme.PANEL_LIGHT);
-        g.fill(x, y, x + w, y + 1, Theme.accent());
-        String title = I18n.get("visuals.gui.confirm.title");
-        g.drawString(this.font, title, x + w / 2 - this.font.width(title) / 2, y + 14, Theme.TEXT);
-
-        ConfigManager cfg = VisualsMod.config();
-        String save = I18n.get("visuals.gui.confirm.save");
-        String discard = I18n.get("visuals.gui.confirm.discard");
-        String cancel = I18n.get("visuals.gui.confirm.cancel");
-        int bw = 76;
-        int by = y + h - 28;
-        button(g, mx, my, x + 8, by, bw, 18, save, Theme.accent(), () -> {
-            cfg.commit();
-            closeNow();
-        });
-        button(g, mx, my, x + 8 + bw + 6, by, bw, 18, discard, Theme.GRAY, () -> {
-            cfg.revert();
-            closeNow();
-        });
-        button(g, mx, my, x + 8 + (bw + 6) * 2, by, bw - 4, 18, cancel, Theme.GRAY, () -> confirmClose = false);
-    }
-
-    // ------------------------------------------------------------------ Bausteine
-
-    private void button(GuiGraphics g, int mx, int my, int x, int y, int w, int h, String label, int color,
-                        Runnable action) {
-        boolean hovered = Theme.inside(mx, my, x, y, w, h);
-        int bg = Theme.mix(Theme.ROW, color, hovered ? 0.55 : 0.25);
-        g.fill(x, y, x + w, y + h, bg);
-        g.drawString(this.font, label, x + (w - this.font.width(label)) / 2, y + (h - 8) / 2, Theme.TEXT);
-        hits.add(new Hit(x, y, w, h, action));
-    }
-
-    /** Gleitender Schalter (30 x 14). {@code knob} darf null sein, dann springt er. */
-    private void toggle(GuiGraphics g, int x, int y, boolean on, Anim knob, boolean enabled) {
-        double t = knob != null ? knob.step(on ? 1 : 0) : (on ? 1 : 0);
-        int track = enabled ? Theme.mix(Theme.GRAY, Theme.accent(), t) : Theme.mix(0xFF3A3A40, 0xFF55453A, t);
-        g.fill(x, y, x + 30, y + 14, track);
-        int kx = x + 2 + (int) Math.round(t * 16);
-        g.fill(kx, y + 2, kx + 10, y + 12, enabled ? 0xFFF4F4F6 : 0xFF8A8A90);
+    private void runModal(Runnable action) {
+        if (action != null) {
+            modal = null;
+            action.run();
+        }
     }
 
     // ------------------------------------------------------------------ Eingaben
@@ -564,71 +525,29 @@ public final class VisualsScreen extends Screen {
             previewFullscreen = false;
             return true;
         }
-        if (confirmClose) {
-            if (button == 0) {
-                runHit(mx, my);
+        if (mode == Mode.CATEGORY && (panel.popupOpen() || panel.editing())) {
+            if (panel.mouseClicked(mx, my, button, shift)) {
+                return true;
             }
-            return true;
         }
         if (button == 0) {
-            for (int i = searchHits.size() - 1; i >= 0; i--) {
-                Hit hit = searchHits.get(i);
+            for (int i = hits.size() - 1; i >= 0; i--) {
+                Hit hit = hits.get(i);
                 if (Theme.inside(mx, my, hit.x(), hit.y(), hit.w(), hit.h())) {
                     hit.action().run();
                     return true;
                 }
             }
-            if (Theme.inside(mx, my, searchX, 5, searchW, TOP_H - 10)) {
-                panel.closeAll();
-                searchFocused = true;
-                return true;
-            }
-            searchFocused = false;
-        }
-        if (panel.popupOpen() || panel.editing()) {
-            if (panel.mouseClicked(mx, my, button, shift)) {
+            if (mode == Mode.PREVIEW && preview.mouseClicked(mx, my)) {
                 return true;
             }
         }
-        if (button == 0) {
-            if (tabBar.contains(mx, my)) {
-                String id = tabBar.clicked(mx, my);
-                if (id != null) {
-                    selectTab(id);
-                }
-                return true;
-            }
-            if (runHit(mx, my)) {
-                return true;
-            }
-        }
-        if (button == 0 && previewVisible() && mx >= contentRight() && preview.mouseClicked(mx, my)) {
-            return true;
-        }
-        if (my >= listTop && my < listBottom && mx >= contentLeft() && mx < contentRight()) {
+        if (mode == Mode.CATEGORY && my >= listTop && my < listBottom) {
             if (panel.mouseClicked(mx, my, button, shift)) {
                 return true;
             }
         }
         return super.mouseClicked(event, doubleClick);
-    }
-
-    private void runModal(Runnable action) {
-        if (action != null) {
-            modal = null;
-            action.run();
-        }
-    }
-
-    private boolean runHit(double mx, double my) {
-        for (int i = hits.size() - 1; i >= 0; i--) {
-            Hit hit = hits.get(i);
-            if (Theme.inside(mx, my, hit.x(), hit.y(), hit.w(), hit.h())) {
-                hit.action().run();
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -647,34 +566,33 @@ public final class VisualsScreen extends Screen {
     }
 
     @Override
+    public boolean mouseScrolled(double mx, double my, double scrollX, double scrollY) {
+        if (modal != null) {
+            return true;
+        }
+        if (mode != Mode.PREVIEW) {
+            scroll = Math.max(0, Math.min(maxScroll, scroll - (int) (scrollY * 22)));
+        }
+        return true;
+    }
+
+    @Override
     public boolean charTyped(CharacterEvent event) {
         if (modal != null) {
             modal.charTyped(event.codepoint());
             return true;
         }
-        if (searchFocused) {
+        if (mode == Mode.MAIN) {
             if (query.length() < 40 && event.codepoint() >= 32) {
                 query.append(Character.toChars(event.codepoint()));
+                scroll = 0;
             }
             return true;
         }
-        if (!confirmClose && panel.charTyped(event.codepoint())) {
+        if (mode == Mode.CATEGORY && panel.charTyped(event.codepoint())) {
             return true;
         }
         return super.charTyped(event);
-    }
-
-    @Override
-    public boolean mouseScrolled(double mx, double my, double scrollX, double scrollY) {
-        if (confirmClose || modal != null) {
-            return true;
-        }
-        if (tabBar.contains(mx, my)) {
-            tabBar.scrolled(scrollY);
-        } else {
-            scroll = Math.max(0, Math.min(maxScroll, scroll - (int) (scrollY * 18)));
-        }
-        return true;
     }
 
     @Override
@@ -691,86 +609,43 @@ public final class VisualsScreen extends Screen {
             }
             return true;
         }
-        if (searchFocused && !confirmClose) {
-            if (key == GLFW.GLFW_KEY_ESCAPE) {
-                searchFocused = false;
-                query.setLength(0);
-            } else if (key == GLFW.GLFW_KEY_BACKSPACE && query.length() > 0) {
-                query.setLength(query.length() - 1);
-            } else if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) {
-                List<Result> results = searchResults();
-                if (!results.isEmpty()) {
-                    jumpTo(results.get(0));
-                }
-            }
+        if (mode == Mode.CATEGORY && panel.keyPressed(key, ctrl)) {
             return true;
         }
-        if (!confirmClose && panel.keyPressed(key, ctrl)) {
-            return true;
-        }
-        if (!confirmClose && ctrl && key == GLFW.GLFW_KEY_F) {
-            panel.closeAll();
-            searchFocused = true;
-            return true;
-        }
-        if (!confirmClose && ctrl && (key == GLFW.GLFW_KEY_Z || key == GLFW.GLFW_KEY_Y)) {
-            UndoStack undo = VisualsMod.undo();
+        if (ctrl && (key == GLFW.GLFW_KEY_Z || key == GLFW.GLFW_KEY_Y)) {
             VisualsMod.presets().finishNow();
             if (key == GLFW.GLFW_KEY_Y || event.hasShiftDown()) {
-                undo.redo();
+                VisualsMod.undo().redo();
             } else {
-                undo.undo();
+                VisualsMod.undo().undo();
             }
             return true;
         }
         if (key == GLFW.GLFW_KEY_ESCAPE) {
-            if (confirmClose) {
-                confirmClose = false;
+            if (mode != Mode.MAIN) {
+                setMode(Mode.MAIN);
+            } else if (query.length() > 0) {
+                query.setLength(0);
+                scroll = 0;
             } else {
-                requestClose();
+                finish();
             }
             return true;
         }
-        if (confirmClose) {
-            return true;
-        }
-        if (key == GLFW.GLFW_KEY_DOWN || key == GLFW.GLFW_KEY_UP) {
-            selectTab(tabBar.neighbour(activeTab, key == GLFW.GLFW_KEY_DOWN ? 1 : -1));
-            return true;
+        if (mode == Mode.MAIN) {
+            if (key == GLFW.GLFW_KEY_BACKSPACE && query.length() > 0) {
+                query.setLength(query.length() - 1);
+                scroll = 0;
+                return true;
+            }
+            if ((key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) && query.length() > 0) {
+                List<Result> results = searchResults();
+                if (!results.isEmpty()) {
+                    openCategory(results.get(0).tabId(), results.get(0).optionId());
+                }
+                return true;
+            }
         }
         return super.keyPressed(event);
-    }
-
-    private void selectTab(String id) {
-        if (!id.equals(activeTab)) {
-            activeTab = id;
-            scroll = 0;
-            panel.closeAll();
-        }
-    }
-
-    // ------------------------------------------------------------------ Schließen
-
-    private void requestClose() {
-        if (VisualsMod.config().isDirty()) {
-            confirmClose = true;
-        } else {
-            closeNow();
-        }
-    }
-
-    private void closeNow() {
-        Minecraft.getInstance().setScreen(parent);
-    }
-
-    @Override
-    public void removed() {
-        VisualsMod.presets().finishNow();
-        super.removed();
-    }
-
-    @Override
-    public void onClose() {
-        requestClose();
     }
 }

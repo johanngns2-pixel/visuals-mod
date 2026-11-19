@@ -18,18 +18,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
- * Zeichnet die Optionsliste eines Reiters und bedient alle Widget-Typen: Schalter, Regler mit Zahlenfeld
- * (Shift = Feineinstellung), Dropdown, Farbwähler (HSV und Hex), Textfeld. Dazu Tooltips, Zurücksetzen-Pfeil,
- * Rechtsklick-Menü (Zurücksetzen, Wert kopieren, Wert einfügen) und Markierung ungültiger Eingaben.
+ * Optionsliste einer Kategorie im Stil der Minecraft-Optionen: pro Option eine Zeile mit Name links und einem
+ * Bedienelement rechts (Schalter-Knopf, Regler, Wechsel-Knopf, Farbknopf, Textfeld) plus Zurücksetzen-Knopf.
+ * Dazu Tooltips, Rechtsklick-Menü (Zurücksetzen, Kopieren, Einfügen, Wert eingeben) und Markierung ungültiger Eingaben.
  *
- * <p>Immediate Mode wie {@link VisualsScreen}: beim Zeichnen werden die klickbaren Flächen gesammelt.
+ * <p>Immediate Mode: beim Zeichnen werden die klickbaren Flächen gesammelt.
  */
 public final class OptionPanel {
     public static final int ROW_H = 22;
-    public static final int GROUP_H = 22;
-    private static final int RESET_W = 16;
+    public static final int GROUP_H = 26;
+    private static final int WIDGET_H = 20;
+    private static final int CONTROL_W = 140;
+    private static final int RESET_W = 20;
     private static final int POPUP_ROW_H = 16;
 
     @FunctionalInterface
@@ -52,17 +55,11 @@ public final class OptionPanel {
     private int clipTop;
     private int clipBottom;
 
-    // Textbearbeitung
     private String editId;
     private OptionDef<?> editDef;
     private boolean editHex;
     private final StringBuilder editBuf = new StringBuilder();
 
-    // Popups
-    private String dropdownId;
-    private int dropX;
-    private int dropY;
-    private int dropW;
     private String colorId;
     private int colorX;
     private int colorY;
@@ -77,28 +74,32 @@ public final class OptionPanel {
     private final Map<String, Integer> rowOffsets = new HashMap<>();
     private String highlightId;
     private long highlightUntil;
+    private Consumer<OptionDef<?>> valueRequest = d -> {
+    };
+
+    /** Der Screen legt fest, was bei "Wert eingeben" passiert (er öffnet ein Eingabefenster). */
+    public void setValueRequest(Consumer<OptionDef<?>> valueRequest) {
+        this.valueRequest = valueRequest;
+    }
 
     // ------------------------------------------------------------------ Zustand
 
     public boolean popupOpen() {
-        return dropdownId != null || colorId != null || ctxId != null;
+        return colorId != null || ctxId != null;
     }
 
     public boolean editing() {
         return editId != null;
     }
 
-    /** True, wenn Esc und Pfeiltasten dem Panel gehören und nicht dem Screen. */
     public boolean blocksInput() {
         return popupOpen() || editing();
     }
 
-    /** Abstand der Zeile vom Listenanfang (nach dem letzten Zeichnen), oder {@code null}. */
     public Integer offsetOf(String id) {
         return rowOffsets.get(id);
     }
 
-    /** Hebt eine Option kurz hervor (Suche). */
     public void highlight(String id) {
         highlightId = id;
         highlightUntil = System.currentTimeMillis() + 1800;
@@ -110,7 +111,6 @@ public final class OptionPanel {
 
     public void closeAll() {
         editId = null;
-        dropdownId = null;
         colorId = null;
         ctxId = null;
         activeDrag = null;
@@ -132,7 +132,8 @@ public final class OptionPanel {
         int originY = y;
 
         for (String group : reg.groupsOf(tabId)) {
-            g.drawString(font, I18n.get("visuals.group." + tabId + "." + group), x, y + 7, Theme.accent());
+            String heading = I18n.get("visuals.group." + tabId + "." + group);
+            g.drawString(font, heading, x + (w - font.width(heading)) / 2, y + 9, Theme.WHITE, true);
             y += GROUP_H;
             for (OptionDef<?> def : reg.optionsOf(tabId)) {
                 if (!def.groupId().equals(group)) {
@@ -144,7 +145,7 @@ public final class OptionPanel {
                         hovered = def.id();
                     }
                 }
-                y += ROW_H + 2;
+                y += ROW_H;
             }
             y += 6;
         }
@@ -159,38 +160,35 @@ public final class OptionPanel {
                         ConfigManager cfg, boolean popup) {
         String id = def.id();
         boolean enabled = cfg.isOptionEnabled(id);
-        boolean hovered = enabled && !popup && my >= clipTop && my < clipBottom && Theme.inside(mx, my, x, y, w, ROW_H);
-        g.fill(x, y, x + w, y + ROW_H, hovered ? Theme.ROW_HOVER : Theme.ROW);
-        boolean modified = cfg.isModified(id);
-        if (modified) {
-            g.fill(x, y, x + 2, y + ROW_H, Theme.accent());
+        boolean inRow = my >= clipTop && my < clipBottom && Theme.inside(mx, my, x, y, w, WIDGET_H);
+        boolean rowHover = enabled && !popup && inRow;
+        if (rowHover) {
+            g.fill(x, y, x + w, y + WIDGET_H, 0x20FFFFFF);
         }
         if (id.equals(highlightId) && System.currentTimeMillis() < highlightUntil) {
             long left = highlightUntil - System.currentTimeMillis();
-            int a = (int) (0x50 * Math.min(1.0, left / 600.0));
-            g.fill(x, y, x + w, y + ROW_H, (a << 24) | (Theme.accent() & 0xFFFFFF));
-            outline(g, x, y, w, ROW_H, Theme.accent());
+            int a = (int) (0x60 * Math.min(1.0, left / 600.0));
+            g.fill(x, y, x + w, y + WIDGET_H, (a << 24) | 0xFFFF55);
         }
         if (invalid.getOrDefault(id, 0L) > System.currentTimeMillis()) {
-            outline(g, x, y, w, ROW_H, 0xFFE04848);
+            outline(g, x, y, w, WIDGET_H, 0xFFFF5555);
         }
         Object value = cfg.getRaw(id);
         if (value == null) {
             value = def.defaultValue();
         }
 
-        int controlRight = x + w - 8 - RESET_W;
-        int controlLeft;
-        int textColor = enabled ? Theme.TEXT : Theme.TEXT_DISABLED;
-        int dimColor = enabled ? Theme.TEXT_DIM : Theme.TEXT_DISABLED;
+        int cx = x + w - RESET_W - 4 - CONTROL_W;
+        boolean ctrlHover = enabled && !popup && inRow && mx >= cx && mx < cx + CONTROL_W;
+        int textColor = enabled ? Theme.WHITE : Theme.GRAY_TEXT;
         long now = System.currentTimeMillis();
 
         switch (def.type()) {
             case TOGGLE -> {
                 boolean on = Boolean.TRUE.equals(value);
-                controlLeft = controlRight - 30;
-                drawToggle(g, controlLeft, y + 4, on ? 1.0 : 0.0, enabled);
-                add(x, y, w, ROW_H, enabled, (cx, cy, b, s) -> {
+                Theme.button(g, font, cx, y, CONTROL_W, WIDGET_H, I18n.get(on ? "visuals.gui.on" : "visuals.gui.off"),
+                        ctrlHover, enabled, enabled ? (on ? Theme.OK_GREEN : Theme.OFF_RED) : Theme.GRAY_TEXT);
+                add(cx, y, CONTROL_W, WIDGET_H, enabled, (px, py, b, s) -> {
                     if (b == 0) {
                         cfg.set(id, !on);
                     }
@@ -198,81 +196,52 @@ public final class OptionPanel {
             }
             case SLIDER, INT_SLIDER -> {
                 double v = ((Number) value).doubleValue();
-                int valueW = 50;
-                int trackW = 76;
-                int valueX = controlRight - valueW;
-                int trackX = valueX - trackW - 6;
-                controlLeft = trackX;
-                double frac = (v - def.min()) / (def.max() - def.min());
-                frac = Math.max(0, Math.min(1, frac));
-                g.fill(trackX, y + 10, trackX + trackW, y + 12, Theme.BORDER);
-                g.fill(trackX, y + 10, trackX + (int) Math.round(frac * trackW), y + 12,
-                        enabled ? Theme.accent() : Theme.GRAY);
-                int kx = trackX + (int) Math.round(frac * (trackW - 4));
-                g.fill(kx, y + 6, kx + 4, y + 16, enabled ? 0xFFF4F4F6 : 0xFF8A8A90);
-                add(trackX - 2, y + 3, trackW + 4, ROW_H - 6, enabled, (cx, cy, b, s) -> {
+                double frac = Math.max(0, Math.min(1, (v - def.min()) / (def.max() - def.min())));
+                Theme.track(g, cx, y, CONTROL_W, WIDGET_H, ctrlHover);
+                int hx = cx + 1 + (int) Math.round(frac * (CONTROL_W - 10));
+                Theme.button(g, font, hx, y, 8, WIDGET_H, "", ctrlHover, enabled, textColor);
+                String shown = numberText(def, v) + (def.unit().isEmpty() ? "" : " " + def.unit());
+                g.drawString(font, shown, cx + (CONTROL_W - font.width(shown)) / 2, y + 6, textColor, true);
+                add(cx, y, CONTROL_W, WIDGET_H, enabled, (px, py, b, s) -> {
                     if (b == 0) {
-                        Drag d = (m, sh) -> slide(def, trackX, trackW, m, sh);
+                        Drag d = (m, sh) -> slide(def, cx, CONTROL_W, m, sh);
                         activeDrag = d;
-                        d.on(cx, s);
-                    }
-                });
-                boolean editingThis = id.equals(editId) && !editHex;
-                g.fill(valueX, y + 3, valueX + valueW, y + ROW_H - 3, editingThis ? 0xFF3A3A44 : Theme.BORDER);
-                String shown = editingThis ? editText(now) : numberText(def, v) + (def.unit().isEmpty() ? "" : " " + def.unit());
-                g.drawString(font, font.plainSubstrByWidth(shown, valueW - 6), valueX + 4, y + 7,
-                        editingThis ? Theme.TEXT : dimColor);
-                add(valueX, y + 3, valueW, ROW_H - 6, enabled, (cx, cy, b, s) -> {
-                    if (b == 0) {
-                        startEdit(def, false, numberText(def, v));
+                        d.on(px, s);
                     }
                 });
             }
             case DROPDOWN -> {
-                int boxW = 112;
-                controlLeft = controlRight - boxW;
-                g.fill(controlLeft, y + 3, controlLeft + boxW, y + ROW_H - 3, Theme.BORDER);
                 String shown = I18n.get(def.choiceKey(String.valueOf(value)));
-                g.drawString(font, font.plainSubstrByWidth(shown, boxW - 18), controlLeft + 5, y + 7, textColor);
-                g.drawString(font, "v", controlLeft + boxW - 11, y + 7, dimColor);
-                int boxX = controlLeft;
-                add(controlLeft, y + 3, boxW, ROW_H - 6, enabled, (cx, cy, b, s) -> {
+                Theme.button(g, font, cx, y, CONTROL_W, WIDGET_H, shown, ctrlHover, enabled, textColor);
+                add(cx, y, CONTROL_W, WIDGET_H, enabled, (px, py, b, s) -> {
                     if (b == 0) {
-                        closeAll();
-                        dropdownId = id;
-                        dropX = boxX;
-                        dropY = y + ROW_H - 3;
-                        dropW = boxW;
+                        cycle(def, s ? -1 : 1);
                     }
                 });
             }
             case COLOR -> {
-                int boxW = 96;
-                controlLeft = controlRight - boxW;
                 int argb = (Integer) value;
-                g.fill(controlLeft, y + 3, controlLeft + boxW, y + ROW_H - 3, Theme.BORDER);
-                g.fill(controlLeft + 3, y + 5, controlLeft + 25, y + ROW_H - 5, 0xFF000000 | argb);
-                g.drawString(font, String.format("#%06X", argb & 0xFFFFFF), controlLeft + 30, y + 7, textColor);
-                int boxX = controlLeft;
-                add(controlLeft, y + 3, boxW, ROW_H - 6, enabled, (cx, cy, b, s) -> {
+                Theme.button(g, font, cx, y, CONTROL_W, WIDGET_H, "", ctrlHover, enabled, textColor);
+                g.fill(cx + 4, y + 4, cx + 22, y + 16, 0xFF000000);
+                g.fill(cx + 5, y + 5, cx + 21, y + 15, 0xFF000000 | argb);
+                g.drawString(font, String.format("#%06X", argb & 0xFFFFFF), cx + 28, y + 6, textColor, true);
+                add(cx, y, CONTROL_W, WIDGET_H, enabled, (px, py, b, s) -> {
                     if (b == 0) {
                         closeAll();
                         colorId = id;
-                        colorX = boxX;
-                        colorY = y + ROW_H - 3;
+                        colorX = cx;
+                        colorY = y + WIDGET_H;
                         rgbToHsv(argb, hsv);
                     }
                 });
             }
             default -> { // TEXT
-                int boxW = 120;
-                controlLeft = controlRight - boxW;
                 boolean editingThis = id.equals(editId);
-                g.fill(controlLeft, y + 3, controlLeft + boxW, y + ROW_H - 3, editingThis ? 0xFF3A3A44 : Theme.BORDER);
+                Theme.field(g, cx, y, CONTROL_W, WIDGET_H, editingThis);
                 String shown = editingThis ? editText(now) : String.valueOf(value);
-                g.drawString(font, font.plainSubstrByWidth(shown, boxW - 8), controlLeft + 4, y + 7,
-                        editingThis ? Theme.TEXT : dimColor);
-                add(controlLeft, y + 3, boxW, ROW_H - 6, enabled, (cx, cy, b, s) -> {
+                g.drawString(font, font.plainSubstrByWidth(shown, CONTROL_W - 10), cx + 5, y + 6,
+                        enabled ? Theme.WHITE : Theme.GRAY_TEXT, true);
+                add(cx, y, CONTROL_W, WIDGET_H, enabled, (px, py, b, s) -> {
                     if (b == 0) {
                         startEdit(def, false, String.valueOf(cfg.getRaw(id)));
                     }
@@ -281,33 +250,29 @@ public final class OptionPanel {
         }
 
         // Name
-        String name = font.plainSubstrByWidth(I18n.get(def.nameKey()), Math.max(20, controlLeft - (x + 8) - 8));
-        g.drawString(font, name, x + 8, y + 7, textColor);
+        String name = font.plainSubstrByWidth(I18n.get(def.nameKey()), Math.max(20, cx - (x + 4) - 8));
+        g.drawString(font, name, x + 4, y + 6, textColor, true);
 
-        // Rechtsklick-Menü für die ganze Zeile (vor den Steuerelementen registriert, damit diese Vorrang haben)
-        // wurde oben bereits über add() angelegt; hier nur der Zurücksetzen-Pfeil
-        if (modified && enabled) {
-            int rx = x + w - 8 - RESET_W + 2;
-            boolean overReset = !popup && Theme.inside(mx, my, rx, y + 3, RESET_W - 2, ROW_H - 6);
-            g.drawString(font, "\u21BA", rx + 2, y + 7, overReset ? Theme.accent() : Theme.TEXT_DIM);
-            add(rx, y + 3, RESET_W - 2, ROW_H - 6, true, (cx, cy, b, s) -> {
+        // Zurücksetzen
+        if (cfg.isModified(id) && enabled) {
+            int rx = x + w - RESET_W;
+            boolean over = !popup && Theme.inside(mx, my, rx, y, RESET_W, WIDGET_H) && my >= clipTop && my < clipBottom;
+            Theme.button(g, font, rx, y, RESET_W, WIDGET_H, "\u21BA", over, true, Theme.WHITE);
+            add(rx, y, RESET_W, WIDGET_H, true, (px, py, b, s) -> {
                 if (b == 0) {
                     cfg.reset(id);
                 }
             });
         }
-        // Rechtsklick auf die Zeile
-        if (enabled) {
-            if (y + ROW_H > clipTop && y < clipBottom) {
-                ctxHits.add(new Hit(x, y, w, ROW_H, (cx, cy, b, s) -> {
-                    closeAll();
-                    ctxId = id;
-                    ctxX = (int) cx;
-                    ctxY = (int) cy;
-                }));
-            }
+        if (enabled && y + ROW_H > clipTop && y < clipBottom) {
+            ctxHits.add(new Hit(x, y, w, WIDGET_H, (px, py, b, s) -> {
+                closeAll();
+                ctxId = id;
+                ctxX = (int) px;
+                ctxY = (int) py;
+            }));
         }
-        return hovered;
+        return rowHover;
     }
 
     private void add(int x, int y, int w, int h, boolean enabled, Click click) {
@@ -316,19 +281,22 @@ public final class OptionPanel {
         }
     }
 
+    private void cycle(OptionDef<?> def, int dir) {
+        List<String> choices = def.choices();
+        if (choices.isEmpty()) {
+            return;
+        }
+        int i = choices.indexOf(String.valueOf(VisualsMod.config().getRaw(def.id())));
+        int next = Math.floorMod(i + dir, choices.size());
+        VisualsMod.config().set(def.id(), choices.get(next));
+    }
+
     // ------------------------------------------------------------------ Overlays
 
     public void renderOverlay(GuiGraphics g, Font font, int mx, int my, int sw, int sh) {
         popupHits.clear();
         ConfigManager cfg = VisualsMod.config();
         OptionRegistry reg = VisualsMod.registry();
-
-        if (dropdownId != null) {
-            OptionDef<?> def = reg.get(dropdownId);
-            if (def != null) {
-                renderDropdown(g, font, mx, my, sh, def, cfg);
-            }
-        }
         if (colorId != null) {
             OptionDef<?> def = reg.get(colorId);
             if (def != null) {
@@ -344,49 +312,24 @@ public final class OptionPanel {
         renderTooltip(g, font, mx, my, sw, sh, reg);
     }
 
-    private void renderDropdown(GuiGraphics g, Font font, int mx, int my, int sh, OptionDef<?> def, ConfigManager cfg) {
-        List<String> choices = def.choices();
-        int h = choices.size() * POPUP_ROW_H + 4;
-        int y = Math.min(dropY, sh - h - 2);
-        g.fill(dropX - 1, y - 1, dropX + dropW + 1, y + h + 1, Theme.BORDER);
-        g.fill(dropX, y, dropX + dropW, y + h, Theme.PANEL_LIGHT);
-        Object current = cfg.getRaw(def.id());
-        for (int i = 0; i < choices.size(); i++) {
-            String choice = choices.get(i);
-            int ry = y + 2 + i * POPUP_ROW_H;
-            boolean hov = Theme.inside(mx, my, dropX, ry, dropW, POPUP_ROW_H);
-            boolean sel = choice.equals(current);
-            if (hov || sel) {
-                g.fill(dropX + 1, ry, dropX + dropW - 1, ry + POPUP_ROW_H, hov ? Theme.ROW_HOVER : Theme.ROW);
-            }
-            g.drawString(font, font.plainSubstrByWidth(I18n.get(def.choiceKey(choice)), dropW - 12), dropX + 6, ry + 4,
-                    sel ? Theme.accent() : Theme.TEXT);
-            popupHits.add(new Hit(dropX, ry, dropW, POPUP_ROW_H, (cx, cy, b, s) -> {
-                if (b == 0) {
-                    cfg.set(def.id(), choice);
-                    closeAll();
-                }
-            }));
-        }
-    }
-
     private void renderColor(GuiGraphics g, Font font, int mx, int my, int sw, int sh, OptionDef<?> def, ConfigManager cfg) {
-        int w = 140;
-        int h = 104;
+        int w = 150;
+        int h = 112;
         int x = Math.max(4, Math.min(colorX, sw - w - 4));
         int y = Math.max(4, Math.min(colorY, sh - h - 4));
         String id = def.id();
         int argb = cfg.getRaw(id) instanceof Integer i ? i : 0xFFFFFFFF;
-        g.fill(x - 1, y - 1, x + w + 1, y + h + 1, Theme.BORDER);
-        g.fill(x, y, x + w, y + h, Theme.PANEL_LIGHT);
-        g.fill(x + 8, y + 8, x + w - 8, y + 22, 0xFF000000 | argb);
+        g.fill(x - 1, y - 1, x + w + 1, y + h + 1, 0xFFFFFFFF);
+        g.fill(x, y, x + w, y + h, 0xFF101010);
+        g.fill(x + 8, y + 8, x + w - 8, y + 24, 0xFF000000);
+        g.fill(x + 9, y + 9, x + w - 9, y + 23, 0xFF000000 | argb);
 
-        int bx = x + 20;
-        int bw = w - 28;
+        int bx = x + 22;
+        int bw = w - 32;
         String[] labels = {"H", "S", "V"};
         for (int k = 0; k < 3; k++) {
-            int by = y + 30 + k * 16;
-            g.drawString(font, labels[k], x + 8, by + 1, Theme.TEXT_DIM);
+            int by = y + 34 + k * 17;
+            g.drawString(font, labels[k], x + 9, by + 1, Theme.GRAY_TEXT, true);
             for (int i = 0; i < bw; i += 2) {
                 float t = i / (float) bw;
                 int col = switch (k) {
@@ -407,17 +350,16 @@ public final class OptionPanel {
                 }
             }));
         }
-        int hy = y + 80;
+        int hy = y + 88;
         boolean editingHex = editHex && id.equals(editId);
-        g.fill(x + 8, hy, x + w - 8, hy + 16, editingHex ? 0xFF3A3A44 : Theme.BORDER);
+        Theme.field(g, x + 8, hy, w - 16, 16, editingHex);
         String shown = editingHex ? editText(System.currentTimeMillis()) : String.format("#%06X", argb & 0xFFFFFF);
-        g.drawString(font, shown, x + 12, hy + 4, Theme.TEXT);
+        g.drawString(font, shown, x + 13, hy + 4, Theme.WHITE, true);
         popupHits.add(new Hit(x + 8, hy, w - 16, 16, (cx, cy, b, s) -> {
             if (b == 0) {
                 startEdit(def, true, String.format("#%06X", argb & 0xFFFFFF));
             }
         }));
-        // Klicks im Popup, die nichts treffen, sollen es nicht schließen
         popupHits.add(0, new Hit(x, y, w, h, (cx, cy, b, s) -> {
         }));
     }
@@ -430,38 +372,45 @@ public final class OptionPanel {
     }
 
     private void renderContext(GuiGraphics g, Font font, int mx, int my, int sw, int sh, OptionDef<?> def, ConfigManager cfg) {
-        String[] labels = {I18n.get("visuals.gui.ctx.reset"), I18n.get("visuals.gui.ctx.copy"), I18n.get("visuals.gui.ctx.paste")};
-        int w = 130;
-        int h = labels.length * POPUP_ROW_H + 4;
+        boolean numeric = def.type() == OptionType.SLIDER || def.type() == OptionType.INT_SLIDER;
+        List<String> labels = new ArrayList<>();
+        labels.add(I18n.get("visuals.gui.ctx.reset"));
+        labels.add(I18n.get("visuals.gui.ctx.copy"));
+        labels.add(I18n.get("visuals.gui.ctx.paste"));
+        if (numeric) {
+            labels.add(I18n.get("visuals.gui.ctx.enter"));
+        }
+        int w = 140;
+        int h = labels.size() * POPUP_ROW_H + 4;
         int x = Math.min(ctxX, sw - w - 4);
         int y = Math.min(ctxY, sh - h - 4);
-        g.fill(x - 1, y - 1, x + w + 1, y + h + 1, Theme.BORDER);
-        g.fill(x, y, x + w, y + h, Theme.PANEL_LIGHT);
+        g.fill(x - 1, y - 1, x + w + 1, y + h + 1, 0xFFFFFFFF);
+        g.fill(x, y, x + w, y + h, 0xFF101010);
         String id = def.id();
-        for (int i = 0; i < labels.length; i++) {
+        for (int i = 0; i < labels.size(); i++) {
             int ry = y + 2 + i * POPUP_ROW_H;
-            boolean hov = Theme.inside(mx, my, x, ry, w, POPUP_ROW_H);
-            if (hov) {
-                g.fill(x + 1, ry, x + w - 1, ry + POPUP_ROW_H, Theme.ROW_HOVER);
+            if (Theme.inside(mx, my, x, ry, w, POPUP_ROW_H)) {
+                g.fill(x + 1, ry, x + w - 1, ry + POPUP_ROW_H, 0xFF4A4F6E);
             }
-            g.drawString(font, labels[i], x + 8, ry + 4, Theme.TEXT);
+            g.drawString(font, labels.get(i), x + 8, ry + 4, Theme.WHITE, true);
             final int idx = i;
             popupHits.add(new Hit(x, ry, w, POPUP_ROW_H, (cx, cy, b, s) -> {
                 if (b != 0) {
                     return;
                 }
+                closeAll();
                 switch (idx) {
                     case 0 -> cfg.reset(id);
                     case 1 -> Minecraft.getInstance().keyboardHandler.setClipboard(toText(def, cfg.getRaw(id)));
-                    default -> parseAndSet(def, Minecraft.getInstance().keyboardHandler.getClipboard().trim());
+                    case 2 -> applyText(def, Minecraft.getInstance().keyboardHandler.getClipboard().trim());
+                    default -> valueRequest.accept(def);
                 }
-                closeAll();
             }));
         }
     }
 
     private void renderTooltip(GuiGraphics g, Font font, int mx, int my, int sw, int sh, OptionRegistry reg) {
-        if (hoverId == null || popupOpen() || editing() || System.currentTimeMillis() - hoverSince < 400) {
+        if (hoverId == null || popupOpen() || editing() || System.currentTimeMillis() - hoverSince < 450) {
             return;
         }
         OptionDef<?> def = reg.get(hoverId);
@@ -471,23 +420,21 @@ public final class OptionPanel {
         String tip = I18n.get(def.tooltipKey());
         List<net.minecraft.util.FormattedCharSequence> lines = new ArrayList<>();
         if (!tip.equals(def.tooltipKey())) {
-            lines.addAll(font.split(Component.literal(tip), 190));
+            lines.addAll(font.split(Component.literal(tip), 200));
         }
         lines.addAll(font.split(Component.literal(I18n.get("visuals.gui.default") + ": " + toText(def, def.defaultValue())
-                + (def.unit().isEmpty() ? "" : " " + def.unit())), 190));
+                + (def.unit().isEmpty() ? "" : " " + def.unit())), 200));
         int w = 0;
         for (var l : lines) {
             w = Math.max(w, font.width(l));
         }
-        w += 10;
-        int h = lines.size() * 10 + 8;
-        int x = Math.min(mx + 12, sw - w - 4);
-        int y = Math.min(my + 14, sh - h - 4);
-        g.fill(x - 1, y - 1, x + w + 1, y + h + 1, Theme.accent());
-        g.fill(x, y, x + w, y + h, 0xFF101014);
-        int ty = y + 5;
+        int h = lines.size() * 10;
+        int x = Math.max(8, Math.min(mx + 12, sw - w - 8));
+        int y = Math.min(my + 16, sh - h - 8);
+        Theme.tooltipBox(g, x, y, w, h);
+        int ty = y;
         for (var l : lines) {
-            g.drawString(font, l, x + 5, ty, Theme.TEXT);
+            g.drawString(font, l, x, ty, Theme.WHITE, true);
             ty += 10;
         }
     }
@@ -624,14 +571,14 @@ public final class OptionPanel {
         OptionDef<?> def = editDef;
         String text = editBuf.toString().trim();
         editId = null;
-        if (parseAndSet(def, text) && def.type() == OptionType.COLOR && def.id().equals(colorId)
+        if (applyText(def, text) && def.type() == OptionType.COLOR && def.id().equals(colorId)
                 && VisualsMod.config().getRaw(def.id()) instanceof Integer i) {
             rgbToHsv(i, hsv);
         }
     }
 
     /** Wandelt Text in einen Wert um und setzt ihn. Bei Fehlern oder Korrekturen wird die Zeile kurz rot markiert. */
-    private boolean parseAndSet(OptionDef<?> def, String text) {
+    public boolean applyText(OptionDef<?> def, String text) {
         ConfigManager cfg = VisualsMod.config();
         String id = def.id();
         boolean ok = false;
@@ -673,7 +620,7 @@ public final class OptionPanel {
     }
 
     private void slide(OptionDef<?> def, int trackX, int trackW, double mx, boolean shift) {
-        double frac = Math.max(0, Math.min(1, (mx - trackX - 2) / (trackW - 4.0)));
+        double frac = Math.max(0, Math.min(1, (mx - trackX - 5) / (trackW - 10.0)));
         double v = def.min() + frac * (def.max() - def.min());
         double step = shift ? Math.max(def.step() / 10.0, 0.0001) : def.step();
         v = Math.round(v / step) * step;
@@ -685,6 +632,17 @@ public final class OptionPanel {
         } else {
             cfg.set(def.id(), v);
         }
+    }
+
+    /** Aktueller Wert als Text, zum Vorbelegen des Eingabefensters. */
+    public static String plainValue(OptionDef<?> def, Object value) {
+        if (value instanceof Number n && def.type() == OptionType.INT_SLIDER) {
+            return String.valueOf(n.intValue());
+        }
+        if (value instanceof Number n) {
+            return numberText(def, n.doubleValue());
+        }
+        return String.valueOf(value);
     }
 
     private static String numberText(OptionDef<?> def, double v) {
@@ -710,13 +668,6 @@ public final class OptionPanel {
     }
 
     // ------------------------------------------------------------------ Bausteine
-
-    public static void drawToggle(GuiGraphics g, int x, int y, double t, boolean enabled) {
-        int track = enabled ? Theme.mix(Theme.GRAY, Theme.accent(), t) : Theme.mix(0xFF3A3A40, 0xFF55453A, t);
-        g.fill(x, y, x + 30, y + 14, track);
-        int kx = x + 2 + (int) Math.round(t * 16);
-        g.fill(kx, y + 2, kx + 10, y + 12, enabled ? 0xFFF4F4F6 : 0xFF8A8A90);
-    }
 
     private static void outline(GuiGraphics g, int x, int y, int w, int h, int color) {
         g.fill(x, y, x + w, y + 1, color);

@@ -558,5 +558,11 @@
   "visuals.group.seasons.m_wildlife": "Wildlife",
   "visuals.group.seasons.m_touch": "Touch",
   "visuals.group.seasons.m_fog": "Fog",
-  "visuals.group.seasons.m_events": "World events"
+  "visuals.group.seasons.m_events": "World events",
+  "visuals.gui.done": "Done",
+  "visuals.gui.previewOpen": "Preview",
+  "visuals.gui.preview": "Preview",
+  "visuals.gui.ctx.enter": "Enter value",
+  "visuals.gui.enterValue": "New value (from %s to %s):",
+  "visuals.gui.resetAll.ask": "Really reset all settings to default? You can undo this with Ctrl+Z."
 }
