@@ -1,0 +1,25 @@
+Compiled from "ParticleFactoryRegistry.java"
+public interface net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry {
+  public static net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry getInstance();
+  public abstract <T extends net.minecraft.class_2394> void register(net.minecraft.class_2396<T>, net.minecraft.class_707<T>);
+  public abstract <T extends net.minecraft.class_2394> void register(net.minecraft.class_2396<T>, net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry$PendingParticleFactory<T>);
+}
+Compiled from "ParticleFactoryRegistry.java"
+public interface net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry$PendingParticleFactory<T extends net.minecraft.class_2394> {
+  public abstract net.minecraft.class_707<T> create(net.fabricmc.fabric.api.client.particle.v1.FabricSpriteProvider);
+}
+Compiled from "FabricSpriteProvider.java"
+public interface net.fabricmc.fabric.api.client.particle.v1.FabricSpriteProvider extends net.minecraft.class_4002 {
+  public abstract net.minecraft.class_1059 getAtlas();
+  public abstract java.util.List<net.minecraft.class_1058> getSprites();
+}
+Compiled from "FabricParticleTypes.java"
+public final class net.fabricmc.fabric.api.particle.v1.FabricParticleTypes {
+  private net.fabricmc.fabric.api.particle.v1.FabricParticleTypes();
+  public static net.minecraft.class_2400 simple();
+  public static net.minecraft.class_2400 simple(boolean);
+  public static <T extends net.minecraft.class_2394> net.minecraft.class_2396<T> complex(com.mojang.serialization.MapCodec<T>, net.minecraft.class_9139<? super net.minecraft.class_9129, T>);
+  public static <T extends net.minecraft.class_2394> net.minecraft.class_2396<T> complex(boolean, com.mojang.serialization.MapCodec<T>, net.minecraft.class_9139<? super net.minecraft.class_9129, T>);
+  public static <T extends net.minecraft.class_2394> net.minecraft.class_2396<T> complex(java.util.function.Function<net.minecraft.class_2396<T>, com.mojang.serialization.MapCodec<T>>, java.util.function.Function<net.minecraft.class_2396<T>, net.minecraft.class_9139<? super net.minecraft.class_9129, T>>);
+  public static <T extends net.minecraft.class_2394> net.minecraft.class_2396<T> complex(boolean, java.util.function.Function<net.minecraft.class_2396<T>, com.mojang.serialization.MapCodec<T>>, java.util.function.Function<net.minecraft.class_2396<T>, net.minecraft.class_9139<? super net.minecraft.class_9129, T>>);
+}
