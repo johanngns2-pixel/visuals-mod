@@ -229,7 +229,7 @@ public final class SpotifyClient {
             mc.execute(() -> {
                 mc.keyboardHandler.setClipboard(url);
                 try {
-                    net.minecraft.Util.getPlatform().openUri(URI.create(url));
+                    net.minecraft.util.Util.getPlatform().openUri(URI.create(url));
                 } catch (RuntimeException e) {
                     Log.warn("Browser konnte nicht geöffnet werden: {}", e.getMessage());
                 }
