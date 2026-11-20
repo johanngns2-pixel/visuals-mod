@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.visuals.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SingleQuadParticleAccessor",
+    "SkyRendererMixin",
+    "WeatherEffectRendererMixin",
+    "AtmosphericFogEnvironmentMixin",
+    "CameraMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
