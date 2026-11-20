@@ -13,6 +13,7 @@ public final class MoreOptions {
     }
 
     public static void register(OptionRegistry r) {
+        r.register(OptionDef.dropdown("glint.example", "custom", "custom", "amethyst", "ruby", "emerald", "sapphire", "gold", "ice", "fire", "lava", "pink", "neon", "cyan", "orange", "white", "shadow", "rainbow", "rainbowsparkle", "galaxy", "sunset", "ocean", "forest", "toxic", "candy", "blood", "mint", "lavender", "copper").group("look").build());
         r.register(OptionDef.dropdown("glint.colorMode", "solid", "solid", "gradient", "rainbow").group("look").build());
         r.register(OptionDef.color("glint.color", 0xFFA050FF).group("look").build());
         r.register(OptionDef.color("glint.color2", 0xFF50C8FF).group("look").build());
@@ -146,6 +147,7 @@ public final class MoreOptions {
         r.register(OptionDef.toggle("sound.reverb", false).group("space").build());
         r.register(OptionDef.intSlider("afk.waitSeconds", 60, 5, 600).group("main").unit("s").build());
         r.register(OptionDef.toggle("afk.cinema", true).group("cinema").build());
+        r.register(OptionDef.toggle("afk.shader", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.viewSide", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.viewBehind", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.viewTop", true).group("cinema").build());

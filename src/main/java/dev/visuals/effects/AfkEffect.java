@@ -1,8 +1,10 @@
 package dev.visuals.effects;
 
+import dev.visuals.mixin.GameRendererAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -21,7 +23,10 @@ import java.util.List;
 public final class AfkEffect {
     private static final String[] VIEWS = {"viewSide", "viewBehind", "viewTop", "viewPanorama"};
 
+    private static final Identifier SHADER = Identifier.fromNamespaceAndPath("visuals", "afk");
+
     private static boolean afk;
+    private static boolean shaderOn;
     private static int idleTicks;
     private static int afkTicks;
     private static int viewTicks;
@@ -75,6 +80,10 @@ public final class AfkEffect {
             viewTicks = 0;
             viewIndex = -1;
             pickNextView();
+            if (Opts.bool("afk.cinema") && Opts.bool("afk.shader")) {
+                ((GameRendererAccessor) mc.gameRenderer).visuals$setPostEffect(SHADER);
+                shaderOn = true;
+            }
         }
         if (afk) {
             afkTicks++;
@@ -92,6 +101,12 @@ public final class AfkEffect {
     }
 
     private static void end(Minecraft mc) {
+        if (shaderOn) {
+            if (SHADER.equals(mc.gameRenderer.currentPostEffect())) {
+                mc.gameRenderer.clearPostEffect();
+            }
+            shaderOn = false;
+        }
         if (!afk && !fpsLowered) {
             idleTicks = 0;
             return;

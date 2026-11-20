@@ -8,7 +8,8 @@
     "SkyRendererMixin",
     "WeatherEffectRendererMixin",
     "AtmosphericFogEnvironmentMixin",
-    "CameraMixin"
+    "CameraMixin",
+    "GameRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

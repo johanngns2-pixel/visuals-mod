@@ -2,11 +2,15 @@ package dev.visuals.effects;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import dev.visuals.VisualsMod;
+import dev.visuals.config.def.GlintExamples;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.Identifier;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Glint: ersetzt die Glint-Texturen für Items und Rüstung durch eine selbst erzeugte, passend eingefärbte Version
@@ -42,6 +46,7 @@ public final class GlintEffect {
 
     public static void tick(Minecraft mc) {
         tick++;
+        applyExample();
         boolean want = Opts.active("glint") && modified();
         TextureManager tm = mc.getTextureManager();
         if (!want) {
@@ -69,6 +74,25 @@ public final class GlintEffect {
         lastKey = key;
         paint(dynItem);
         paint(dynEntity);
+    }
+
+    /** Wählt der Spieler einen Beispiel-Glint, werden dessen Werte (weich überblendet) übernommen. */
+    private static void applyExample() {
+        String ex = Opts.text("glint.example");
+        if ("custom".equals(ex) || !Opts.active("glint")) {
+            return;
+        }
+        GlintExamples.Example e = GlintExamples.ALL.get(ex);
+        if (e != null) {
+            Map<String, Object> v = new LinkedHashMap<>();
+            v.put("glint.colorMode", e.mode());
+            v.put("glint.color", e.color());
+            v.put("glint.color2", e.color2());
+            v.put("glint.pattern", e.pattern());
+            v.put("glint.direction", e.direction());
+            VisualsMod.presets().applyValues(v);
+        }
+        VisualsMod.config().set("glint.example", "custom");
     }
 
     private static void restore(TextureManager tm) {
