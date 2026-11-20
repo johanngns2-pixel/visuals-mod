@@ -1,0 +1,17 @@
+net/fabricmc/fabric/api/client/rendering/v1/HudRenderCallback.class
+net/fabricmc/fabric/api/client/rendering/v1/hud/
+net/fabricmc/fabric/api/client/rendering/v1/hud/HudElement.class
+net/fabricmc/fabric/api/client/rendering/v1/hud/HudElementRegistry.class
+net/fabricmc/fabric/api/client/rendering/v1/hud/HudStatusBarHeightRegistry.class
+net/fabricmc/fabric/api/client/rendering/v1/hud/StatusBarHeightProvider.class
+net/fabricmc/fabric/api/client/rendering/v1/hud/VanillaHudElements.class
+net/fabricmc/fabric/api/client/rendering/v1/hud/package-info.class
+net/fabricmc/fabric/impl/client/rendering/hud/
+net/fabricmc/fabric/impl/client/rendering/hud/HudElementRegistryImpl$LayerVisitor.class
+net/fabricmc/fabric/impl/client/rendering/hud/HudElementRegistryImpl$RootLayer.class
+net/fabricmc/fabric/impl/client/rendering/hud/HudElementRegistryImpl.class
+net/fabricmc/fabric/impl/client/rendering/hud/HudLayer$1.class
+net/fabricmc/fabric/impl/client/rendering/hud/HudLayer.class
+net/fabricmc/fabric/impl/client/rendering/hud/HudStatusBarHeightRegistryImpl$ResolvedHeightProvider.class
+net/fabricmc/fabric/impl/client/rendering/hud/HudStatusBarHeightRegistryImpl.class
+net/fabricmc/fabric/impl/client/rendering/hud/package-info.class

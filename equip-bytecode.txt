@@ -1,0 +1,225 @@
+Compiled from "EquipmentLayerRenderer.java"
+public class net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer {
+  private static final int NO_LAYER_COLOR;
+
+  private final net.minecraft.client.resources.model.EquipmentAssetManager equipmentAssets;
+
+  private final java.util.function.Function<net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$LayerTextureKey, net.minecraft.resources.Identifier> layerTextureLookup;
+
+  private final java.util.function.Function<net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$TrimSpriteKey, net.minecraft.client.renderer.texture.TextureAtlasSprite> trimSpriteLookup;
+
+  public net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer(net.minecraft.client.resources.model.EquipmentAssetManager, net.minecraft.client.renderer.texture.TextureAtlas);
+    Code:
+       0: aload_0
+       1: invokespecial #53                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #55                 // Field equipmentAssets:Lnet/minecraft/client/resources/model/EquipmentAssetManager;
+       9: aload_0
+      10: invokedynamic #74,  0             // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+      15: invokestatic  #80                 // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+      18: putfield      #82                 // Field layerTextureLookup:Ljava/util/function/Function;
+      21: aload_0
+      22: aload_2
+      23: invokedynamic #92,  0             // InvokeDynamic #1:apply:(Lnet/minecraft/client/renderer/texture/TextureAtlas;)Ljava/util/function/Function;
+      28: invokestatic  #80                 // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+      31: putfield      #94                 // Field trimSpriteLookup:Ljava/util/function/Function;
+      34: return
+
+  public <S> void renderLayers(net.minecraft.client.resources.model.EquipmentClientInfo$LayerType, net.minecraft.resources.ResourceKey<net.minecraft.world.item.equipment.EquipmentAsset>, net.minecraft.client.model.Model<? super S>, S, net.minecraft.world.item.ItemStack, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, int, int);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aload_3
+       4: aload         4
+       6: aload         5
+       8: aload         6
+      10: aload         7
+      12: iload         8
+      14: aconst_null
+      15: iload         9
+      17: iconst_1
+      18: invokevirtual #112                // Method renderLayers:(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V
+      21: return
+
+  public <S> void renderLayers(net.minecraft.client.resources.model.EquipmentClientInfo$LayerType, net.minecraft.resources.ResourceKey<net.minecraft.world.item.equipment.EquipmentAsset>, net.minecraft.client.model.Model<? super S>, S, net.minecraft.world.item.ItemStack, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, int, net.minecraft.resources.Identifier, int, int);
+    Code:
+       0: aload_0
+       1: getfield      #55                 // Field equipmentAssets:Lnet/minecraft/client/resources/model/EquipmentAssetManager;
+       4: aload_2
+       5: invokevirtual #132                // Method net/minecraft/client/resources/model/EquipmentAssetManager.get:(Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/client/resources/model/EquipmentClientInfo;
+       8: aload_1
+       9: invokevirtual #136                // Method net/minecraft/client/resources/model/EquipmentClientInfo.getLayers:(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;)Ljava/util/List;
+      12: astore        12
+      14: aload         12
+      16: invokeinterface #142,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+      21: ifeq          25
+      24: return
+      25: aload         5
+      27: iconst_0
+      28: invokestatic  #148                // Method net/minecraft/world/item/component/DyedItemColor.getOrDefault:(Lnet/minecraft/world/item/ItemStack;I)I
+      31: istore        13
+      33: aload         5
+      35: invokevirtual #153                // Method net/minecraft/world/item/ItemStack.hasFoil:()Z
+      38: istore        14
+      40: iload         11
+      42: istore        15
+      44: aload         12
+      46: invokeinterface #157,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      51: astore        16
+      53: aload         16
+      55: invokeinterface #172,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      60: ifeq          219
+      63: aload         16
+      65: invokeinterface #176,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      70: checkcast     #20                 // class net/minecraft/client/resources/model/EquipmentClientInfo$Layer
+      73: astore        17
+      75: aload         17
+      77: iload         13
+      79: invokestatic  #180                // Method getColorForLayer:(Lnet/minecraft/client/resources/model/EquipmentClientInfo$Layer;I)I
+      82: istore        18
+      84: iload         18
+      86: ifne          92
+      89: goto          53
+      92: aload         17
+      94: invokevirtual #183                // Method net/minecraft/client/resources/model/EquipmentClientInfo$Layer.usePlayerTexture:()Z
+      97: ifeq          110
+     100: aload         9
+     102: ifnull        110
+     105: aload         9
+     107: goto          132
+     110: aload_0
+     111: getfield      #82                 // Field layerTextureLookup:Ljava/util/function/Function;
+     114: new           #13                 // class net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$LayerTextureKey
+     117: dup
+     118: aload_1
+     119: aload         17
+     121: invokespecial #186                // Method net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$LayerTextureKey."<init>":(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/client/resources/model/EquipmentClientInfo$Layer;)V
+     124: invokeinterface #190,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+     129: checkcast     #167                // class net/minecraft/resources/Identifier
+     132: astore        19
+     134: aload         7
+     136: iload         15
+     138: iinc          15, 1
+     141: invokeinterface #194,  2          // InterfaceMethod net/minecraft/client/renderer/SubmitNodeCollector.order:(I)Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;
+     146: aload_3
+     147: aload         4
+     149: aload         6
+     151: aload         19
+     153: invokestatic  #200                // Method net/minecraft/client/renderer/rendertype/RenderTypes.armorCutoutNoCull:(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;
+     156: iload         8
+     158: getstatic     #205                // Field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAY:I
+     161: iload         18
+     163: aconst_null
+     164: iload         10
+     166: aconst_null
+     167: invokeinterface #211,  11         // InterfaceMethod net/minecraft/client/renderer/OrderedSubmitNodeCollector.submitModel:(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V
+     172: iload         14
+     174: ifeq          213
+     177: aload         7
+     179: iload         15
+     181: iinc          15, 1
+     184: invokeinterface #194,  2          // InterfaceMethod net/minecraft/client/renderer/SubmitNodeCollector.order:(I)Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;
+     189: aload_3
+     190: aload         4
+     192: aload         6
+     194: invokestatic  #215                // Method net/minecraft/client/renderer/rendertype/RenderTypes.armorEntityGlint:()Lnet/minecraft/client/renderer/rendertype/RenderType;
+     197: iload         8
+     199: getstatic     #205                // Field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAY:I
+     202: iload         18
+     204: aconst_null
+     205: iload         10
+     207: aconst_null
+     208: invokeinterface #211,  11         // InterfaceMethod net/minecraft/client/renderer/OrderedSubmitNodeCollector.submitModel:(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V
+     213: iconst_0
+     214: istore        14
+     216: goto          53
+     219: aload         5
+     221: getstatic     #221                // Field net/minecraft/core/component/DataComponents.TRIM:Lnet/minecraft/core/component/DataComponentType;
+     224: invokevirtual #224                // Method net/minecraft/world/item/ItemStack.get:(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;
+     227: checkcast     #226                // class net/minecraft/world/item/equipment/trim/ArmorTrim
+     230: astore        16
+     232: aload         16
+     234: ifnull        318
+     237: aload_0
+     238: getfield      #94                 // Field trimSpriteLookup:Ljava/util/function/Function;
+     241: new           #11                 // class net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$TrimSpriteKey
+     244: dup
+     245: aload         16
+     247: aload_1
+     248: aload_2
+     249: invokespecial #229                // Method net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$TrimSpriteKey."<init>":(Lnet/minecraft/world/item/equipment/trim/ArmorTrim;Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;)V
+     252: invokeinterface #190,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+     257: checkcast     #231                // class net/minecraft/client/renderer/texture/TextureAtlasSprite
+     260: astore        17
+     262: aload         16
+     264: invokevirtual #235                // Method net/minecraft/world/item/equipment/trim/ArmorTrim.pattern:()Lnet/minecraft/core/Holder;
+     267: invokeinterface #239,  1          // InterfaceMethod net/minecraft/core/Holder.value:()Ljava/lang/Object;
+     272: checkcast     #241                // class net/minecraft/world/item/equipment/trim/TrimPattern
+     275: invokevirtual #244                // Method net/minecraft/world/item/equipment/trim/TrimPattern.decal:()Z
+     278: invokestatic  #250                // Method net/minecraft/client/renderer/Sheets.armorTrimsSheet:(Z)Lnet/minecraft/client/renderer/rendertype/RenderType;
+     281: astore        18
+     283: aload         7
+     285: iload         15
+     287: iinc          15, 1
+     290: invokeinterface #194,  2          // InterfaceMethod net/minecraft/client/renderer/SubmitNodeCollector.order:(I)Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;
+     295: aload_3
+     296: aload         4
+     298: aload         6
+     300: aload         18
+     302: iload         8
+     304: getstatic     #205                // Field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAY:I
+     307: iconst_m1
+     308: aload         17
+     310: iload         10
+     312: aconst_null
+     313: invokeinterface #211,  11         // InterfaceMethod net/minecraft/client/renderer/OrderedSubmitNodeCollector.submitModel:(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V
+     318: return
+
+  private static int getColorForLayer(net.minecraft.client.resources.model.EquipmentClientInfo$Layer, int);
+    Code:
+       0: aload_0
+       1: invokevirtual #272                // Method net/minecraft/client/resources/model/EquipmentClientInfo$Layer.dyeable:()Ljava/util/Optional;
+       4: astore_2
+       5: aload_2
+       6: invokevirtual #277                // Method java/util/Optional.isPresent:()Z
+       9: ifeq          54
+      12: aload_2
+      13: invokevirtual #279                // Method java/util/Optional.get:()Ljava/lang/Object;
+      16: checkcast     #30                 // class net/minecraft/client/resources/model/EquipmentClientInfo$Dyeable
+      19: invokevirtual #282                // Method net/minecraft/client/resources/model/EquipmentClientInfo$Dyeable.colorWhenUndyed:()Ljava/util/Optional;
+      22: invokedynamic #292,  0            // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+      27: invokevirtual #296                // Method java/util/Optional.map:(Ljava/util/function/Function;)Ljava/util/Optional;
+      30: iconst_0
+      31: invokestatic  #302                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      34: invokevirtual #305                // Method java/util/Optional.orElse:(Ljava/lang/Object;)Ljava/lang/Object;
+      37: checkcast     #298                // class java/lang/Integer
+      40: invokevirtual #309                // Method java/lang/Integer.intValue:()I
+      43: istore_3
+      44: iload_1
+      45: ifeq          52
+      48: iload_1
+      49: goto          53
+      52: iload_3
+      53: ireturn
+      54: iconst_m1
+      55: ireturn
+
+  private static net.minecraft.client.renderer.texture.TextureAtlasSprite method_64080(net.minecraft.client.renderer.texture.TextureAtlas, net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$TrimSpriteKey);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #317                // Method net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$TrimSpriteKey.spriteId:()Lnet/minecraft/resources/Identifier;
+       5: invokevirtual #323                // Method net/minecraft/client/renderer/texture/TextureAtlas.getSprite:(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;
+       8: areturn
+
+  private static net.minecraft.resources.Identifier method_64079(net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$LayerTextureKey);
+    Code:
+       0: aload_0
+       1: getfield      #327                // Field net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$LayerTextureKey.layer:Lnet/minecraft/client/resources/model/EquipmentClientInfo$Layer;
+       4: aload_0
+       5: getfield      #329                // Field net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$LayerTextureKey.layerType:Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;
+       8: invokevirtual #333                // Method net/minecraft/client/resources/model/EquipmentClientInfo$Layer.getTextureLocation:(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;)Lnet/minecraft/resources/Identifier;
+      11: areturn
+}

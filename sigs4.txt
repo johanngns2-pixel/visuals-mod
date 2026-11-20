@@ -1,0 +1,429 @@
+Compiled from "Camera.java"
+public class net.minecraft.client.Camera implements net.minecraft.world.waypoints.TrackedWaypoint$Camera {
+  private static final float DEFAULT_CAMERA_DISTANCE;
+  private static final org.joml.Vector3f FORWARDS;
+  private static final org.joml.Vector3f UP;
+  private static final org.joml.Vector3f LEFT;
+  private boolean initialized;
+  private net.minecraft.world.level.Level level;
+  private net.minecraft.world.entity.Entity entity;
+  private net.minecraft.world.phys.Vec3 position;
+  private final net.minecraft.core.BlockPos$MutableBlockPos blockPosition;
+  private final org.joml.Vector3f forwards;
+  private final org.joml.Vector3f up;
+  private final org.joml.Vector3f left;
+  private float xRot;
+  private float yRot;
+  private final org.joml.Quaternionf rotation;
+  private boolean detached;
+  private float eyeHeight;
+  private float eyeHeightOld;
+  private float partialTickTime;
+  private final net.minecraft.world.attribute.EnvironmentAttributeProbe attributeProbe;
+  public net.minecraft.client.Camera();
+  public void setup(net.minecraft.world.level.Level, net.minecraft.world.entity.Entity, boolean, boolean, float);
+  public void tick();
+  private float getMaxZoom(float);
+  protected void move(float, float, float);
+  protected void setRotation(float, float);
+  protected void setPosition(double, double, double);
+  protected void setPosition(net.minecraft.world.phys.Vec3);
+  public net.minecraft.world.phys.Vec3 position();
+  public net.minecraft.core.BlockPos blockPosition();
+  public float xRot();
+  public float yRot();
+  public float yaw();
+  public org.joml.Quaternionf rotation();
+  public net.minecraft.world.entity.Entity entity();
+  public boolean isInitialized();
+  public boolean isDetached();
+  public net.minecraft.world.attribute.EnvironmentAttributeProbe attributeProbe();
+  public net.minecraft.client.Camera$NearPlane getNearPlane();
+  public net.minecraft.world.level.material.FogType getFluidInCamera();
+  public org.joml.Vector3fc forwardVector();
+  public org.joml.Vector3fc upVector();
+  public org.joml.Vector3fc leftVector();
+  public void reset();
+  public float getPartialTickTime();
+  static {};
+}
+Compiled from "EntityRenderer.java"
+public abstract class net.minecraft.client.renderer.entity.EntityRenderer<T extends net.minecraft.world.entity.Entity, S extends net.minecraft.client.renderer.entity.state.EntityRenderState> {
+  private static final float SHADOW_POWER_FALLOFF_Y;
+  private static final float MAX_SHADOW_RADIUS;
+  public static final float NAMETAG_SCALE;
+  protected final net.minecraft.client.renderer.entity.EntityRenderDispatcher entityRenderDispatcher;
+  private final net.minecraft.client.gui.Font font;
+  protected float shadowRadius;
+  protected float shadowStrength;
+  protected net.minecraft.client.renderer.entity.EntityRenderer(net.minecraft.client.renderer.entity.EntityRendererProvider$Context);
+  public final int getPackedLightCoords(T, float);
+  protected int getSkyLightLevel(T, net.minecraft.core.BlockPos);
+  protected int getBlockLightLevel(T, net.minecraft.core.BlockPos);
+  public boolean shouldRender(T, net.minecraft.client.renderer.culling.Frustum, double, double, double);
+  protected net.minecraft.world.phys.AABB getBoundingBoxForCulling(T);
+  protected boolean affectedByCulling(T);
+  public net.minecraft.world.phys.Vec3 getRenderOffset(S);
+  public void submit(S, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  protected boolean shouldShowName(T, double);
+  public net.minecraft.client.gui.Font getFont();
+  protected void submitNameTag(S, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  protected net.minecraft.network.chat.Component getNameTag(T);
+  protected float getShadowRadius(S);
+  protected float getShadowStrength(S);
+  public abstract S createRenderState();
+  public final S createRenderState(T, float);
+  public void extractRenderState(T, S, float);
+  protected void finalizeRenderState(T, S);
+  private void extractShadow(S, net.minecraft.client.Minecraft, net.minecraft.world.level.Level);
+  private void extractShadowPiece(S, net.minecraft.world.level.Level, float, net.minecraft.core.BlockPos$MutableBlockPos, net.minecraft.world.level.chunk.ChunkAccess);
+  private static net.minecraft.world.entity.Entity getServerSideEntity(net.minecraft.world.entity.Entity);
+}
+Compiled from "LivingEntityRenderer.java"
+public abstract class net.minecraft.client.renderer.entity.LivingEntityRenderer<T extends net.minecraft.world.entity.LivingEntity, S extends net.minecraft.client.renderer.entity.state.LivingEntityRenderState, M extends net.minecraft.client.model.EntityModel<? super S>> extends net.minecraft.client.renderer.entity.EntityRenderer<T, S> implements net.minecraft.client.renderer.entity.RenderLayerParent<S, M> {
+  private static final float EYE_BED_OFFSET;
+  protected M model;
+  protected final net.minecraft.client.renderer.item.ItemModelResolver itemModelResolver;
+  protected final java.util.List<net.minecraft.client.renderer.entity.layers.RenderLayer<S, M>> layers;
+  public net.minecraft.client.renderer.entity.LivingEntityRenderer(net.minecraft.client.renderer.entity.EntityRendererProvider$Context, M, float);
+  protected final boolean addLayer(net.minecraft.client.renderer.entity.layers.RenderLayer<S, M>);
+  public M getModel();
+  protected net.minecraft.world.phys.AABB getBoundingBoxForCulling(T);
+  public void submit(S, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  protected boolean shouldRenderLayers(S);
+  protected int getModelTint(S);
+  public abstract net.minecraft.resources.Identifier getTextureLocation(S);
+  protected net.minecraft.client.renderer.rendertype.RenderType getRenderType(S, boolean, boolean, boolean);
+  public static int getOverlayCoords(net.minecraft.client.renderer.entity.state.LivingEntityRenderState, float);
+  protected boolean isBodyVisible(S);
+  private static float sleepDirectionToRotation(net.minecraft.core.Direction);
+  protected boolean isShaking(S);
+  protected void setupRotations(S, com.mojang.blaze3d.vertex.PoseStack, float, float);
+  protected float getFlipDegrees();
+  protected float getWhiteOverlayProgress(S);
+  protected void scale(S, com.mojang.blaze3d.vertex.PoseStack);
+  protected boolean shouldShowName(T, double);
+  public boolean isEntityUpsideDown(T);
+  protected static boolean isUpsideDownName(java.lang.String);
+  protected float getShadowRadius(S);
+  public void extractRenderState(T, S, float);
+  private static float solveBodyRot(net.minecraft.world.entity.LivingEntity, float, float);
+  public void extractRenderState(net.minecraft.world.entity.Entity, net.minecraft.client.renderer.entity.state.EntityRenderState, float);
+  protected float getShadowRadius(net.minecraft.client.renderer.entity.state.EntityRenderState);
+  protected boolean shouldShowName(net.minecraft.world.entity.Entity, double);
+  public void submit(net.minecraft.client.renderer.entity.state.EntityRenderState, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  protected net.minecraft.world.phys.AABB getBoundingBoxForCulling(net.minecraft.world.entity.Entity);
+}
+Compiled from "AvatarRenderer.java"
+public class net.minecraft.client.renderer.entity.player.AvatarRenderer<AvatarlikeEntity extends net.minecraft.world.entity.Avatar & net.minecraft.client.entity.ClientAvatarEntity> extends net.minecraft.client.renderer.entity.LivingEntityRenderer<AvatarlikeEntity, net.minecraft.client.renderer.entity.state.AvatarRenderState, net.minecraft.client.model.player.PlayerModel> {
+  public net.minecraft.client.renderer.entity.player.AvatarRenderer(net.minecraft.client.renderer.entity.EntityRendererProvider$Context, boolean);
+  protected boolean shouldRenderLayers(net.minecraft.client.renderer.entity.state.AvatarRenderState);
+  public net.minecraft.world.phys.Vec3 getRenderOffset(net.minecraft.client.renderer.entity.state.AvatarRenderState);
+  private static net.minecraft.client.model.HumanoidModel$ArmPose getArmPose(net.minecraft.world.entity.Avatar, net.minecraft.world.entity.HumanoidArm);
+  private static net.minecraft.client.model.HumanoidModel$ArmPose getArmPose(net.minecraft.world.entity.Avatar, net.minecraft.world.item.ItemStack, net.minecraft.world.InteractionHand);
+  public net.minecraft.resources.Identifier getTextureLocation(net.minecraft.client.renderer.entity.state.AvatarRenderState);
+  protected void scale(net.minecraft.client.renderer.entity.state.AvatarRenderState, com.mojang.blaze3d.vertex.PoseStack);
+  protected void submitNameTag(net.minecraft.client.renderer.entity.state.AvatarRenderState, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  public net.minecraft.client.renderer.entity.state.AvatarRenderState createRenderState();
+  public void extractRenderState(AvatarlikeEntity, net.minecraft.client.renderer.entity.state.AvatarRenderState, float);
+  protected boolean shouldShowName(AvatarlikeEntity, double);
+  private void extractFlightData(AvatarlikeEntity, net.minecraft.client.renderer.entity.state.AvatarRenderState, float);
+  private void extractCapeState(AvatarlikeEntity, net.minecraft.client.renderer.entity.state.AvatarRenderState, float);
+  public void renderRightHand(com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, int, net.minecraft.resources.Identifier, boolean);
+  public void renderLeftHand(com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, int, net.minecraft.resources.Identifier, boolean);
+  private void renderHand(com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, int, net.minecraft.resources.Identifier, net.minecraft.client.model.geom.ModelPart, boolean);
+  protected void setupRotations(net.minecraft.client.renderer.entity.state.AvatarRenderState, com.mojang.blaze3d.vertex.PoseStack, float, float);
+  public boolean isEntityUpsideDown(AvatarlikeEntity);
+  public static boolean isPlayerUpsideDown(net.minecraft.world.entity.player.Player);
+  public void extractRenderState(net.minecraft.world.entity.LivingEntity, net.minecraft.client.renderer.entity.state.LivingEntityRenderState, float);
+  public boolean isEntityUpsideDown(net.minecraft.world.entity.LivingEntity);
+  protected boolean shouldShowName(net.minecraft.world.entity.LivingEntity, double);
+  protected void scale(net.minecraft.client.renderer.entity.state.LivingEntityRenderState, com.mojang.blaze3d.vertex.PoseStack);
+  protected void setupRotations(net.minecraft.client.renderer.entity.state.LivingEntityRenderState, com.mojang.blaze3d.vertex.PoseStack, float, float);
+  public net.minecraft.resources.Identifier getTextureLocation(net.minecraft.client.renderer.entity.state.LivingEntityRenderState);
+  protected boolean shouldRenderLayers(net.minecraft.client.renderer.entity.state.LivingEntityRenderState);
+  public void extractRenderState(net.minecraft.world.entity.Entity, net.minecraft.client.renderer.entity.state.EntityRenderState, float);
+  public net.minecraft.client.renderer.entity.state.EntityRenderState createRenderState();
+  protected void submitNameTag(net.minecraft.client.renderer.entity.state.EntityRenderState, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  protected boolean shouldShowName(net.minecraft.world.entity.Entity, double);
+  public net.minecraft.world.phys.Vec3 getRenderOffset(net.minecraft.client.renderer.entity.state.EntityRenderState);
+  private static net.minecraft.client.model.player.PlayerModel method_72996(boolean, net.minecraft.client.model.geom.ModelPart);
+}
+Compiled from "CameraType.java"
+public final class net.minecraft.client.CameraType extends java.lang.Enum<net.minecraft.client.CameraType> {
+  public static final net.minecraft.client.CameraType FIRST_PERSON;
+  public static final net.minecraft.client.CameraType THIRD_PERSON_BACK;
+  public static final net.minecraft.client.CameraType THIRD_PERSON_FRONT;
+  private static final net.minecraft.client.CameraType[] VALUES;
+  private final boolean firstPerson;
+  private final boolean mirrored;
+  private static final net.minecraft.client.CameraType[] $VALUES;
+  public static net.minecraft.client.CameraType[] values();
+  public static net.minecraft.client.CameraType valueOf(java.lang.String);
+  private net.minecraft.client.CameraType(boolean, boolean);
+  public boolean isFirstPerson();
+  public boolean isMirrored();
+  public net.minecraft.client.CameraType cycle();
+  private static net.minecraft.client.CameraType[] $values();
+  static {};
+}
+Compiled from "MusicManager.java"
+public class net.minecraft.client.sounds.MusicManager {
+  private static final int STARTING_DELAY;
+  private final net.minecraft.util.RandomSource random;
+  private final net.minecraft.client.Minecraft minecraft;
+  private net.minecraft.client.resources.sounds.SoundInstance currentMusic;
+  private net.minecraft.client.sounds.MusicManager$MusicFrequency gameMusicFrequency;
+  private float currentGain;
+  private int nextSongDelay;
+  private boolean toastShown;
+  public net.minecraft.client.sounds.MusicManager(net.minecraft.client.Minecraft);
+  public void tick();
+  private static boolean canReplace(net.minecraft.sounds.Music, net.minecraft.client.resources.sounds.SoundInstance);
+  public void startPlaying(net.minecraft.sounds.Music);
+  public void showNowPlayingToastIfNeeded();
+  public void stopPlaying(net.minecraft.sounds.Music);
+  public void stopPlaying();
+  private boolean fadePlaying(float);
+  public boolean isPlayingMusic(net.minecraft.sounds.Music);
+  public java.lang.String getCurrentMusicTranslationKey();
+  public void setMinutesBetweenSongs(net.minecraft.client.sounds.MusicManager$MusicFrequency);
+}
+Compiled from "Music.java"
+public final class net.minecraft.sounds.Music extends java.lang.Record {
+  private final net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> sound;
+  private final int minDelay;
+  private final int maxDelay;
+  private final boolean replaceCurrentMusic;
+  public static final com.mojang.serialization.Codec<net.minecraft.sounds.Music> CODEC;
+  public net.minecraft.sounds.Music(net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent>, int, int, boolean);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> sound();
+  public int minDelay();
+  public int maxDelay();
+  public boolean replaceCurrentMusic();
+  private static com.mojang.datafixers.kinds.App method_28128(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "Musics.java"
+public class net.minecraft.sounds.Musics {
+  private static final int ONE_SECOND;
+  private static final int THIRTY_SECONDS;
+  private static final int TEN_MINUTES;
+  private static final int TWENTY_MINUTES;
+  private static final int FIVE_MINUTES;
+  public static final net.minecraft.sounds.Music MENU;
+  public static final net.minecraft.sounds.Music CREATIVE;
+  public static final net.minecraft.sounds.Music CREDITS;
+  public static final net.minecraft.sounds.Music END_BOSS;
+  public static final net.minecraft.sounds.Music END;
+  public static final net.minecraft.sounds.Music UNDER_WATER;
+  public static final net.minecraft.sounds.Music GAME;
+  public net.minecraft.sounds.Musics();
+  public static net.minecraft.sounds.Music createGameMusic(net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent>);
+  static {};
+}
+Compiled from "RenderTarget.java"
+public abstract class com.mojang.blaze3d.pipeline.RenderTarget {
+  private static int UNNAMED_RENDER_TARGETS;
+  public int width;
+  public int height;
+  protected final java.lang.String label;
+  public final boolean useDepth;
+  protected com.mojang.blaze3d.textures.GpuTexture colorTexture;
+  protected com.mojang.blaze3d.textures.GpuTextureView colorTextureView;
+  protected com.mojang.blaze3d.textures.GpuTexture depthTexture;
+  protected com.mojang.blaze3d.textures.GpuTextureView depthTextureView;
+  public com.mojang.blaze3d.pipeline.RenderTarget(java.lang.String, boolean);
+  public void resize(int, int);
+  public void destroyBuffers();
+  public void copyDepthFrom(com.mojang.blaze3d.pipeline.RenderTarget);
+  public void createBuffers(int, int);
+  public void blitToScreen();
+  public void blitAndBlendToTexture(com.mojang.blaze3d.textures.GpuTextureView);
+  public com.mojang.blaze3d.textures.GpuTexture getColorTexture();
+  public com.mojang.blaze3d.textures.GpuTextureView getColorTextureView();
+  public com.mojang.blaze3d.textures.GpuTexture getDepthTexture();
+  public com.mojang.blaze3d.textures.GpuTextureView getDepthTextureView();
+  private static java.lang.String method_71167();
+  private java.lang.String method_67768();
+  private java.lang.String method_67767();
+  static {};
+}
+Compiled from "GlTexture.java"
+public class com.mojang.blaze3d.opengl.GlTexture extends com.mojang.blaze3d.textures.GpuTexture {
+  private static final int EMPTY;
+  protected final int id;
+  private int firstFboId;
+  private int firstFboDepthId;
+  private it.unimi.dsi.fastutil.ints.Int2IntMap fboCache;
+  protected boolean closed;
+  private int views;
+  protected com.mojang.blaze3d.opengl.GlTexture(int, java.lang.String, com.mojang.blaze3d.textures.TextureFormat, int, int, int, int, int);
+  public void close();
+  private void destroyImmediately();
+  public boolean isClosed();
+  public int getFbo(com.mojang.blaze3d.opengl.DirectStateAccess, com.mojang.blaze3d.textures.GpuTexture);
+  private int createFbo(com.mojang.blaze3d.opengl.DirectStateAccess, int);
+  public int glId();
+  public void addViews();
+  public void removeViews();
+  private int method_68425(com.mojang.blaze3d.opengl.DirectStateAccess, int);
+}
+Compiled from "GlStateManager.java"
+public class com.mojang.blaze3d.opengl.GlStateManager {
+  private static final com.mojang.jtracy.Plot PLOT_TEXTURES;
+  private static int numTextures;
+  private static final com.mojang.jtracy.Plot PLOT_BUFFERS;
+  private static int numBuffers;
+  private static final com.mojang.blaze3d.opengl.GlStateManager$BlendState BLEND;
+  private static final com.mojang.blaze3d.opengl.GlStateManager$DepthState DEPTH;
+  private static final com.mojang.blaze3d.opengl.GlStateManager$CullState CULL;
+  private static final com.mojang.blaze3d.opengl.GlStateManager$PolygonOffsetState POLY_OFFSET;
+  private static final com.mojang.blaze3d.opengl.GlStateManager$ColorLogicState COLOR_LOGIC;
+  private static final com.mojang.blaze3d.opengl.GlStateManager$ScissorState SCISSOR;
+  private static int activeTexture;
+  private static final int TEXTURE_COUNT;
+  private static final com.mojang.blaze3d.opengl.GlStateManager$TextureState[] TEXTURES;
+  private static final com.mojang.blaze3d.opengl.GlStateManager$ColorMask COLOR_MASK;
+  private static int readFbo;
+  private static int writeFbo;
+  public com.mojang.blaze3d.opengl.GlStateManager();
+  public static void _disableScissorTest();
+  public static void _enableScissorTest();
+  public static void _scissorBox(int, int, int, int);
+  public static void _disableDepthTest();
+  public static void _enableDepthTest();
+  public static void _depthFunc(int);
+  public static void _depthMask(boolean);
+  public static void _disableBlend();
+  public static void _enableBlend();
+  public static void _blendFuncSeparate(int, int, int, int);
+  public static int glGetProgrami(int, int);
+  public static void glAttachShader(int, int);
+  public static void glDeleteShader(int);
+  public static int glCreateShader(int);
+  public static void glShaderSource(int, java.lang.String);
+  public static void glCompileShader(int);
+  public static int glGetShaderi(int, int);
+  public static void _glUseProgram(int);
+  public static int glCreateProgram();
+  public static void glDeleteProgram(int);
+  public static void glLinkProgram(int);
+  public static int _glGetUniformLocation(int, java.lang.CharSequence);
+  public static void _glUniform1i(int, int);
+  public static void _glBindAttribLocation(int, int, java.lang.CharSequence);
+  public static void incrementTrackedBuffers();
+  public static int _glGenBuffers();
+  public static int _glGenVertexArrays();
+  public static void _glBindBuffer(int, int);
+  public static void _glBindVertexArray(int);
+  public static void _glBufferData(int, java.nio.ByteBuffer, int);
+  public static void _glBufferSubData(int, long, java.nio.ByteBuffer);
+  public static void _glBufferData(int, long, int);
+  public static java.nio.ByteBuffer _glMapBufferRange(int, long, long, int);
+  public static void _glUnmapBuffer(int);
+  public static void _glDeleteBuffers(int);
+  public static void _glBindFramebuffer(int, int);
+  public static int getFrameBuffer(int);
+  public static void _glBlitFrameBuffer(int, int, int, int, int, int, int, int, int, int);
+  public static void _glDeleteFramebuffers(int);
+  public static int glGenFramebuffers();
+  public static void _glFramebufferTexture2D(int, int, int, int, int);
+  public static void glBlendFuncSeparate(int, int, int, int);
+  public static java.lang.String glGetShaderInfoLog(int, int);
+  public static java.lang.String glGetProgramInfoLog(int, int);
+  public static void _enableCull();
+  public static void _disableCull();
+  public static void _polygonMode(int, int);
+  public static void _enablePolygonOffset();
+  public static void _disablePolygonOffset();
+  public static void _polygonOffset(float, float);
+  public static void _enableColorLogicOp();
+  public static void _disableColorLogicOp();
+  public static void _logicOp(int);
+  public static void _activeTexture(int);
+  public static void _texParameter(int, int, int);
+  public static int _getTexLevelParameter(int, int, int);
+  public static int _genTexture();
+  public static void _deleteTexture(int);
+  public static void _bindTexture(int);
+  public static void _texImage2D(int, int, int, int, int, int, int, int, java.nio.ByteBuffer);
+  public static void _texSubImage2D(int, int, int, int, int, int, int, int, long);
+  public static void _texSubImage2D(int, int, int, int, int, int, int, int, java.nio.ByteBuffer);
+  public static void _viewport(int, int, int, int);
+  public static void _colorMask(boolean, boolean, boolean, boolean);
+  public static void _clear(int);
+  public static void _vertexAttribPointer(int, int, int, boolean, int, long);
+  public static void _vertexAttribIPointer(int, int, int, int, long);
+  public static void _enableVertexAttribArray(int);
+  public static void _drawElements(int, int, int, long);
+  public static void _drawArrays(int, int, int);
+  public static void _pixelStore(int, int);
+  public static void _readPixels(int, int, int, int, int, int, long);
+  public static int _getError();
+  public static void clearGlErrors();
+  public static java.lang.String _getString(int);
+  public static int _getInteger(int);
+  public static long _glFenceSync(int, int);
+  public static int _glClientWaitSync(long, int, long);
+  public static void _glDeleteSync(long);
+  private static com.mojang.blaze3d.opengl.GlStateManager$TextureState[] lambda$static$1(int);
+  private static com.mojang.blaze3d.opengl.GlStateManager$TextureState lambda$static$0(int);
+  static {};
+}
+Compiled from "GpuTexture.java"
+public abstract class com.mojang.blaze3d.textures.GpuTexture implements java.lang.AutoCloseable {
+  public static final int USAGE_COPY_DST;
+  public static final int USAGE_COPY_SRC;
+  public static final int USAGE_TEXTURE_BINDING;
+  public static final int USAGE_RENDER_ATTACHMENT;
+  public static final int USAGE_CUBEMAP_COMPATIBLE;
+  private final com.mojang.blaze3d.textures.TextureFormat format;
+  private final int width;
+  private final int height;
+  private final int depthOrLayers;
+  private final int mipLevels;
+  private final int usage;
+  private final java.lang.String label;
+  public com.mojang.blaze3d.textures.GpuTexture(int, java.lang.String, com.mojang.blaze3d.textures.TextureFormat, int, int, int, int);
+  public int getWidth(int);
+  public int getHeight(int);
+  public int getDepthOrLayers();
+  public int getMipLevels();
+  public com.mojang.blaze3d.textures.TextureFormat getFormat();
+  public int usage();
+  public java.lang.String getLabel();
+  public abstract void close();
+  public abstract boolean isClosed();
+}
+Compiled from "EquipmentLayerRenderer.java"
+public class net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer {
+  private static final int NO_LAYER_COLOR;
+  private final net.minecraft.client.resources.model.EquipmentAssetManager equipmentAssets;
+  private final java.util.function.Function<net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$LayerTextureKey, net.minecraft.resources.Identifier> layerTextureLookup;
+  private final java.util.function.Function<net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$TrimSpriteKey, net.minecraft.client.renderer.texture.TextureAtlasSprite> trimSpriteLookup;
+  public net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer(net.minecraft.client.resources.model.EquipmentAssetManager, net.minecraft.client.renderer.texture.TextureAtlas);
+  public <S> void renderLayers(net.minecraft.client.resources.model.EquipmentClientInfo$LayerType, net.minecraft.resources.ResourceKey<net.minecraft.world.item.equipment.EquipmentAsset>, net.minecraft.client.model.Model<? super S>, S, net.minecraft.world.item.ItemStack, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, int, int);
+  public <S> void renderLayers(net.minecraft.client.resources.model.EquipmentClientInfo$LayerType, net.minecraft.resources.ResourceKey<net.minecraft.world.item.equipment.EquipmentAsset>, net.minecraft.client.model.Model<? super S>, S, net.minecraft.world.item.ItemStack, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, int, net.minecraft.resources.Identifier, int, int);
+  private static int getColorForLayer(net.minecraft.client.resources.model.EquipmentClientInfo$Layer, int);
+  private static net.minecraft.client.renderer.texture.TextureAtlasSprite method_64080(net.minecraft.client.renderer.texture.TextureAtlas, net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$TrimSpriteKey);
+  private static net.minecraft.resources.Identifier method_64079(net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$LayerTextureKey);
+}
+Compiled from "EquipmentClientInfo.java"
+public final class net.minecraft.client.resources.model.EquipmentClientInfo extends java.lang.Record {
+  private final java.util.Map<net.minecraft.client.resources.model.EquipmentClientInfo$LayerType, java.util.List<net.minecraft.client.resources.model.EquipmentClientInfo$Layer>> layers;
+  private static final com.mojang.serialization.Codec<java.util.List<net.minecraft.client.resources.model.EquipmentClientInfo$Layer>> LAYER_LIST_CODEC;
+  public static final com.mojang.serialization.Codec<net.minecraft.client.resources.model.EquipmentClientInfo> CODEC;
+  public net.minecraft.client.resources.model.EquipmentClientInfo(java.util.Map<net.minecraft.client.resources.model.EquipmentClientInfo$LayerType, java.util.List<net.minecraft.client.resources.model.EquipmentClientInfo$Layer>>);
+  public static net.minecraft.client.resources.model.EquipmentClientInfo$Builder builder();
+  public java.util.List<net.minecraft.client.resources.model.EquipmentClientInfo$Layer> getLayers(net.minecraft.client.resources.model.EquipmentClientInfo$LayerType);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public java.util.Map<net.minecraft.client.resources.model.EquipmentClientInfo$LayerType, java.util.List<net.minecraft.client.resources.model.EquipmentClientInfo$Layer>> layers();
+  private static com.mojang.datafixers.kinds.App method_63995(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}

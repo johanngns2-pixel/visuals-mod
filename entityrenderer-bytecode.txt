@@ -1,0 +1,70 @@
+      61: return
+
+  protected boolean shouldShowName(T, double);
+    Code:
+       0: aload_1
+       1: invokevirtual #262                // Method net/minecraft/world/entity/Entity.shouldShowName:()Z
+       4: ifne          25
+       7: aload_1
+       8: invokevirtual #265                // Method net/minecraft/world/entity/Entity.hasCustomName:()Z
+      11: ifeq          29
+      14: aload_1
+      15: aload_0
+      16: getfield      #55                 // Field entityRenderDispatcher:Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;
+      19: getfield      #268                // Field net/minecraft/client/renderer/entity/EntityRenderDispatcher.crosshairPickEntity:Lnet/minecraft/world/entity/Entity;
+      22: if_acmpne     29
+      25: iconst_1
+      26: goto          30
+      29: iconst_0
+      30: ireturn
+
+  public net.minecraft.client.gui.Font getFont();
+    Code:
+       0: aload_0
+       1: getfield      #61                 // Field font:Lnet/minecraft/client/gui/Font;
+       4: areturn
+
+  protected void submitNameTag(S, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+    Code:
+       0: aload_1
+       1: getfield      #272                // Field net/minecraft/client/renderer/entity/state/EntityRenderState.nameTag:Lnet/minecraft/network/chat/Component;
+       4: ifnull        45
+       7: aload_3
+       8: aload_2
+       9: aload_1
+      10: getfield      #275                // Field net/minecraft/client/renderer/entity/state/EntityRenderState.nameTagAttachment:Lnet/minecraft/world/phys/Vec3;
+      13: iconst_0
+--
+     280: aload_2
+     281: getfield      #292                // Field net/minecraft/client/renderer/entity/state/EntityRenderState.distanceToCameraSq:D
+     284: invokevirtual #432                // Method shouldShowName:(Lnet/minecraft/world/entity/Entity;D)Z
+     287: ifeq          294
+     290: iconst_1
+     291: goto          295
+     294: iconst_0
+     295: istore        4
+     297: iload         4
+     299: ifeq          334
+     302: aload_2
+     303: aload_0
+     304: aload_1
+     305: invokevirtual #434                // Method getNameTag:(Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/network/chat/Component;
+     308: putfield      #272                // Field net/minecraft/client/renderer/entity/state/EntityRenderState.nameTag:Lnet/minecraft/network/chat/Component;
+     311: aload_2
+     312: aload_1
+     313: invokevirtual #438                // Method net/minecraft/world/entity/Entity.getAttachments:()Lnet/minecraft/world/entity/EntityAttachments;
+     316: getstatic     #444                // Field net/minecraft/world/entity/EntityAttachment.NAME_TAG:Lnet/minecraft/world/entity/EntityAttachment;
+     319: iconst_0
+     320: aload_1
+     321: fload_3
+     322: invokevirtual #448                // Method net/minecraft/world/entity/Entity.getYRot:(F)F
+     325: invokevirtual #454                // Method net/minecraft/world/entity/EntityAttachments.getNullable:(Lnet/minecraft/world/entity/EntityAttachment;IF)Lnet/minecraft/world/phys/Vec3;
+     328: putfield      #275                // Field net/minecraft/client/renderer/entity/state/EntityRenderState.nameTagAttachment:Lnet/minecraft/world/phys/Vec3;
+     331: goto          339
+     334: aload_2
+     335: aconst_null
+     336: putfield      #272                // Field net/minecraft/client/renderer/entity/state/EntityRenderState.nameTag:Lnet/minecraft/network/chat/Component;
+     339: aload_2
+     340: aload_1
+     341: invokevirtual #456                // Method net/minecraft/world/entity/Entity.isDiscrete:()Z
+     344: putfield      #279                // Field net/minecraft/client/renderer/entity/state/EntityRenderState.isDiscrete:Z
