@@ -100,7 +100,7 @@ public final class VisualsScreen extends Screen {
     public void render(GuiGraphics g, int mx, int my, float delta) {
         hits.clear();
         VisualsMod.presets().tick();
-        this.renderBackground(g, mx, my, delta);
+        // Der unscharfe Hintergrund wird von Minecraft selbst gezeichnet; ein zweiter Aufruf stürzt ab ("blur once per frame").
         if (previewFullscreen) {
             preview.renderSceneOnly(g, 0, 0, this.width, this.height);
             String hint = I18n.get("visuals.gui.preview.exitHint");
