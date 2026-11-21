@@ -9,7 +9,11 @@
     "WeatherEffectRendererMixin",
     "AtmosphericFogEnvironmentMixin",
     "CameraMixin",
-    "GameRendererAccessor"
+    "GameRendererAccessor",
+    "LevelRendererMixin",
+    "EntityRendererMixin",
+    "AvatarRendererMixin",
+    "EquipmentLayerRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

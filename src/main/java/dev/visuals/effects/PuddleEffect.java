@@ -51,7 +51,7 @@ public final class PuddleEffect {
             lastLevel = level;
         }
         tick++;
-        boolean enabled = Opts.active(Tabs.PUDDLES) && level.dimension() == Level.OVERWORLD;
+        boolean enabled = Opts.active(Tabs.PUDDLES) && level.dimension() == Level.OVERWORLD && !PuddleShader.working();
         if (!enabled) {
             retireAll();
             return;
@@ -59,8 +59,7 @@ public final class PuddleEffect {
         if (tick % 5 != 0) {
             return;
         }
-        double amount = Opts.num("puddles.amount");
-        double chance = Math.max(0.0, Math.min(0.75, 0.2 * amount));
+        double chance = Math.max(0.0, Math.min(0.75, Opts.integer("puddles.coverage") / 100.0 * 0.6));
         double sizeOpt = Opts.num("puddles.size");
         int pcx = Math.floorDiv((int) Math.floor(player.getX()), CELL);
         int pcz = Math.floorDiv((int) Math.floor(player.getZ()), CELL);

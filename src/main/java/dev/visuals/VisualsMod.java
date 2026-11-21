@@ -60,6 +60,21 @@ public final class VisualsMod implements ClientModInitializer {
                 FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).resolve("presets"));
 
         Particles.register();
+        // Vanilla-Oberfläche im AFK-Kino-Modus ausblenden, unsere eigene Anzeige bleibt
+        for (java.lang.reflect.Field f : net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements.class.getFields()) {
+            if (f.getType() == Identifier.class) {
+                try {
+                    Identifier id = (Identifier) f.get(null);
+                    HudElementRegistry.replaceElement(id, original -> (g, tracker) -> {
+                        if (!dev.visuals.effects.AfkEffect.hideHud()) {
+                            original.render(g, tracker);
+                        }
+                    });
+                } catch (ReflectiveOperationException | RuntimeException e) {
+                    Log.warn("HUD-Element konnte nicht umhüllt werden: {}", f.getName());
+                }
+            }
+        }
         HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(MOD_ID, "hud"), VisualsHud::render);
 
         // Pfützen-Partikel (nur auf dem Client, kein Server nötig)

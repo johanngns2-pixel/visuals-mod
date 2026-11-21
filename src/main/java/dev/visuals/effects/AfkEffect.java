@@ -1,10 +1,12 @@
 package dev.visuals.effects;
 
 import dev.visuals.mixin.GameRendererAccessor;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.Music;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -27,6 +29,9 @@ public final class AfkEffect {
 
     private static boolean afk;
     private static boolean shaderOn;
+    private static CameraType savedCamera;
+    private static boolean cameraChanged;
+    private static boolean musicOn;
     private static int idleTicks;
     private static int afkTicks;
     private static int viewTicks;
@@ -46,6 +51,19 @@ public final class AfkEffect {
 
     public static int afkTicks() {
         return afkTicks;
+    }
+
+    /** Vanilla-Oberfläche (Hotbar, Herzen, Fadenkreuz ...) ausblenden? */
+    public static boolean hideHud() {
+        return afk && Opts.bool("afk.cinema") && Opts.bool("afk.hideHud");
+    }
+
+    public static boolean hideNames() {
+        return afk && Opts.bool("afk.cinema") && Opts.bool("afk.hideNames");
+    }
+
+    public static boolean trimGlow() {
+        return afk && Opts.bool("afk.trimGlow");
     }
 
     public static boolean bars() {
@@ -80,6 +98,12 @@ public final class AfkEffect {
             viewTicks = 0;
             viewIndex = -1;
             pickNextView();
+            if (Opts.bool("afk.cinema")) {
+                // Dritte Person: Hände und Item verschwinden, der Charakter wird sichtbar
+                savedCamera = mc.options.getCameraType();
+                mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+                cameraChanged = true;
+            }
             if (Opts.bool("afk.cinema") && Opts.bool("afk.shader")) {
                 ((GameRendererAccessor) mc.gameRenderer).visuals$setPostEffect(SHADER);
                 shaderOn = true;
@@ -88,6 +112,16 @@ public final class AfkEffect {
         if (afk) {
             afkTicks++;
             viewTicks++;
+            if (shaderOn && afkTicks % 40 == 0 && !SHADER.equals(mc.gameRenderer.currentPostEffect())) {
+                ((GameRendererAccessor) mc.gameRenderer).visuals$setPostEffect(SHADER);
+            }
+            if (Opts.bool("afk.music") && afkTicks % 20 == 0) {
+                Music m = mc.getSituationalMusic();
+                if (!mc.getMusicManager().isPlayingMusic(m)) {
+                    mc.getMusicManager().startPlaying(m);
+                }
+                musicOn = true;
+            }
             if (viewTicks >= Math.max(3, Opts.integer("afk.switchInterval")) * 20) {
                 viewTicks = 0;
                 pickNextView();
@@ -101,6 +135,16 @@ public final class AfkEffect {
     }
 
     private static void end(Minecraft mc) {
+        if (cameraChanged) {
+            if (savedCamera != null) {
+                mc.options.setCameraType(savedCamera);
+            }
+            cameraChanged = false;
+        }
+        if (musicOn) {
+            mc.getMusicManager().stopPlaying();
+            musicOn = false;
+        }
         if (shaderOn) {
             if (SHADER.equals(mc.gameRenderer.currentPostEffect())) {
                 mc.gameRenderer.clearPostEffect();
@@ -190,7 +234,12 @@ public final class AfkEffect {
             default -> { // Panorama
                 yaw = player.getYRot() + vt * 11.0;
                 pitch = -6.0 + Math.sin(vt * 0.3) * 4.0;
-                return new double[]{cx, cy + 0.25 + crane * 0.3, cz, yaw, pitch};
+                // Kamera 1,4 Blöcke hinter der Blickrichtung, damit sie nie im Kopf des Spielers steckt
+                double yr = Math.toRadians(yaw);
+                px = cx + Math.sin(yr) * 1.4;
+                pz = cz - Math.cos(yr) * 1.4;
+                py = cy + 0.45 + crane * 0.3;
+                return clipped(level, player, cx, cy, cz, px, py, pz, yaw, pitch);
             }
         }
     }

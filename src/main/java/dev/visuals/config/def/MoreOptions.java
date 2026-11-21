@@ -20,6 +20,7 @@ public final class MoreOptions {
         r.register(OptionDef.slider("glint.speed", 1.0, 0.1, 5.0, 0.1).group("look").build());
         r.register(OptionDef.dropdown("glint.direction", "diagonal", "diagonal", "horizontal", "vertical", "reverse").group("look").build());
         r.register(OptionDef.dropdown("glint.pattern", "stripes", "stripes", "sparkles", "waves").group("look").build());
+        r.register(OptionDef.toggle("glint.trimGlow", false).group("look").build());
         r.register(OptionDef.toggle("glint.weapons", true).group("targets").build());
         r.register(OptionDef.toggle("glint.tools", true).group("targets").build());
         r.register(OptionDef.toggle("glint.armor", true).group("targets").build());
@@ -101,7 +102,8 @@ public final class MoreOptions {
         r.register(OptionDef.toggle("fireflies.onlyAtNight", true).group("behaviour").build());
         r.register(OptionDef.slider("puddles.reflection", 0.6, 0.0, 1.0, 0.05).group("look").build());
         r.register(OptionDef.slider("puddles.size", 1.0, 0.5, 3.0, 0.05).group("look").build());
-        r.register(OptionDef.slider("puddles.amount", 1.0, 0.0, 3.0, 0.05).group("look").build());
+        r.register(OptionDef.dropdown("puddles.mode", "reflect", "reflect", "simple").group("look").build());
+        r.register(OptionDef.intSlider("puddles.coverage", 35, 0, 100).group("look").unit("%").build());
         r.register(OptionDef.dropdown("puddles.quality", "medium", "low", "medium", "high").group("look").build());
         r.register(OptionDef.toggle("wildlife.butterflies", true).group("species").build());
         r.register(OptionDef.toggle("wildlife.birds", true).group("species").build());
@@ -148,6 +150,10 @@ public final class MoreOptions {
         r.register(OptionDef.intSlider("afk.waitSeconds", 60, 5, 600).group("main").unit("s").build());
         r.register(OptionDef.toggle("afk.cinema", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.shader", true).group("cinema").build());
+        r.register(OptionDef.toggle("afk.music", true).group("cinema").build());
+        r.register(OptionDef.toggle("afk.hideHud", true).group("cinema").build());
+        r.register(OptionDef.toggle("afk.hideNames", true).group("cinema").build());
+        r.register(OptionDef.toggle("afk.trimGlow", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.viewSide", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.viewBehind", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.viewTop", true).group("cinema").build());

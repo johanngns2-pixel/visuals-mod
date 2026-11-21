@@ -19,6 +19,17 @@ final class PuddleLook {
         return (float) Math.max(0.0, Math.min(0.92, Opts.num("puddles.reflection") * 0.92));
     }
 
+    /** Himmelsfarbe (RGB) zur Tageszeit, wie sie Pfützen und Shader spiegeln. */
+    static int skyColor(long dayTime) {
+        double hour = (((dayTime % 24000L) / 1000.0) + 6.0) % 24.0;
+        boolean custom = Opts.bool("sky.skyCustom") && Opts.active("sky");
+        int night = custom ? Opts.color("sky.skyNight") : 0xFF0B1030;
+        int dawn = custom ? Opts.color("sky.skyDawn") : 0xFFE8946A;
+        int day = custom ? Opts.color("sky.skyDay") : 0xFF78A7FF;
+        int dusk = custom ? Opts.color("sky.skyDusk") : 0xFFC96B4F;
+        return SkyColors.at(hour, night, dawn, day, dusk);
+    }
+
     /** Farbe, die der Himmel gerade in den Pfützen spiegelt. */
     static int color(long dayTime, float rain, double seed, int age) {
         double hour = (((dayTime % 24000L) / 1000.0) + 6.0) % 24.0;
