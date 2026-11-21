@@ -150,7 +150,9 @@ public final class MoreOptions {
         r.register(OptionDef.intSlider("afk.waitSeconds", 60, 5, 600).group("main").unit("s").build());
         r.register(OptionDef.toggle("afk.cinema", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.shader", true).group("cinema").build());
+        r.register(OptionDef.dropdown("afk.shaderQuality", "medium", "low", "medium", "high").group("cinema").build());
         r.register(OptionDef.toggle("afk.music", true).group("cinema").build());
+        r.register(OptionDef.slider("afk.musicVolume", 0.5, 0.0, 1.0, 0.05).group("cinema").build());
         r.register(OptionDef.toggle("afk.hideHud", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.hideNames", true).group("cinema").build());
         r.register(OptionDef.toggle("afk.trimGlow", true).group("cinema").build());

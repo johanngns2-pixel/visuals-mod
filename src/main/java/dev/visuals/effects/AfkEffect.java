@@ -6,7 +6,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.Music;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -32,6 +36,8 @@ public final class AfkEffect {
     private static CameraType savedCamera;
     private static boolean cameraChanged;
     private static boolean musicOn;
+    private static boolean irisOn;
+    private static SoundInstance musicInstance;
     private static int idleTicks;
     private static int afkTicks;
     private static int viewTicks;
@@ -105,8 +111,14 @@ public final class AfkEffect {
                 cameraChanged = true;
             }
             if (Opts.bool("afk.cinema") && Opts.bool("afk.shader")) {
-                ((GameRendererAccessor) mc.gameRenderer).visuals$setPostEffect(SHADER);
-                shaderOn = true;
+                // Qualität: niedrig = eingebauter Kino-Shader, mittel = Mellow, hoch = Bliss (beide über Iris)
+                String quality = Opts.text("afk.shaderQuality");
+                String pack = "medium".equals(quality) ? IrisBridge.MELLOW : "high".equals(quality) ? IrisBridge.BLISS : null;
+                irisOn = pack != null && IrisBridge.start(pack);
+                if (!irisOn && !IrisBridge.active()) {
+                    ((GameRendererAccessor) mc.gameRenderer).visuals$setPostEffect(SHADER);
+                    shaderOn = true;
+                }
             }
         }
         if (afk) {
@@ -116,11 +128,7 @@ public final class AfkEffect {
                 ((GameRendererAccessor) mc.gameRenderer).visuals$setPostEffect(SHADER);
             }
             if (Opts.bool("afk.music") && afkTicks % 20 == 0) {
-                Music m = mc.getSituationalMusic();
-                if (!mc.getMusicManager().isPlayingMusic(m)) {
-                    mc.getMusicManager().startPlaying(m);
-                }
-                musicOn = true;
+                playMusic(mc);
             }
             if (viewTicks >= Math.max(3, Opts.integer("afk.switchInterval")) * 20) {
                 viewTicks = 0;
@@ -134,6 +142,24 @@ public final class AfkEffect {
         }
     }
 
+    /**
+     * Spielt Minecraft-Musik durchgehend, auch wenn die Musik-Lautstärke in den Optionen auf 0 steht:
+     * Sie läuft über die Master-Lautstärke und hat eine eigene Lautstärke ("Musik-Lautstärke").
+     */
+    private static void playMusic(Minecraft mc) {
+        mc.getMusicManager().stopPlaying(); // Vanilla-Musik pausieren, damit nichts doppelt läuft
+        var sounds = mc.getSoundManager();
+        if (musicInstance != null && sounds.isActive(musicInstance)) {
+            return;
+        }
+        Music music = mc.getSituationalMusic();
+        musicInstance = new SimpleSoundInstance(music.getEvent().value().location(), SoundSource.MASTER,
+                (float) Math.max(0.0, Math.min(1.0, Opts.num("afk.musicVolume"))), 1.0f, RandomSource.create(), false, 0,
+                SoundInstance.Attenuation.NONE, 0.0, 0.0, 0.0, true);
+        sounds.play(musicInstance);
+        musicOn = true;
+    }
+
     private static void end(Minecraft mc) {
         if (cameraChanged) {
             if (savedCamera != null) {
@@ -142,8 +168,15 @@ public final class AfkEffect {
             cameraChanged = false;
         }
         if (musicOn) {
-            mc.getMusicManager().stopPlaying();
+            if (musicInstance != null) {
+                mc.getSoundManager().stop(musicInstance);
+                musicInstance = null;
+            }
             musicOn = false;
+        }
+        if (irisOn) {
+            IrisBridge.restore();
+            irisOn = false;
         }
         if (shaderOn) {
             if (SHADER.equals(mc.gameRenderer.currentPostEffect())) {

@@ -16,6 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /** Hängt den Pfützen-Spiegel-Shader an das Ende des Welt-Renderings. */
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
+    @Inject(method = "renderLevel", at = @At("HEAD"))
+    private void visuals$beforeLevel(GraphicsResourceAllocator allocator, DeltaTracker tracker, boolean outline,
+                                     Camera camera, Matrix4f view, Matrix4f projection, Matrix4f cullProjection,
+                                     GpuBufferSlice fog, Vector4f fogColor, boolean sky, CallbackInfo ci) {
+        PuddleShader.begin(view, projection);
+    }
+
     @Inject(method = "renderLevel", at = @At("TAIL"))
     private void visuals$afterLevel(GraphicsResourceAllocator allocator, DeltaTracker tracker, boolean outline,
                                     Camera camera, Matrix4f view, Matrix4f projection, Matrix4f cullProjection,

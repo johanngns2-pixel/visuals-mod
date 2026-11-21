@@ -116,15 +116,16 @@ public final class PuddleShader {
                 float scale = max(0.5, Params.z);
                 float shape = fbm(ground * (0.30 / scale)) * 0.75 + fbm(ground * (1.4 / scale)) * 0.25;
                 float coverage = clamp(Params.x, 0.0, 1.0);
-                float mask = smoothstep(1.0 - coverage - 0.07, 1.0 - coverage + 0.07, shape);
+                float thr = mix(0.76, 0.22, coverage);
+                float mask = coverage > 0.985 ? 1.0 : smoothstep(thr - 0.04, thr + 0.04, shape);
                 if (mask < 0.01) {
                     fragColor = vec4(base, 1.0);
                     return;
                 }
                 vec3 n = normalAt(uv, p);
                 vec3 nw = toWorld * n;
-                float flat = smoothstep(0.88, 0.98, nw.y);
-                mask *= flat;
+                float upFacing = smoothstep(0.88, 0.98, nw.y);
+                mask *= upFacing;
                 if (mask < 0.01) {
                     fragColor = vec4(base, 1.0);
                     return;
@@ -184,7 +185,7 @@ public final class PuddleShader {
                 }
                 float cosT = max(dot(-v, n), 0.0);
                 float fresnel = 0.04 + 0.96 * pow(1.0 - cosT, 5.0);
-                float reflectance = clamp(fresnel * 1.8 + 0.22, 0.0, 1.0) * Params.y;
+                float reflectance = clamp(fresnel * 2.2 + 0.45, 0.0, 1.0) * mix(0.55, 1.0, clamp(Params.y, 0.0, 1.0));
                 // nasser Boden ist etwas dunkler, die Pfützenmitte spiegelt am stärksten
                 vec3 wetBase = base * mix(1.0, 0.72, mask);
                 vec3 outCol = mix(wetBase, refl, mask * reflectance);
@@ -213,8 +214,24 @@ public final class PuddleShader {
         return !failed && Opts.active("puddles") && "reflect".equals(Opts.text("puddles.mode"));
     }
 
+    private static final Matrix4f SAVED_VIEW = new Matrix4f();
+    private static final Matrix4f SAVED_PROJECTION = new Matrix4f();
+    private static boolean savedValid;
+    private static boolean loggedStart;
+
+    /** Zu Beginn von renderLevel: Kamera-Matrizen kopieren, weil sie im Lauf verändert werden können. */
+    public static void begin(Matrix4f view, Matrix4f projection) {
+        SAVED_VIEW.set(view);
+        SAVED_PROJECTION.set(projection);
+        savedValid = true;
+    }
+
     /** Wird nach dem Zeichnen der Welt aufgerufen. */
     public static void apply(Camera camera, Matrix4f view, Matrix4f projection) {
+        if (savedValid) {
+            view = SAVED_VIEW;
+            projection = SAVED_PROJECTION;
+        }
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
         if (!working() || level == null || level.dimension() != Level.OVERWORLD || mc.player == null) {
@@ -228,7 +245,7 @@ public final class PuddleShader {
             draw(mc, level, camera, view, projection, coverage);
         } catch (Throwable t) {
             errors++;
-            Log.error("Pfützen-Shader Fehler " + errors + "/3", t);
+            Log.error("Pfützen-Shader Fehler " + errors + "/3: " + t.getMessage(), t);
             if (errors >= 3) {
                 failed = true;
             }
@@ -305,6 +322,10 @@ public final class PuddleShader {
 
             GL30.glBindVertexArray(vao);
             GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 3);
+            if (!loggedStart) {
+                loggedStart = true;
+                Log.warn("Pfützen-Shader läuft ({}x{}, Flächendeckung {} %)", w, h, (int) Math.round(coverage * 100));
+            }
 
             // Ergebnis zurück in das Hauptbild kopieren
             GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, outFbo);
