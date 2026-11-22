@@ -625,5 +625,7 @@
   "visuals.option.afk.shaderQuality.choice.medium": "Medium (Mellow)",
   "visuals.option.afk.shaderQuality.choice.high": "High (Bliss)",
   "visuals.option.afk.musicVolume.name": "Music volume",
-  "visuals.option.afk.musicVolume.tooltip": "Volume of the AFK music."
+  "visuals.option.afk.musicVolume.tooltip": "Volume of the AFK music.",
+  "visuals.option.puddles.damp.name": "Wet ground",
+  "visuals.option.puddles.damp.tooltip": "How strongly damp ground outside the puddles reflects. 0 = only puddles reflect."
 }

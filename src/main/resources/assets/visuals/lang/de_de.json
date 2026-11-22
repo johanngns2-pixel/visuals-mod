@@ -625,5 +625,7 @@
   "visuals.option.afk.shaderQuality.choice.medium": "Mittel (Mellow)",
   "visuals.option.afk.shaderQuality.choice.high": "Hoch (Bliss)",
   "visuals.option.afk.musicVolume.name": "Musik-Lautstärke",
-  "visuals.option.afk.musicVolume.tooltip": "Lautstärke der AFK-Musik."
+  "visuals.option.afk.musicVolume.tooltip": "Lautstärke der AFK-Musik.",
+  "visuals.option.puddles.damp.name": "Nasser Boden",
+  "visuals.option.puddles.damp.tooltip": "Wie stark der feuchte Boden außerhalb der Pfützen spiegelt. 0 = nur die Pfützen spiegeln."
 }

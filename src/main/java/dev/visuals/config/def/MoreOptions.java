@@ -100,10 +100,11 @@ public final class MoreOptions {
         r.register(OptionDef.toggle("fireflies.avoidPlayer", true).group("behaviour").build());
         r.register(OptionDef.toggle("fireflies.groundGlow", true).group("behaviour").build());
         r.register(OptionDef.toggle("fireflies.onlyAtNight", true).group("behaviour").build());
-        r.register(OptionDef.slider("puddles.reflection", 0.6, 0.0, 1.0, 0.05).group("look").build());
+        r.register(OptionDef.slider("puddles.reflection", 0.85, 0.0, 1.0, 0.05).group("look").build());
         r.register(OptionDef.slider("puddles.size", 1.0, 0.5, 3.0, 0.05).group("look").build());
         r.register(OptionDef.dropdown("puddles.mode", "reflect", "reflect", "simple").group("look").build());
-        r.register(OptionDef.intSlider("puddles.coverage", 35, 0, 100).group("look").unit("%").build());
+        r.register(OptionDef.slider("puddles.damp", 0.7, 0.0, 1.0, 0.05).group("look").build());
+        r.register(OptionDef.intSlider("puddles.coverage", 55, 0, 100).group("look").unit("%").build());
         r.register(OptionDef.dropdown("puddles.quality", "medium", "low", "medium", "high").group("look").build());
         r.register(OptionDef.toggle("wildlife.butterflies", true).group("species").build());
         r.register(OptionDef.toggle("wildlife.birds", true).group("species").build());

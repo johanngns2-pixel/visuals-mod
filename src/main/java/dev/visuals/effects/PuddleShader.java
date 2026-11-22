@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
 /**
- * Pfützen mit echter Spiegelung: Nach dem Zeichnen der Welt läuft ein Vollbild-Shader über das fertige Bild.
+ * Pfützen mit Spiegelung: Nach dem Zeichnen der Welt läuft ein Vollbild-Shader über das fertige Bild (Technik und Aufbau nach dem Welt-Shader von Versefall, MIT-Lizenz).
  * Er liest Bild und Tiefe, erkennt waagerechte Flächen, legt per Rauschen Pfützen darauf und spiegelt die Szene
  * darin ("Screen-Space-Reflection": Strahlen laufen durch das Tiefenbild). Was nicht im Bild ist, wird durch die
  * Himmelsfarbe ersetzt. Es werden keine Blöcke verändert. Schlägt etwas fehl, schaltet sich der Effekt ab und die
@@ -29,12 +29,99 @@ public final class PuddleShader {
             #version 330 core
             out vec2 uv;
             void main() {
-                vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
-                uv = p;
-                gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+                vec3 base = texture(ColorTex, uv).rgb;
+                float d = depthAt(uv);
+                if (d >= 1.0) {
+                    fragColor = vec4(base, 1.0);
+                    return;
+                }
+                vec3 p = viewPos(uv, d);
+                vec3 v = normalize(p);
+                vec3 n = normalAt(uv, p);
+                mat3 toWorld = transpose(ViewRot);
+                vec3 nw = toWorld * n;
+                vec3 pw = toWorld * p;
+
+                // nass: alles, was nach oben zeigt; Pfützen dort, wo das Rauschen hoch ist
+                float upFacing = smoothstep(0.80, 0.97, nw.y);
+                float wet = upFacing * clamp(Params.y, 0.0, 1.0);
+                if (wet < 0.01) {
+                    fragColor = vec4(base, 1.0);
+                    return;
+                }
+                float scale = max(0.5, Params.z);
+                vec2 ground = mod(pw.xz + CamPos.xz, 4096.0);
+                float shape = fbm(ground * (0.28 / scale)) * 0.75 + fbm(ground * (1.3 / scale)) * 0.25;
+                float coverage = clamp(Params.x + Env.a * 0.2, 0.0, 1.0);
+                float puddle = smoothstep(1.0 - coverage - 0.08, 1.0 - coverage + 0.08, shape);
+                if (coverage > 0.985) {
+                    puddle = 1.0;
+                }
+
+                // Regen kräuselt die Oberfläche in den Pfützen leicht
+                if (Params.w > 1.5 && Env.a > 0.05) {
+                    vec2 q = ground * 6.0;
+                    vec3 rip = vec3(noise(q + Time * 2.1) - 0.5, 0.0, noise(q * 1.3 - Time * 1.7) - 0.5);
+                    nw = normalize(nw + rip * 0.12 * Env.a * puddle);
+                    n = normalize(ViewRot * nw);
+                }
+
+                vec3 rw = toWorld * reflect(v, n);
+                vec3 skyRefl = skyAt(rw);
+                vec3 refl = skyRefl;
+                float found = 0.0;
+                if (Params.w > 0.5) {
+                    int steps = Params.w > 1.5 ? 44 : 28;
+                    vec3 r = normalize(reflect(v, n));
+                    vec3 pos = p + n * 0.03;
+                    float stepLen = 0.12 + length(p) * 0.012;
+                    vec2 hitUv = vec2(0.0);
+                    for (int i = 0; i < steps; i++) {
+                        vec3 prev = pos;
+                        pos += r * stepLen;
+                        stepLen *= 1.1;
+                        vec2 suv = project(pos);
+                        if (suv.x < 0.0 || suv.x > 1.0 || suv.y < 0.0 || suv.y > 1.0 || pos.z > -0.05) {
+                            break;
+                        }
+                        float sd = depthAt(suv);
+                        if (sd >= 1.0) {
+                            continue;
+                        }
+                        float diff = viewPos(suv, sd).z - pos.z;
+                        if (diff > 0.0 && diff < stepLen * 2.5 + 0.3) {
+                            vec3 a = prev;
+                            vec3 b = pos;
+                            for (int k = 0; k < 5; k++) {
+                                vec3 m = (a + b) * 0.5;
+                                vec2 muv = project(m);
+                                float md = viewPos(muv, depthAt(muv)).z;
+                                if (md - m.z > 0.0) {
+                                    b = m;
+                                } else {
+                                    a = m;
+                                }
+                            }
+                            hitUv = project(b);
+                            vec2 edge = min(hitUv, 1.0 - hitUv);
+                            found = smoothstep(0.0, 0.08, min(edge.x, edge.y)) * (1.0 - float(i) / float(steps));
+                            break;
+                        }
+                    }
+                    if (found > 0.0) {
+                        refl = mix(skyRefl, texture(ColorTex, hitUv).rgb, found);
+                    }
+                }
+                float fresnel = 0.02 + 0.98 * pow(1.0 - max(dot(-v, n), 0.0), 5.0);
+                // feuchter Boden glänzt nur in flachen Winkeln, Pfützen sind echte Spiegel
+                float amount = wet * mix((0.32 + 0.4 * fresnel) * Damp, 0.75, puddle);
+                vec3 darkened = base * mix(1.0, 0.8, wet);
+                fragColor = vec4(mix(darkened, refl, clamp(amount, 0.0, 0.78)), 1.0);
             }
             """;
 
+    // Der Spiegel-Teil dieses Shaders (nasser Boden, Pfützen aus Rauschen, Strahlen durch das Tiefenbild) folgt dem
+    // Welt-Shader von Versefall (MIT-Lizenz, VerseFall-Development), siehe THIRD_PARTY_NOTICES.md.
     private static final String FRAGMENT = """
             #version 330 core
             uniform sampler2D ColorTex;
@@ -47,6 +134,7 @@ public final class PuddleShader {
             uniform vec4 Params;   // Flächendeckung, Spiegelstärke, Größe, Qualität (0 niedrig, 1 mittel, 2 hoch)
             uniform vec4 Env;      // Himmelsfarbe rgb, Regen
             uniform float Time;
+            uniform float Damp;    // wie stark der nasse Boden außerhalb der Pfützen spiegelt
             in vec2 uv;
             out vec4 fragColor;
 
@@ -238,7 +326,7 @@ public final class PuddleShader {
             return;
         }
         double coverage = Opts.integer("puddles.coverage") / 100.0;
-        if (coverage <= 0.001) {
+        if (Opts.num("puddles.reflection") <= 0.001) {
             return;
         }
         try {
@@ -319,6 +407,7 @@ public final class PuddleShader {
             GL20.glUniform1f(loc[7], (System.nanoTime() / 1_000_000_000.0 % 1000.0) > 0 ? (float) (System.nanoTime() / 1.0e9 % 1000.0) : 0f);
             GL20.glUniform1i(loc[8], 0);
             GL20.glUniform1i(loc[9], 1);
+            GL20.glUniform1f(loc[10], (float) Opts.num("puddles.damp"));
 
             GL30.glBindVertexArray(vao);
             GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 3);
@@ -383,7 +472,7 @@ public final class PuddleShader {
         }
         GL20.glDeleteShader(vs);
         GL20.glDeleteShader(fs);
-        String[] names = {"Proj", "InvProj", "ViewRot", "CamPos", "OutSize", "Params", "Env", "Time", "ColorTex", "DepthTex"};
+        String[] names = {"Proj", "InvProj", "ViewRot", "CamPos", "OutSize", "Params", "Env", "Time", "ColorTex", "DepthTex", "Damp"};
         loc = new int[names.length];
         for (int i = 0; i < names.length; i++) {
             loc[i] = GL20.glGetUniformLocation(p, names[i]);
