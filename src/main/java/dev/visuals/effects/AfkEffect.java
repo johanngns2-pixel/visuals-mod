@@ -153,7 +153,7 @@ public final class AfkEffect {
             return;
         }
         Music music = mc.getSituationalMusic();
-        musicInstance = new SimpleSoundInstance(music.getEvent().value().location(), SoundSource.MASTER,
+        musicInstance = new SimpleSoundInstance(music.sound().value().location(), SoundSource.MASTER,
                 (float) Math.max(0.0, Math.min(1.0, Opts.num("afk.musicVolume"))), 1.0f, RandomSource.create(), false, 0,
                 SoundInstance.Attenuation.NONE, 0.0, 0.0, 0.0, true);
         sounds.play(musicInstance);
