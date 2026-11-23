@@ -1,0 +1,92 @@
+Compiled from "LightTexture.java"
+public class net.minecraft.client.renderer.LightTexture implements java.lang.AutoCloseable {
+  public static final int FULL_BRIGHT;
+  public static final int FULL_SKY;
+  public static final int FULL_BLOCK;
+  private static final int TEXTURE_SIZE;
+  private static final int LIGHTMAP_UBO_SIZE;
+  private final com.mojang.blaze3d.textures.GpuTexture texture;
+  private final com.mojang.blaze3d.textures.GpuTextureView textureView;
+  private boolean updateLightTexture;
+  private float blockLightRedFlicker;
+  private final net.minecraft.client.renderer.GameRenderer renderer;
+  private final net.minecraft.client.Minecraft minecraft;
+  private final net.minecraft.client.renderer.MappableRingBuffer ubo;
+  private final net.minecraft.util.RandomSource randomSource;
+  public net.minecraft.client.renderer.LightTexture(net.minecraft.client.renderer.GameRenderer, net.minecraft.client.Minecraft);
+  public com.mojang.blaze3d.textures.GpuTextureView getTextureView();
+  public void close();
+  public void tick();
+  private float calculateDarknessScale(net.minecraft.world.entity.LivingEntity, float, float);
+  public void updateLightTexture(float);
+  public static float getBrightness(net.minecraft.world.level.dimension.DimensionType, int);
+  public static float getBrightness(float, int);
+  public static int pack(int, int);
+  public static int block(int);
+  public static int sky(int);
+  public static int lightCoordsWithEmission(int, int);
+  private static java.lang.String method_71310();
+  private static java.lang.String method_71311();
+  static {};
+}
+Compiled from "GameTestBlockHighlightRenderer.java"
+public class net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer {
+  private static final int SHOW_POS_DURATION_MS;
+  private static final float PADDING;
+  private final java.util.Map<net.minecraft.core.BlockPos, net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer$Marker> markers;
+  public net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer();
+  public void highlightPos(net.minecraft.core.BlockPos, net.minecraft.core.BlockPos);
+  public void clear();
+  public void emitGizmos();
+  private void renderMarker(net.minecraft.core.BlockPos, net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer$Marker);
+  private void method_75440(net.minecraft.core.BlockPos, net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer$Marker);
+  private static boolean method_75437(long, java.util.Map$Entry);
+}
+Compiled from "LightDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.LightDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  private final boolean showBlockLight;
+  private final boolean showSkyLight;
+  private static final int MAX_RENDER_DIST;
+  public net.minecraft.client.renderer.debug.LightDebugRenderer(net.minecraft.client.Minecraft, boolean, boolean);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+}
+Compiled from "LightSectionDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.LightSectionDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final java.time.Duration REFRESH_INTERVAL;
+  private static final int RADIUS;
+  private static final int LIGHT_AND_BLOCKS_COLOR;
+  private static final int LIGHT_ONLY_COLOR;
+  private final net.minecraft.client.Minecraft minecraft;
+  private final net.minecraft.world.level.LightLayer lightLayer;
+  private java.time.Instant lastUpdateTime;
+  private net.minecraft.client.renderer.debug.LightSectionDebugRenderer$SectionData data;
+  public net.minecraft.client.renderer.debug.LightSectionDebugRenderer(net.minecraft.client.Minecraft, net.minecraft.world.level.LightLayer);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void renderFaces(net.minecraft.world.phys.shapes.DiscreteVoxelShape, net.minecraft.core.SectionPos, int);
+  private static void renderEdges(net.minecraft.world.phys.shapes.DiscreteVoxelShape, net.minecraft.core.SectionPos, int);
+  private static void renderFace(net.minecraft.core.Direction, int, int, int, int);
+  private static void renderEdge(int, int, int, int, int, int, int);
+  private static void method_51462(net.minecraft.core.SectionPos, int, int, int, int, int, int, int);
+  private static void method_51461(net.minecraft.core.SectionPos, int, net.minecraft.core.Direction, int, int, int);
+  static {};
+}
+Compiled from "LightningBoltRenderer.java"
+public class net.minecraft.client.renderer.entity.LightningBoltRenderer extends net.minecraft.client.renderer.entity.EntityRenderer<net.minecraft.world.entity.LightningBolt, net.minecraft.client.renderer.entity.state.LightningBoltRenderState> {
+  public net.minecraft.client.renderer.entity.LightningBoltRenderer(net.minecraft.client.renderer.entity.EntityRendererProvider$Context);
+  public void submit(net.minecraft.client.renderer.entity.state.LightningBoltRenderState, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  private static void quad(org.joml.Matrix4f, com.mojang.blaze3d.vertex.VertexConsumer, float, float, int, float, float, float, float, float, float, float, boolean, boolean, boolean, boolean);
+  public net.minecraft.client.renderer.entity.state.LightningBoltRenderState createRenderState();
+  public void extractRenderState(net.minecraft.world.entity.LightningBolt, net.minecraft.client.renderer.entity.state.LightningBoltRenderState, float);
+  protected boolean affectedByCulling(net.minecraft.world.entity.LightningBolt);
+  public void extractRenderState(net.minecraft.world.entity.Entity, net.minecraft.client.renderer.entity.state.EntityRenderState, float);
+  public net.minecraft.client.renderer.entity.state.EntityRenderState createRenderState();
+  public void submit(net.minecraft.client.renderer.entity.state.EntityRenderState, com.mojang.blaze3d.vertex.PoseStack, net.minecraft.client.renderer.SubmitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState);
+  protected boolean affectedByCulling(net.minecraft.world.entity.Entity);
+  private static void method_72989(net.minecraft.client.renderer.entity.state.LightningBoltRenderState, float[], float, float[], float, com.mojang.blaze3d.vertex.PoseStack$Pose, com.mojang.blaze3d.vertex.VertexConsumer);
+}
+Compiled from "LightningBoltRenderState.java"
+public class net.minecraft.client.renderer.entity.state.LightningBoltRenderState extends net.minecraft.client.renderer.entity.state.EntityRenderState {
+  public long seed;
+  public net.minecraft.client.renderer.entity.state.LightningBoltRenderState();
+}

@@ -1,0 +1,2233 @@
+Compiled from "SkyRenderer.java"
+public class net.minecraft.client.renderer.SkyRenderer implements java.lang.AutoCloseable {
+  private static final net.minecraft.resources.Identifier SUN_SPRITE;
+
+  private static final net.minecraft.resources.Identifier END_FLASH_SPRITE;
+
+  private static final net.minecraft.resources.Identifier END_SKY_LOCATION;
+
+  private static final float SKY_DISC_RADIUS;
+
+  private static final int SKY_VERTICES;
+
+  private static final int STAR_COUNT;
+
+  private static final float SUN_SIZE;
+
+  private static final float SUN_HEIGHT;
+
+  private static final float MOON_SIZE;
+
+  private static final float MOON_HEIGHT;
+
+  private static final int SUNRISE_STEPS;
+
+  private static final int END_SKY_QUAD_COUNT;
+
+  private static final float END_FLASH_HEIGHT;
+
+  private static final float END_FLASH_SCALE;
+
+  private final net.minecraft.client.renderer.texture.TextureAtlas celestialsAtlas;
+
+  private final com.mojang.blaze3d.buffers.GpuBuffer starBuffer;
+
+  private final com.mojang.blaze3d.buffers.GpuBuffer topSkyBuffer;
+
+  private final com.mojang.blaze3d.buffers.GpuBuffer bottomSkyBuffer;
+
+  private final com.mojang.blaze3d.buffers.GpuBuffer endSkyBuffer;
+
+  private final com.mojang.blaze3d.buffers.GpuBuffer sunBuffer;
+
+  private final com.mojang.blaze3d.buffers.GpuBuffer moonBuffer;
+
+  private final com.mojang.blaze3d.buffers.GpuBuffer sunriseBuffer;
+
+  private final com.mojang.blaze3d.buffers.GpuBuffer endFlashBuffer;
+
+  private final com.mojang.blaze3d.systems.RenderSystem$AutoStorageIndexBuffer quadIndices;
+
+  private final net.minecraft.client.renderer.texture.AbstractTexture endSkyTexture;
+
+  private int starIndexCount;
+
+  public net.minecraft.client.renderer.SkyRenderer(net.minecraft.client.renderer.texture.TextureManager, net.minecraft.client.resources.model.AtlasManager);
+    Code:
+       0: aload_0
+       1: invokespecial #100                // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: getstatic     #104                // Field com/mojang/blaze3d/vertex/VertexFormat$Mode.QUADS:Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+       8: invokestatic  #108                // Method com/mojang/blaze3d/systems/RenderSystem.getSequentialBuffer:(Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;)Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+      11: putfield      #110                // Field quadIndices:Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+      14: aload_0
+      15: aload_2
+      16: getstatic     #115                // Field net/minecraft/data/AtlasIds.CELESTIALS:Lnet/minecraft/resources/Identifier;
+      19: invokevirtual #121                // Method net/minecraft/client/resources/model/AtlasManager.getAtlasOrThrow:(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/texture/TextureAtlas;
+      22: putfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+      25: aload_0
+      26: aload_0
+      27: invokevirtual #127                // Method buildStars:()Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      30: putfield      #129                // Field starBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      33: aload_0
+      34: invokestatic  #132                // Method buildEndSky:()Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      37: putfield      #134                // Field endSkyBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      40: aload_0
+      41: aload_0
+      42: aload_1
+      43: getstatic     #136                // Field END_SKY_LOCATION:Lnet/minecraft/resources/Identifier;
+      46: invokevirtual #140                // Method getTexture:(Lnet/minecraft/client/renderer/texture/TextureManager;Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/texture/AbstractTexture;
+      49: putfield      #142                // Field endSkyTexture:Lnet/minecraft/client/renderer/texture/AbstractTexture;
+      52: aload_0
+      53: aload_0
+      54: getfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+      57: invokestatic  #146                // Method buildEndFlashQuad:(Lnet/minecraft/client/renderer/texture/TextureAtlas;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      60: putfield      #148                // Field endFlashBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      63: aload_0
+      64: aload_0
+      65: getfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+      68: invokestatic  #151                // Method buildSunQuad:(Lnet/minecraft/client/renderer/texture/TextureAtlas;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      71: putfield      #153                // Field sunBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      74: aload_0
+      75: aload_0
+      76: getfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+      79: invokestatic  #156                // Method buildMoonPhases:(Lnet/minecraft/client/renderer/texture/TextureAtlas;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      82: putfield      #158                // Field moonBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      85: aload_0
+      86: aload_0
+      87: invokevirtual #161                // Method buildSunriseFan:()Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      90: putfield      #163                // Field sunriseBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      93: bipush        10
+      95: getstatic     #169                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION:Lcom/mojang/blaze3d/vertex/VertexFormat;
+      98: invokevirtual #173                // Method com/mojang/blaze3d/vertex/VertexFormat.getVertexSize:()I
+     101: imul
+     102: invokestatic  #179                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.exactlySized:(I)Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;
+     105: astore_3
+     106: new           #181                // class com/mojang/blaze3d/vertex/BufferBuilder
+     109: dup
+     110: aload_3
+     111: getstatic     #184                // Field com/mojang/blaze3d/vertex/VertexFormat$Mode.TRIANGLE_FAN:Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+     114: getstatic     #169                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION:Lcom/mojang/blaze3d/vertex/VertexFormat;
+     117: invokespecial #187                // Method com/mojang/blaze3d/vertex/BufferBuilder."<init>":(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+     120: astore        4
+     122: aload_0
+     123: aload         4
+     125: ldc           #188                // float 16.0f
+     127: invokevirtual #192                // Method buildSkyDisc:(Lcom/mojang/blaze3d/vertex/VertexConsumer;F)V
+     130: aload         4
+     132: invokevirtual #196                // Method com/mojang/blaze3d/vertex/BufferBuilder.buildOrThrow:()Lcom/mojang/blaze3d/vertex/MeshData;
+     135: astore        5
+     137: aload_0
+     138: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     141: invokedynamic #219,  0            // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+     146: bipush        32
+     148: aload         5
+     150: invokevirtual #223                // Method com/mojang/blaze3d/vertex/MeshData.vertexBuffer:()Ljava/nio/ByteBuffer;
+     153: invokeinterface #229,  4          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createBuffer:(Ljava/util/function/Supplier;ILjava/nio/ByteBuffer;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     158: putfield      #231                // Field topSkyBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     161: aload         5
+     163: ifnull        201
+     166: aload         5
+     168: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     171: goto          201
+     174: astore        6
+     176: aload         5
+     178: ifnull        198
+     181: aload         5
+     183: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     186: goto          198
+     189: astore        7
+     191: aload         6
+     193: aload         7
+     195: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     198: aload         6
+     200: athrow
+     201: new           #181                // class com/mojang/blaze3d/vertex/BufferBuilder
+     204: dup
+     205: aload_3
+     206: getstatic     #184                // Field com/mojang/blaze3d/vertex/VertexFormat$Mode.TRIANGLE_FAN:Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+     209: getstatic     #169                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION:Lcom/mojang/blaze3d/vertex/VertexFormat;
+     212: invokespecial #187                // Method com/mojang/blaze3d/vertex/BufferBuilder."<init>":(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+     215: astore        4
+     217: aload_0
+     218: aload         4
+     220: ldc           #239                // float -16.0f
+     222: invokevirtual #192                // Method buildSkyDisc:(Lcom/mojang/blaze3d/vertex/VertexConsumer;F)V
+     225: aload         4
+     227: invokevirtual #196                // Method com/mojang/blaze3d/vertex/BufferBuilder.buildOrThrow:()Lcom/mojang/blaze3d/vertex/MeshData;
+     230: astore        5
+     232: aload_0
+     233: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     236: invokedynamic #244,  0            // InvokeDynamic #1:get:()Ljava/util/function/Supplier;
+     241: bipush        32
+     243: aload         5
+     245: invokevirtual #223                // Method com/mojang/blaze3d/vertex/MeshData.vertexBuffer:()Ljava/nio/ByteBuffer;
+     248: invokeinterface #229,  4          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createBuffer:(Ljava/util/function/Supplier;ILjava/nio/ByteBuffer;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     253: putfield      #246                // Field bottomSkyBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     256: aload         5
+     258: ifnull        296
+     261: aload         5
+     263: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     266: goto          296
+     269: astore        6
+     271: aload         5
+     273: ifnull        293
+     276: aload         5
+     278: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     281: goto          293
+     284: astore        7
+     286: aload         6
+     288: aload         7
+     290: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     293: aload         6
+     295: athrow
+     296: aload_3
+     297: ifnull        332
+     300: aload_3
+     301: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     304: goto          332
+     307: astore        4
+     309: aload_3
+     310: ifnull        329
+     313: aload_3
+     314: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     317: goto          329
+     320: astore        5
+     322: aload         4
+     324: aload         5
+     326: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     329: aload         4
+     331: athrow
+     332: return
+    Exception table:
+       from    to  target type
+         137   161   174   Class java/lang/Throwable
+         181   186   189   Class java/lang/Throwable
+         232   256   269   Class java/lang/Throwable
+         276   281   284   Class java/lang/Throwable
+         106   296   307   Class java/lang/Throwable
+         313   317   320   Class java/lang/Throwable
+
+  private net.minecraft.client.renderer.texture.AbstractTexture getTexture(net.minecraft.client.renderer.texture.TextureManager, net.minecraft.resources.Identifier);
+    Code:
+       0: aload_1
+       1: aload_2
+       2: invokevirtual #263                // Method net/minecraft/client/renderer/texture/TextureManager.getTexture:(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/texture/AbstractTexture;
+       5: areturn
+
+  private com.mojang.blaze3d.buffers.GpuBuffer buildSunriseFan();
+    Code:
+       0: bipush        18
+       2: istore_1
+       3: getstatic     #266                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION_COLOR:Lcom/mojang/blaze3d/vertex/VertexFormat;
+       6: invokevirtual #173                // Method com/mojang/blaze3d/vertex/VertexFormat.getVertexSize:()I
+       9: istore_2
+      10: bipush        18
+      12: iload_2
+      13: imul
+      14: invokestatic  #179                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.exactlySized:(I)Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;
+      17: astore_3
+      18: new           #181                // class com/mojang/blaze3d/vertex/BufferBuilder
+      21: dup
+      22: aload_3
+      23: getstatic     #184                // Field com/mojang/blaze3d/vertex/VertexFormat$Mode.TRIANGLE_FAN:Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+      26: getstatic     #266                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION_COLOR:Lcom/mojang/blaze3d/vertex/VertexFormat;
+      29: invokespecial #187                // Method com/mojang/blaze3d/vertex/BufferBuilder."<init>":(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+      32: astore        4
+      34: fconst_1
+      35: invokestatic  #272                // Method net/minecraft/util/ARGB.white:(F)I
+      38: istore        5
+      40: fconst_0
+      41: invokestatic  #272                // Method net/minecraft/util/ARGB.white:(F)I
+      44: istore        6
+      46: aload         4
+      48: fconst_0
+      49: ldc           #65                 // float 100.0f
+      51: fconst_0
+      52: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      55: iload         5
+      57: invokeinterface #282,  2          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setColor:(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      62: pop
+      63: iconst_0
+      64: istore        7
+      66: iload         7
+      68: bipush        16
+      70: if_icmpgt     139
+      73: iload         7
+      75: i2f
+      76: ldc_w         #283                // float 6.2831855f
+      79: fmul
+      80: ldc           #188                // float 16.0f
+      82: fdiv
+      83: fstore        8
+      85: fload         8
+      87: f2d
+      88: invokestatic  #289                // Method net/minecraft/util/Mth.sin:(D)F
+      91: fstore        9
+      93: fload         8
+      95: f2d
+      96: invokestatic  #292                // Method net/minecraft/util/Mth.cos:(D)F
+      99: fstore        10
+     101: aload         4
+     103: fload         9
+     105: ldc_w         #293                // float 120.0f
+     108: fmul
+     109: fload         10
+     111: ldc_w         #293                // float 120.0f
+     114: fmul
+     115: fload         10
+     117: fneg
+     118: ldc_w         #294                // float 40.0f
+     121: fmul
+     122: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     125: iload         6
+     127: invokeinterface #282,  2          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setColor:(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     132: pop
+     133: iinc          7, 1
+     136: goto          66
+     139: aload         4
+     141: invokevirtual #196                // Method com/mojang/blaze3d/vertex/BufferBuilder.buildOrThrow:()Lcom/mojang/blaze3d/vertex/MeshData;
+     144: astore        7
+     146: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     149: invokedynamic #299,  0            // InvokeDynamic #2:get:()Ljava/util/function/Supplier;
+     154: bipush        32
+     156: aload         7
+     158: invokevirtual #223                // Method com/mojang/blaze3d/vertex/MeshData.vertexBuffer:()Ljava/nio/ByteBuffer;
+     161: invokeinterface #229,  4          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createBuffer:(Ljava/util/function/Supplier;ILjava/nio/ByteBuffer;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     166: astore        8
+     168: aload         7
+     170: ifnull        178
+     173: aload         7
+     175: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     178: aload_3
+     179: ifnull        186
+     182: aload_3
+     183: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     186: aload         8
+     188: areturn
+     189: astore        8
+     191: aload         7
+     193: ifnull        213
+     196: aload         7
+     198: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     201: goto          213
+     204: astore        9
+     206: aload         8
+     208: aload         9
+     210: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     213: aload         8
+     215: athrow
+     216: astore        4
+     218: aload_3
+     219: ifnull        238
+     222: aload_3
+     223: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     226: goto          238
+     229: astore        5
+     231: aload         4
+     233: aload         5
+     235: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     238: aload         4
+     240: athrow
+    Exception table:
+       from    to  target type
+         146   168   189   Class java/lang/Throwable
+         196   201   204   Class java/lang/Throwable
+          18   178   216   Class java/lang/Throwable
+         189   216   216   Class java/lang/Throwable
+         222   226   229   Class java/lang/Throwable
+
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildSunQuad(net.minecraft.client.renderer.texture.TextureAtlas);
+    Code:
+       0: ldc_w         #312                // String Sun quad
+       3: aload_0
+       4: getstatic     #314                // Field SUN_SPRITE:Lnet/minecraft/resources/Identifier;
+       7: invokevirtual #320                // Method net/minecraft/client/renderer/texture/TextureAtlas.getSprite:(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;
+      10: invokestatic  #324                // Method buildCelestialQuad:(Ljava/lang/String;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      13: areturn
+
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildEndFlashQuad(net.minecraft.client.renderer.texture.TextureAtlas);
+    Code:
+       0: ldc_w         #326                // String End flash quad
+       3: aload_0
+       4: getstatic     #328                // Field END_FLASH_SPRITE:Lnet/minecraft/resources/Identifier;
+       7: invokevirtual #320                // Method net/minecraft/client/renderer/texture/TextureAtlas.getSprite:(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;
+      10: invokestatic  #324                // Method buildCelestialQuad:(Ljava/lang/String;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      13: areturn
+
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildCelestialQuad(java.lang.String, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+    Code:
+       0: getstatic     #333                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION_TEX:Lcom/mojang/blaze3d/vertex/VertexFormat;
+       3: astore_2
+       4: iconst_4
+       5: aload_2
+       6: invokevirtual #173                // Method com/mojang/blaze3d/vertex/VertexFormat.getVertexSize:()I
+       9: imul
+      10: invokestatic  #179                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.exactlySized:(I)Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;
+      13: astore_3
+      14: new           #181                // class com/mojang/blaze3d/vertex/BufferBuilder
+      17: dup
+      18: aload_3
+      19: getstatic     #104                // Field com/mojang/blaze3d/vertex/VertexFormat$Mode.QUADS:Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+      22: aload_2
+      23: invokespecial #187                // Method com/mojang/blaze3d/vertex/BufferBuilder."<init>":(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+      26: astore        4
+      28: aload         4
+      30: ldc_w         #334                // float -1.0f
+      33: fconst_0
+      34: ldc_w         #334                // float -1.0f
+      37: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      40: aload_1
+      41: invokevirtual #340                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getU0:()F
+      44: aload_1
+      45: invokevirtual #343                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getV0:()F
+      48: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      53: pop
+      54: aload         4
+      56: fconst_1
+      57: fconst_0
+      58: ldc_w         #334                // float -1.0f
+      61: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      64: aload_1
+      65: invokevirtual #350                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getU1:()F
+      68: aload_1
+      69: invokevirtual #343                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getV0:()F
+      72: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      77: pop
+      78: aload         4
+      80: fconst_1
+      81: fconst_0
+      82: fconst_1
+      83: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      86: aload_1
+      87: invokevirtual #350                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getU1:()F
+      90: aload_1
+      91: invokevirtual #353                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getV1:()F
+      94: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      99: pop
+     100: aload         4
+     102: ldc_w         #334                // float -1.0f
+     105: fconst_0
+     106: fconst_1
+     107: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     110: aload_1
+     111: invokevirtual #340                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getU0:()F
+     114: aload_1
+     115: invokevirtual #353                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getV1:()F
+     118: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     123: pop
+     124: aload         4
+     126: invokevirtual #196                // Method com/mojang/blaze3d/vertex/BufferBuilder.buildOrThrow:()Lcom/mojang/blaze3d/vertex/MeshData;
+     129: astore        5
+     131: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     134: aload_0
+     135: invokedynamic #361,  0            // InvokeDynamic #3:get:(Ljava/lang/String;)Ljava/util/function/Supplier;
+     140: bipush        32
+     142: aload         5
+     144: invokevirtual #223                // Method com/mojang/blaze3d/vertex/MeshData.vertexBuffer:()Ljava/nio/ByteBuffer;
+     147: invokeinterface #229,  4          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createBuffer:(Ljava/util/function/Supplier;ILjava/nio/ByteBuffer;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     152: astore        6
+     154: aload         5
+     156: ifnull        164
+     159: aload         5
+     161: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     164: aload_3
+     165: ifnull        172
+     168: aload_3
+     169: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     172: aload         6
+     174: areturn
+     175: astore        6
+     177: aload         5
+     179: ifnull        199
+     182: aload         5
+     184: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     187: goto          199
+     190: astore        7
+     192: aload         6
+     194: aload         7
+     196: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     199: aload         6
+     201: athrow
+     202: astore        4
+     204: aload_3
+     205: ifnull        224
+     208: aload_3
+     209: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     212: goto          224
+     215: astore        5
+     217: aload         4
+     219: aload         5
+     221: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     224: aload         4
+     226: athrow
+    Exception table:
+       from    to  target type
+         131   154   175   Class java/lang/Throwable
+         182   187   190   Class java/lang/Throwable
+          14   164   202   Class java/lang/Throwable
+         175   202   202   Class java/lang/Throwable
+         208   212   215   Class java/lang/Throwable
+
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildMoonPhases(net.minecraft.client.renderer.texture.TextureAtlas);
+    Code:
+       0: invokestatic  #370                // Method net/minecraft/world/level/MoonPhase.values:()[Lnet/minecraft/world/level/MoonPhase;
+       3: astore_1
+       4: getstatic     #333                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION_TEX:Lcom/mojang/blaze3d/vertex/VertexFormat;
+       7: astore_2
+       8: aload_1
+       9: arraylength
+      10: iconst_4
+      11: imul
+      12: aload_2
+      13: invokevirtual #173                // Method com/mojang/blaze3d/vertex/VertexFormat.getVertexSize:()I
+      16: imul
+      17: invokestatic  #179                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.exactlySized:(I)Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;
+      20: astore_3
+      21: new           #181                // class com/mojang/blaze3d/vertex/BufferBuilder
+      24: dup
+      25: aload_3
+      26: getstatic     #104                // Field com/mojang/blaze3d/vertex/VertexFormat$Mode.QUADS:Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+      29: aload_2
+      30: invokespecial #187                // Method com/mojang/blaze3d/vertex/BufferBuilder."<init>":(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+      33: astore        4
+      35: aload_1
+      36: astore        5
+      38: aload         5
+      40: arraylength
+      41: istore        6
+      43: iconst_0
+      44: istore        7
+      46: iload         7
+      48: iload         6
+      50: if_icmpge     189
+      53: aload         5
+      55: iload         7
+      57: aaload
+      58: astore        8
+      60: aload_0
+      61: aload         8
+      63: invokevirtual #375                // Method net/minecraft/world/level/MoonPhase.getSerializedName:()Ljava/lang/String;
+      66: invokedynamic #386,  0            // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      71: invokestatic  #392                // Method net/minecraft/resources/Identifier.withDefaultNamespace:(Ljava/lang/String;)Lnet/minecraft/resources/Identifier;
+      74: invokevirtual #320                // Method net/minecraft/client/renderer/texture/TextureAtlas.getSprite:(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;
+      77: astore        9
+      79: aload         4
+      81: ldc_w         #334                // float -1.0f
+      84: fconst_0
+      85: ldc_w         #334                // float -1.0f
+      88: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      91: aload         9
+      93: invokevirtual #350                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getU1:()F
+      96: aload         9
+      98: invokevirtual #353                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getV1:()F
+     101: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     106: pop
+     107: aload         4
+     109: fconst_1
+     110: fconst_0
+     111: ldc_w         #334                // float -1.0f
+     114: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     117: aload         9
+     119: invokevirtual #340                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getU0:()F
+     122: aload         9
+     124: invokevirtual #353                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getV1:()F
+     127: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     132: pop
+     133: aload         4
+     135: fconst_1
+     136: fconst_0
+     137: fconst_1
+     138: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     141: aload         9
+     143: invokevirtual #340                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getU0:()F
+     146: aload         9
+     148: invokevirtual #343                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getV0:()F
+     151: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     156: pop
+     157: aload         4
+     159: ldc_w         #334                // float -1.0f
+     162: fconst_0
+     163: fconst_1
+     164: invokevirtual #276                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     167: aload         9
+     169: invokevirtual #350                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getU1:()F
+     172: aload         9
+     174: invokevirtual #343                // Method net/minecraft/client/renderer/texture/TextureAtlasSprite.getV0:()F
+     177: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     182: pop
+     183: iinc          7, 1
+     186: goto          46
+     189: aload         4
+     191: invokevirtual #196                // Method com/mojang/blaze3d/vertex/BufferBuilder.buildOrThrow:()Lcom/mojang/blaze3d/vertex/MeshData;
+     194: astore        5
+     196: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     199: invokedynamic #397,  0            // InvokeDynamic #5:get:()Ljava/util/function/Supplier;
+     204: bipush        32
+     206: aload         5
+     208: invokevirtual #223                // Method com/mojang/blaze3d/vertex/MeshData.vertexBuffer:()Ljava/nio/ByteBuffer;
+     211: invokeinterface #229,  4          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createBuffer:(Ljava/util/function/Supplier;ILjava/nio/ByteBuffer;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     216: astore        6
+     218: aload         5
+     220: ifnull        228
+     223: aload         5
+     225: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     228: aload_3
+     229: ifnull        236
+     232: aload_3
+     233: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     236: aload         6
+     238: areturn
+     239: astore        6
+     241: aload         5
+     243: ifnull        263
+     246: aload         5
+     248: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     251: goto          263
+     254: astore        7
+     256: aload         6
+     258: aload         7
+     260: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     263: aload         6
+     265: athrow
+     266: astore        4
+     268: aload_3
+     269: ifnull        288
+     272: aload_3
+     273: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     276: goto          288
+     279: astore        5
+     281: aload         4
+     283: aload         5
+     285: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     288: aload         4
+     290: athrow
+    Exception table:
+       from    to  target type
+         196   218   239   Class java/lang/Throwable
+         246   251   254   Class java/lang/Throwable
+          21   228   266   Class java/lang/Throwable
+         239   266   266   Class java/lang/Throwable
+         272   276   279   Class java/lang/Throwable
+
+  private com.mojang.blaze3d.buffers.GpuBuffer buildStars();
+    Code:
+       0: ldc2_w        #401                // long 10842l
+       3: invokestatic  #408                // InterfaceMethod net/minecraft/util/RandomSource.create:(J)Lnet/minecraft/util/RandomSource;
+       6: astore_1
+       7: ldc           #65                 // float 100.0f
+       9: fstore_2
+      10: getstatic     #169                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION:Lcom/mojang/blaze3d/vertex/VertexFormat;
+      13: invokevirtual #173                // Method com/mojang/blaze3d/vertex/VertexFormat.getVertexSize:()I
+      16: sipush        1500
+      19: imul
+      20: iconst_4
+      21: imul
+      22: invokestatic  #179                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.exactlySized:(I)Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;
+      25: astore_3
+      26: new           #181                // class com/mojang/blaze3d/vertex/BufferBuilder
+      29: dup
+      30: aload_3
+      31: getstatic     #104                // Field com/mojang/blaze3d/vertex/VertexFormat$Mode.QUADS:Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+      34: getstatic     #169                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION:Lcom/mojang/blaze3d/vertex/VertexFormat;
+      37: invokespecial #187                // Method com/mojang/blaze3d/vertex/BufferBuilder."<init>":(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+      40: astore        4
+      42: iconst_0
+      43: istore        5
+      45: iload         5
+      47: sipush        1500
+      50: if_icmpge     334
+      53: aload_1
+      54: invokeinterface #411,  1          // InterfaceMethod net/minecraft/util/RandomSource.nextFloat:()F
+      59: fconst_2
+      60: fmul
+      61: fconst_1
+      62: fsub
+      63: fstore        6
+      65: aload_1
+      66: invokeinterface #411,  1          // InterfaceMethod net/minecraft/util/RandomSource.nextFloat:()F
+      71: fconst_2
+      72: fmul
+      73: fconst_1
+      74: fsub
+      75: fstore        7
+      77: aload_1
+      78: invokeinterface #411,  1          // InterfaceMethod net/minecraft/util/RandomSource.nextFloat:()F
+      83: fconst_2
+      84: fmul
+      85: fconst_1
+      86: fsub
+      87: fstore        8
+      89: ldc_w         #412                // float 0.15f
+      92: aload_1
+      93: invokeinterface #411,  1          // InterfaceMethod net/minecraft/util/RandomSource.nextFloat:()F
+      98: ldc_w         #413                // float 0.1f
+     101: fmul
+     102: fadd
+     103: fstore        9
+     105: fload         6
+     107: fload         7
+     109: fload         8
+     111: invokestatic  #417                // Method net/minecraft/util/Mth.lengthSquared:(FFF)F
+     114: fstore        10
+     116: fload         10
+     118: ldc_w         #418                // float 0.010000001f
+     121: fcmpg
+     122: ifle          328
+     125: fload         10
+     127: fconst_1
+     128: fcmpl
+     129: iflt          135
+     132: goto          328
+     135: new           #420                // class org/joml/Vector3f
+     138: dup
+     139: fload         6
+     141: fload         7
+     143: fload         8
+     145: invokespecial #423                // Method org/joml/Vector3f."<init>":(FFF)V
+     148: ldc           #65                 // float 100.0f
+     150: invokevirtual #427                // Method org/joml/Vector3f.normalize:(F)Lorg/joml/Vector3f;
+     153: astore        11
+     155: aload_1
+     156: invokeinterface #431,  1          // InterfaceMethod net/minecraft/util/RandomSource.nextDouble:()D
+     161: ldc2_w        #432                // double 3.1415927410125732d
+     164: dmul
+     165: ldc2_w        #434                // double 2.0d
+     168: dmul
+     169: d2f
+     170: fstore        12
+     172: new           #437                // class org/joml/Matrix3f
+     175: dup
+     176: invokespecial #438                // Method org/joml/Matrix3f."<init>":()V
+     179: new           #420                // class org/joml/Vector3f
+     182: dup
+     183: aload         11
+     185: invokespecial #441                // Method org/joml/Vector3f."<init>":(Lorg/joml/Vector3fc;)V
+     188: invokevirtual #445                // Method org/joml/Vector3f.negate:()Lorg/joml/Vector3f;
+     191: new           #420                // class org/joml/Vector3f
+     194: dup
+     195: fconst_0
+     196: fconst_1
+     197: fconst_0
+     198: invokespecial #423                // Method org/joml/Vector3f."<init>":(FFF)V
+     201: invokevirtual #449                // Method org/joml/Matrix3f.rotateTowards:(Lorg/joml/Vector3fc;Lorg/joml/Vector3fc;)Lorg/joml/Matrix3f;
+     204: fload         12
+     206: fneg
+     207: invokevirtual #453                // Method org/joml/Matrix3f.rotateZ:(F)Lorg/joml/Matrix3f;
+     210: astore        13
+     212: aload         4
+     214: new           #420                // class org/joml/Vector3f
+     217: dup
+     218: fload         9
+     220: fload         9
+     222: fneg
+     223: fconst_0
+     224: invokespecial #423                // Method org/joml/Vector3f."<init>":(FFF)V
+     227: aload         13
+     229: invokevirtual #457                // Method org/joml/Vector3f.mul:(Lorg/joml/Matrix3fc;)Lorg/joml/Vector3f;
+     232: aload         11
+     234: invokevirtual #461                // Method org/joml/Vector3f.add:(Lorg/joml/Vector3fc;)Lorg/joml/Vector3f;
+     237: invokevirtual #464                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(Lorg/joml/Vector3fc;)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     240: pop
+     241: aload         4
+     243: new           #420                // class org/joml/Vector3f
+     246: dup
+     247: fload         9
+     249: fload         9
+     251: fconst_0
+     252: invokespecial #423                // Method org/joml/Vector3f."<init>":(FFF)V
+     255: aload         13
+     257: invokevirtual #457                // Method org/joml/Vector3f.mul:(Lorg/joml/Matrix3fc;)Lorg/joml/Vector3f;
+     260: aload         11
+     262: invokevirtual #461                // Method org/joml/Vector3f.add:(Lorg/joml/Vector3fc;)Lorg/joml/Vector3f;
+     265: invokevirtual #464                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(Lorg/joml/Vector3fc;)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     268: pop
+     269: aload         4
+     271: new           #420                // class org/joml/Vector3f
+     274: dup
+     275: fload         9
+     277: fneg
+     278: fload         9
+     280: fconst_0
+     281: invokespecial #423                // Method org/joml/Vector3f."<init>":(FFF)V
+     284: aload         13
+     286: invokevirtual #457                // Method org/joml/Vector3f.mul:(Lorg/joml/Matrix3fc;)Lorg/joml/Vector3f;
+     289: aload         11
+     291: invokevirtual #461                // Method org/joml/Vector3f.add:(Lorg/joml/Vector3fc;)Lorg/joml/Vector3f;
+     294: invokevirtual #464                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(Lorg/joml/Vector3fc;)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     297: pop
+     298: aload         4
+     300: new           #420                // class org/joml/Vector3f
+     303: dup
+     304: fload         9
+     306: fneg
+     307: fload         9
+     309: fneg
+     310: fconst_0
+     311: invokespecial #423                // Method org/joml/Vector3f."<init>":(FFF)V
+     314: aload         13
+     316: invokevirtual #457                // Method org/joml/Vector3f.mul:(Lorg/joml/Matrix3fc;)Lorg/joml/Vector3f;
+     319: aload         11
+     321: invokevirtual #461                // Method org/joml/Vector3f.add:(Lorg/joml/Vector3fc;)Lorg/joml/Vector3f;
+     324: invokevirtual #464                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(Lorg/joml/Vector3fc;)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     327: pop
+     328: iinc          5, 1
+     331: goto          45
+     334: aload         4
+     336: invokevirtual #196                // Method com/mojang/blaze3d/vertex/BufferBuilder.buildOrThrow:()Lcom/mojang/blaze3d/vertex/MeshData;
+     339: astore        5
+     341: aload_0
+     342: aload         5
+     344: invokevirtual #468                // Method com/mojang/blaze3d/vertex/MeshData.drawState:()Lcom/mojang/blaze3d/vertex/MeshData$DrawState;
+     347: invokevirtual #471                // Method com/mojang/blaze3d/vertex/MeshData$DrawState.indexCount:()I
+     350: putfield      #473                // Field starIndexCount:I
+     353: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     356: invokedynamic #478,  0            // InvokeDynamic #6:get:()Ljava/util/function/Supplier;
+     361: bipush        40
+     363: aload         5
+     365: invokevirtual #223                // Method com/mojang/blaze3d/vertex/MeshData.vertexBuffer:()Ljava/nio/ByteBuffer;
+     368: invokeinterface #229,  4          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createBuffer:(Ljava/util/function/Supplier;ILjava/nio/ByteBuffer;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     373: astore        6
+     375: aload         5
+     377: ifnull        385
+     380: aload         5
+     382: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     385: aload_3
+     386: ifnull        393
+     389: aload_3
+     390: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     393: aload         6
+     395: areturn
+     396: astore        6
+     398: aload         5
+     400: ifnull        420
+     403: aload         5
+     405: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     408: goto          420
+     411: astore        7
+     413: aload         6
+     415: aload         7
+     417: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     420: aload         6
+     422: athrow
+     423: astore        4
+     425: aload_3
+     426: ifnull        445
+     429: aload_3
+     430: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     433: goto          445
+     436: astore        5
+     438: aload         4
+     440: aload         5
+     442: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     445: aload         4
+     447: athrow
+    Exception table:
+       from    to  target type
+         341   375   396   Class java/lang/Throwable
+         403   408   411   Class java/lang/Throwable
+          26   385   423   Class java/lang/Throwable
+         396   423   423   Class java/lang/Throwable
+         429   433   436   Class java/lang/Throwable
+
+  private void buildSkyDisc(com.mojang.blaze3d.vertex.VertexConsumer, float);
+    Code:
+       0: fload_2
+       1: invokestatic  #491                // Method java/lang/Math.signum:(F)F
+       4: ldc           #56                 // float 512.0f
+       6: fmul
+       7: fstore_3
+       8: aload_1
+       9: fconst_0
+      10: fload_2
+      11: fconst_0
+      12: invokeinterface #492,  4          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      17: pop
+      18: sipush        -180
+      21: istore        4
+      23: iload         4
+      25: sipush        180
+      28: if_icmpgt     72
+      31: aload_1
+      32: fload_3
+      33: iload         4
+      35: i2f
+      36: ldc_w         #493                // float 0.017453292f
+      39: fmul
+      40: f2d
+      41: invokestatic  #292                // Method net/minecraft/util/Mth.cos:(D)F
+      44: fmul
+      45: fload_2
+      46: ldc           #56                 // float 512.0f
+      48: iload         4
+      50: i2f
+      51: ldc_w         #493                // float 0.017453292f
+      54: fmul
+      55: f2d
+      56: invokestatic  #289                // Method net/minecraft/util/Mth.sin:(D)F
+      59: fmul
+      60: invokeinterface #492,  4          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.addVertex:(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+      65: pop
+      66: iinc          4, 45
+      69: goto          23
+      72: return
+
+  private static com.mojang.blaze3d.buffers.GpuBuffer buildEndSky();
+    Code:
+       0: bipush        24
+       2: getstatic     #497                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION_TEX_COLOR:Lcom/mojang/blaze3d/vertex/VertexFormat;
+       5: invokevirtual #173                // Method com/mojang/blaze3d/vertex/VertexFormat.getVertexSize:()I
+       8: imul
+       9: invokestatic  #179                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.exactlySized:(I)Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;
+      12: astore_0
+      13: new           #181                // class com/mojang/blaze3d/vertex/BufferBuilder
+      16: dup
+      17: aload_0
+      18: getstatic     #104                // Field com/mojang/blaze3d/vertex/VertexFormat$Mode.QUADS:Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+      21: getstatic     #497                // Field com/mojang/blaze3d/vertex/DefaultVertexFormat.POSITION_TEX_COLOR:Lcom/mojang/blaze3d/vertex/VertexFormat;
+      24: invokespecial #187                // Method com/mojang/blaze3d/vertex/BufferBuilder."<init>":(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+      27: astore_1
+      28: iconst_0
+      29: istore_2
+      30: iload_2
+      31: bipush        6
+      33: if_icmpge     258
+      36: new           #499                // class org/joml/Matrix4f
+      39: dup
+      40: invokespecial #500                // Method org/joml/Matrix4f."<init>":()V
+      43: astore_3
+      44: iload_2
+      45: tableswitch   { // 1 to 5
+                     1: 80
+                     2: 91
+                     3: 102
+                     4: 113
+                     5: 124
+               default: 132
+          }
+      80: aload_3
+      81: ldc_w         #501                // float 1.5707964f
+      84: invokevirtual #505                // Method org/joml/Matrix4f.rotationX:(F)Lorg/joml/Matrix4f;
+      87: pop
+      88: goto          132
+      91: aload_3
+      92: ldc_w         #506                // float -1.5707964f
+      95: invokevirtual #505                // Method org/joml/Matrix4f.rotationX:(F)Lorg/joml/Matrix4f;
+      98: pop
+      99: goto          132
+     102: aload_3
+     103: ldc_w         #507                // float 3.1415927f
+     106: invokevirtual #505                // Method org/joml/Matrix4f.rotationX:(F)Lorg/joml/Matrix4f;
+     109: pop
+     110: goto          132
+     113: aload_3
+     114: ldc_w         #501                // float 1.5707964f
+     117: invokevirtual #510                // Method org/joml/Matrix4f.rotationZ:(F)Lorg/joml/Matrix4f;
+     120: pop
+     121: goto          132
+     124: aload_3
+     125: ldc_w         #506                // float -1.5707964f
+     128: invokevirtual #510                // Method org/joml/Matrix4f.rotationZ:(F)Lorg/joml/Matrix4f;
+     131: pop
+     132: aload_1
+     133: aload_3
+     134: ldc_w         #511                // float -100.0f
+     137: ldc_w         #511                // float -100.0f
+     140: ldc_w         #511                // float -100.0f
+     143: invokevirtual #514                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(Lorg/joml/Matrix4fc;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     146: fconst_0
+     147: fconst_0
+     148: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     153: ldc_w         #515                // int -14145496
+     156: invokeinterface #282,  2          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setColor:(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     161: pop
+     162: aload_1
+     163: aload_3
+     164: ldc_w         #511                // float -100.0f
+     167: ldc_w         #511                // float -100.0f
+     170: ldc           #65                 // float 100.0f
+     172: invokevirtual #514                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(Lorg/joml/Matrix4fc;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     175: fconst_0
+     176: ldc           #188                // float 16.0f
+     178: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     183: ldc_w         #515                // int -14145496
+     186: invokeinterface #282,  2          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setColor:(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     191: pop
+     192: aload_1
+     193: aload_3
+     194: ldc           #65                 // float 100.0f
+     196: ldc_w         #511                // float -100.0f
+     199: ldc           #65                 // float 100.0f
+     201: invokevirtual #514                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(Lorg/joml/Matrix4fc;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     204: ldc           #188                // float 16.0f
+     206: ldc           #188                // float 16.0f
+     208: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     213: ldc_w         #515                // int -14145496
+     216: invokeinterface #282,  2          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setColor:(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     221: pop
+     222: aload_1
+     223: aload_3
+     224: ldc           #65                 // float 100.0f
+     226: ldc_w         #511                // float -100.0f
+     229: ldc_w         #511                // float -100.0f
+     232: invokevirtual #514                // Method com/mojang/blaze3d/vertex/BufferBuilder.addVertex:(Lorg/joml/Matrix4fc;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     235: ldc           #188                // float 16.0f
+     237: fconst_0
+     238: invokeinterface #347,  3          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setUv:(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     243: ldc_w         #515                // int -14145496
+     246: invokeinterface #282,  2          // InterfaceMethod com/mojang/blaze3d/vertex/VertexConsumer.setColor:(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+     251: pop
+     252: iinc          2, 1
+     255: goto          30
+     258: aload_1
+     259: invokevirtual #196                // Method com/mojang/blaze3d/vertex/BufferBuilder.buildOrThrow:()Lcom/mojang/blaze3d/vertex/MeshData;
+     262: astore_2
+     263: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     266: invokedynamic #520,  0            // InvokeDynamic #7:get:()Ljava/util/function/Supplier;
+     271: bipush        40
+     273: aload_2
+     274: invokevirtual #223                // Method com/mojang/blaze3d/vertex/MeshData.vertexBuffer:()Ljava/nio/ByteBuffer;
+     277: invokeinterface #229,  4          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createBuffer:(Ljava/util/function/Supplier;ILjava/nio/ByteBuffer;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     282: astore_3
+     283: aload_2
+     284: ifnull        291
+     287: aload_2
+     288: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     291: aload_0
+     292: ifnull        299
+     295: aload_0
+     296: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     299: aload_3
+     300: areturn
+     301: astore_3
+     302: aload_2
+     303: ifnull        321
+     306: aload_2
+     307: invokevirtual #234                // Method com/mojang/blaze3d/vertex/MeshData.close:()V
+     310: goto          321
+     313: astore        4
+     315: aload_3
+     316: aload         4
+     318: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     321: aload_3
+     322: athrow
+     323: astore_1
+     324: aload_0
+     325: ifnull        341
+     328: aload_0
+     329: invokevirtual #247                // Method com/mojang/blaze3d/vertex/ByteBufferBuilder.close:()V
+     332: goto          341
+     335: astore_2
+     336: aload_1
+     337: aload_2
+     338: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     341: aload_1
+     342: athrow
+    Exception table:
+       from    to  target type
+         263   283   301   Class java/lang/Throwable
+         306   310   313   Class java/lang/Throwable
+          13   291   323   Class java/lang/Throwable
+         301   323   323   Class java/lang/Throwable
+         328   332   335   Class java/lang/Throwable
+
+  public void renderSkyDisc(int);
+    Code:
+       0: invokestatic  #528                // Method com/mojang/blaze3d/systems/RenderSystem.getDynamicUniforms:()Lnet/minecraft/client/renderer/DynamicUniforms;
+       3: invokestatic  #532                // Method com/mojang/blaze3d/systems/RenderSystem.getModelViewMatrix:()Lorg/joml/Matrix4f;
+       6: iload_1
+       7: invokestatic  #536                // Method net/minecraft/util/ARGB.vector4fFromARGB32:(I)Lorg/joml/Vector4f;
+      10: new           #420                // class org/joml/Vector3f
+      13: dup
+      14: invokespecial #537                // Method org/joml/Vector3f."<init>":()V
+      17: new           #499                // class org/joml/Matrix4f
+      20: dup
+      21: invokespecial #500                // Method org/joml/Matrix4f."<init>":()V
+      24: invokevirtual #543                // Method net/minecraft/client/renderer/DynamicUniforms.writeTransform:(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;
+      27: astore_2
+      28: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      31: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      34: invokevirtual #559                // Method com/mojang/blaze3d/pipeline/RenderTarget.getColorTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      37: astore_3
+      38: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      41: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      44: invokevirtual #562                // Method com/mojang/blaze3d/pipeline/RenderTarget.getDepthTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      47: astore        4
+      49: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+      52: invokeinterface #566,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+      57: invokedynamic #571,  0            // InvokeDynamic #8:get:()Ljava/util/function/Supplier;
+      62: aload_3
+      63: invokestatic  #577                // Method java/util/OptionalInt.empty:()Ljava/util/OptionalInt;
+      66: aload         4
+      68: invokestatic  #582                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+      71: invokeinterface #588,  6          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.createRenderPass:(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPass;
+      76: astore        5
+      78: aload         5
+      80: getstatic     #594                // Field net/minecraft/client/renderer/RenderPipelines.SKY:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      83: invokeinterface #600,  2          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setPipeline:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V
+      88: aload         5
+      90: invokestatic  #604                // Method com/mojang/blaze3d/systems/RenderSystem.bindDefaultUniforms:(Lcom/mojang/blaze3d/systems/RenderPass;)V
+      93: aload         5
+      95: ldc_w         #606                // String DynamicTransforms
+      98: aload_2
+      99: invokeinterface #610,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setUniform:(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+     104: aload         5
+     106: iconst_0
+     107: aload_0
+     108: getfield      #231                // Field topSkyBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     111: invokeinterface #614,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setVertexBuffer:(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V
+     116: aload         5
+     118: iconst_0
+     119: bipush        10
+     121: invokeinterface #618,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.draw:(II)V
+     126: aload         5
+     128: ifnull        170
+     131: aload         5
+     133: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     138: goto          170
+     141: astore        6
+     143: aload         5
+     145: ifnull        167
+     148: aload         5
+     150: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     155: goto          167
+     158: astore        7
+     160: aload         6
+     162: aload         7
+     164: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     167: aload         6
+     169: athrow
+     170: return
+    Exception table:
+       from    to  target type
+          78   126   141   Class java/lang/Throwable
+         148   155   158   Class java/lang/Throwable
+
+  public void extractRenderState(net.minecraft.client.multiplayer.ClientLevel, float, net.minecraft.client.Camera, net.minecraft.client.renderer.state.SkyRenderState);
+    Code:
+       0: aload         4
+       2: aload_1
+       3: invokevirtual #635                // Method net/minecraft/client/multiplayer/ClientLevel.dimensionType:()Lnet/minecraft/world/level/dimension/DimensionType;
+       6: invokevirtual #639                // Method net/minecraft/world/level/dimension/DimensionType.skybox:()Lnet/minecraft/world/level/dimension/DimensionType$Skybox;
+       9: putfield      #644                // Field net/minecraft/client/renderer/state/SkyRenderState.skybox:Lnet/minecraft/world/level/dimension/DimensionType$Skybox;
+      12: aload         4
+      14: getfield      #644                // Field net/minecraft/client/renderer/state/SkyRenderState.skybox:Lnet/minecraft/world/level/dimension/DimensionType$Skybox;
+      17: getstatic     #647                // Field net/minecraft/world/level/dimension/DimensionType$Skybox.NONE:Lnet/minecraft/world/level/dimension/DimensionType$Skybox;
+      20: if_acmpne     24
+      23: return
+      24: aload         4
+      26: getfield      #644                // Field net/minecraft/client/renderer/state/SkyRenderState.skybox:Lnet/minecraft/world/level/dimension/DimensionType$Skybox;
+      29: getstatic     #650                // Field net/minecraft/world/level/dimension/DimensionType$Skybox.END:Lnet/minecraft/world/level/dimension/DimensionType$Skybox;
+      32: if_acmpne     79
+      35: aload_1
+      36: invokevirtual #654                // Method net/minecraft/client/multiplayer/ClientLevel.endFlashState:()Lnet/minecraft/client/renderer/EndFlashState;
+      39: astore        5
+      41: aload         5
+      43: ifnonnull     47
+      46: return
+      47: aload         4
+      49: aload         5
+      51: fload_2
+      52: invokevirtual #659                // Method net/minecraft/client/renderer/EndFlashState.getIntensity:(F)F
+      55: putfield      #662                // Field net/minecraft/client/renderer/state/SkyRenderState.endFlashIntensity:F
+      58: aload         4
+      60: aload         5
+      62: invokevirtual #665                // Method net/minecraft/client/renderer/EndFlashState.getXAngle:()F
+      65: putfield      #668                // Field net/minecraft/client/renderer/state/SkyRenderState.endFlashXAngle:F
+      68: aload         4
+      70: aload         5
+      72: invokevirtual #671                // Method net/minecraft/client/renderer/EndFlashState.getYAngle:()F
+      75: putfield      #674                // Field net/minecraft/client/renderer/state/SkyRenderState.endFlashYAngle:F
+      78: return
+      79: aload_3
+      80: invokevirtual #680                // Method net/minecraft/client/Camera.attributeProbe:()Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;
+      83: astore        5
+      85: aload         4
+      87: aload         5
+      89: getstatic     #686                // Field net/minecraft/world/attribute/EnvironmentAttributes.SUN_ANGLE:Lnet/minecraft/world/attribute/EnvironmentAttribute;
+      92: fload_2
+      93: invokevirtual #692                // Method net/minecraft/world/attribute/EnvironmentAttributeProbe.getValue:(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;
+      96: checkcast     #694                // class java/lang/Float
+      99: invokevirtual #697                // Method java/lang/Float.floatValue:()F
+     102: ldc_w         #493                // float 0.017453292f
+     105: fmul
+     106: putfield      #700                // Field net/minecraft/client/renderer/state/SkyRenderState.sunAngle:F
+     109: aload         4
+     111: aload         5
+     113: getstatic     #703                // Field net/minecraft/world/attribute/EnvironmentAttributes.MOON_ANGLE:Lnet/minecraft/world/attribute/EnvironmentAttribute;
+     116: fload_2
+     117: invokevirtual #692                // Method net/minecraft/world/attribute/EnvironmentAttributeProbe.getValue:(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;
+     120: checkcast     #694                // class java/lang/Float
+     123: invokevirtual #697                // Method java/lang/Float.floatValue:()F
+     126: ldc_w         #493                // float 0.017453292f
+     129: fmul
+     130: putfield      #706                // Field net/minecraft/client/renderer/state/SkyRenderState.moonAngle:F
+     133: aload         4
+     135: aload         5
+     137: getstatic     #709                // Field net/minecraft/world/attribute/EnvironmentAttributes.STAR_ANGLE:Lnet/minecraft/world/attribute/EnvironmentAttribute;
+     140: fload_2
+     141: invokevirtual #692                // Method net/minecraft/world/attribute/EnvironmentAttributeProbe.getValue:(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;
+     144: checkcast     #694                // class java/lang/Float
+     147: invokevirtual #697                // Method java/lang/Float.floatValue:()F
+     150: ldc_w         #493                // float 0.017453292f
+     153: fmul
+     154: putfield      #712                // Field net/minecraft/client/renderer/state/SkyRenderState.starAngle:F
+     157: aload         4
+     159: fconst_1
+     160: aload_1
+     161: fload_2
+     162: invokevirtual #715                // Method net/minecraft/client/multiplayer/ClientLevel.getRainLevel:(F)F
+     165: fsub
+     166: putfield      #718                // Field net/minecraft/client/renderer/state/SkyRenderState.rainBrightness:F
+     169: aload         4
+     171: aload         5
+     173: getstatic     #721                // Field net/minecraft/world/attribute/EnvironmentAttributes.STAR_BRIGHTNESS:Lnet/minecraft/world/attribute/EnvironmentAttribute;
+     176: fload_2
+     177: invokevirtual #692                // Method net/minecraft/world/attribute/EnvironmentAttributeProbe.getValue:(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;
+     180: checkcast     #694                // class java/lang/Float
+     183: invokevirtual #697                // Method java/lang/Float.floatValue:()F
+     186: putfield      #724                // Field net/minecraft/client/renderer/state/SkyRenderState.starBrightness:F
+     189: aload         4
+     191: aload_3
+     192: invokevirtual #680                // Method net/minecraft/client/Camera.attributeProbe:()Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;
+     195: getstatic     #727                // Field net/minecraft/world/attribute/EnvironmentAttributes.SUNRISE_SUNSET_COLOR:Lnet/minecraft/world/attribute/EnvironmentAttribute;
+     198: fload_2
+     199: invokevirtual #692                // Method net/minecraft/world/attribute/EnvironmentAttributeProbe.getValue:(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;
+     202: checkcast     #729                // class java/lang/Integer
+     205: invokevirtual #732                // Method java/lang/Integer.intValue:()I
+     208: putfield      #735                // Field net/minecraft/client/renderer/state/SkyRenderState.sunriseAndSunsetColor:I
+     211: aload         4
+     213: aload         5
+     215: getstatic     #738                // Field net/minecraft/world/attribute/EnvironmentAttributes.MOON_PHASE:Lnet/minecraft/world/attribute/EnvironmentAttribute;
+     218: fload_2
+     219: invokevirtual #692                // Method net/minecraft/world/attribute/EnvironmentAttributeProbe.getValue:(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;
+     222: checkcast     #366                // class net/minecraft/world/level/MoonPhase
+     225: putfield      #740                // Field net/minecraft/client/renderer/state/SkyRenderState.moonPhase:Lnet/minecraft/world/level/MoonPhase;
+     228: aload         4
+     230: aload         5
+     232: getstatic     #743                // Field net/minecraft/world/attribute/EnvironmentAttributes.SKY_COLOR:Lnet/minecraft/world/attribute/EnvironmentAttribute;
+     235: fload_2
+     236: invokevirtual #692                // Method net/minecraft/world/attribute/EnvironmentAttributeProbe.getValue:(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;
+     239: checkcast     #729                // class java/lang/Integer
+     242: invokevirtual #732                // Method java/lang/Integer.intValue:()I
+     245: putfield      #746                // Field net/minecraft/client/renderer/state/SkyRenderState.skyColor:I
+     248: aload         4
+     250: aload_0
+     251: fload_2
+     252: aload_1
+     253: invokevirtual #750                // Method shouldRenderDarkDisc:(FLnet/minecraft/client/multiplayer/ClientLevel;)Z
+     256: putfield      #753                // Field net/minecraft/client/renderer/state/SkyRenderState.shouldRenderDarkDisc:Z
+     259: return
+
+  private boolean shouldRenderDarkDisc(float, net.minecraft.client.multiplayer.ClientLevel);
+    Code:
+       0: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+       3: getfield      #763                // Field net/minecraft/client/Minecraft.player:Lnet/minecraft/client/player/LocalPlayer;
+       6: fload_1
+       7: invokevirtual #769                // Method net/minecraft/client/player/LocalPlayer.getEyePosition:(F)Lnet/minecraft/world/phys/Vec3;
+      10: getfield      #775                // Field net/minecraft/world/phys/Vec3.y:D
+      13: aload_2
+      14: invokevirtual #779                // Method net/minecraft/client/multiplayer/ClientLevel.getLevelData:()Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;
+      17: aload_2
+      18: invokevirtual #783                // Method net/minecraft/client/multiplayer/ClientLevel$ClientLevelData.getHorizonHeight:(Lnet/minecraft/world/level/LevelHeightAccessor;)D
+      21: dsub
+      22: dconst_0
+      23: dcmpg
+      24: ifge          31
+      27: iconst_1
+      28: goto          32
+      31: iconst_0
+      32: ireturn
+
+  public void renderDarkDisc();
+    Code:
+       0: invokestatic  #788                // Method com/mojang/blaze3d/systems/RenderSystem.getModelViewStack:()Lorg/joml/Matrix4fStack;
+       3: astore_1
+       4: aload_1
+       5: invokevirtual #793                // Method org/joml/Matrix4fStack.pushMatrix:()Lorg/joml/Matrix4fStack;
+       8: pop
+       9: aload_1
+      10: fconst_0
+      11: ldc_w         #794                // float 12.0f
+      14: fconst_0
+      15: invokevirtual #798                // Method org/joml/Matrix4fStack.translate:(FFF)Lorg/joml/Matrix4f;
+      18: pop
+      19: invokestatic  #528                // Method com/mojang/blaze3d/systems/RenderSystem.getDynamicUniforms:()Lnet/minecraft/client/renderer/DynamicUniforms;
+      22: aload_1
+      23: new           #800                // class org/joml/Vector4f
+      26: dup
+      27: fconst_0
+      28: fconst_0
+      29: fconst_0
+      30: fconst_1
+      31: invokespecial #803                // Method org/joml/Vector4f."<init>":(FFFF)V
+      34: new           #420                // class org/joml/Vector3f
+      37: dup
+      38: invokespecial #537                // Method org/joml/Vector3f."<init>":()V
+      41: new           #499                // class org/joml/Matrix4f
+      44: dup
+      45: invokespecial #500                // Method org/joml/Matrix4f."<init>":()V
+      48: invokevirtual #543                // Method net/minecraft/client/renderer/DynamicUniforms.writeTransform:(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;
+      51: astore_2
+      52: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      55: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      58: invokevirtual #559                // Method com/mojang/blaze3d/pipeline/RenderTarget.getColorTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      61: astore_3
+      62: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      65: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      68: invokevirtual #562                // Method com/mojang/blaze3d/pipeline/RenderTarget.getDepthTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      71: astore        4
+      73: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+      76: invokeinterface #566,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+      81: invokedynamic #808,  0            // InvokeDynamic #9:get:()Ljava/util/function/Supplier;
+      86: aload_3
+      87: invokestatic  #577                // Method java/util/OptionalInt.empty:()Ljava/util/OptionalInt;
+      90: aload         4
+      92: invokestatic  #582                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+      95: invokeinterface #588,  6          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.createRenderPass:(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPass;
+     100: astore        5
+     102: aload         5
+     104: getstatic     #594                // Field net/minecraft/client/renderer/RenderPipelines.SKY:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+     107: invokeinterface #600,  2          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setPipeline:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V
+     112: aload         5
+     114: invokestatic  #604                // Method com/mojang/blaze3d/systems/RenderSystem.bindDefaultUniforms:(Lcom/mojang/blaze3d/systems/RenderPass;)V
+     117: aload         5
+     119: ldc_w         #606                // String DynamicTransforms
+     122: aload_2
+     123: invokeinterface #610,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setUniform:(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+     128: aload         5
+     130: iconst_0
+     131: aload_0
+     132: getfield      #246                // Field bottomSkyBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     135: invokeinterface #614,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setVertexBuffer:(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V
+     140: aload         5
+     142: iconst_0
+     143: bipush        10
+     145: invokeinterface #618,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.draw:(II)V
+     150: aload         5
+     152: ifnull        194
+     155: aload         5
+     157: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     162: goto          194
+     165: astore        6
+     167: aload         5
+     169: ifnull        191
+     172: aload         5
+     174: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     179: goto          191
+     182: astore        7
+     184: aload         6
+     186: aload         7
+     188: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     191: aload         6
+     193: athrow
+     194: aload_1
+     195: invokevirtual #811                // Method org/joml/Matrix4fStack.popMatrix:()Lorg/joml/Matrix4fStack;
+     198: pop
+     199: return
+    Exception table:
+       from    to  target type
+         102   150   165   Class java/lang/Throwable
+         172   179   182   Class java/lang/Throwable
+
+  public void renderSunMoonAndStars(com.mojang.blaze3d.vertex.PoseStack, float, float, float, net.minecraft.world.level.MoonPhase, float, float);
+    Code:
+       0: aload_1
+       1: invokevirtual #819                // Method com/mojang/blaze3d/vertex/PoseStack.pushPose:()V
+       4: aload_1
+       5: getstatic     #825                // Field com/mojang/math/Axis.YP:Lcom/mojang/math/Axis;
+       8: ldc_w         #826                // float -90.0f
+      11: invokeinterface #830,  2          // InterfaceMethod com/mojang/math/Axis.rotationDegrees:(F)Lorg/joml/Quaternionf;
+      16: invokevirtual #834                // Method com/mojang/blaze3d/vertex/PoseStack.mulPose:(Lorg/joml/Quaternionfc;)V
+      19: aload_1
+      20: invokevirtual #819                // Method com/mojang/blaze3d/vertex/PoseStack.pushPose:()V
+      23: aload_1
+      24: getstatic     #837                // Field com/mojang/math/Axis.XP:Lcom/mojang/math/Axis;
+      27: fload_2
+      28: invokeinterface #840,  2          // InterfaceMethod com/mojang/math/Axis.rotation:(F)Lorg/joml/Quaternionf;
+      33: invokevirtual #834                // Method com/mojang/blaze3d/vertex/PoseStack.mulPose:(Lorg/joml/Quaternionfc;)V
+      36: aload_0
+      37: fload         6
+      39: aload_1
+      40: invokevirtual #844                // Method renderSun:(FLcom/mojang/blaze3d/vertex/PoseStack;)V
+      43: aload_1
+      44: invokevirtual #847                // Method com/mojang/blaze3d/vertex/PoseStack.popPose:()V
+      47: aload_1
+      48: invokevirtual #819                // Method com/mojang/blaze3d/vertex/PoseStack.pushPose:()V
+      51: aload_1
+      52: getstatic     #837                // Field com/mojang/math/Axis.XP:Lcom/mojang/math/Axis;
+      55: fload_3
+      56: invokeinterface #840,  2          // InterfaceMethod com/mojang/math/Axis.rotation:(F)Lorg/joml/Quaternionf;
+      61: invokevirtual #834                // Method com/mojang/blaze3d/vertex/PoseStack.mulPose:(Lorg/joml/Quaternionfc;)V
+      64: aload_0
+      65: aload         5
+      67: fload         6
+      69: aload_1
+      70: invokevirtual #851                // Method renderMoon:(Lnet/minecraft/world/level/MoonPhase;FLcom/mojang/blaze3d/vertex/PoseStack;)V
+      73: aload_1
+      74: invokevirtual #847                // Method com/mojang/blaze3d/vertex/PoseStack.popPose:()V
+      77: fload         7
+      79: fconst_0
+      80: fcmpl
+      81: ifle          113
+      84: aload_1
+      85: invokevirtual #819                // Method com/mojang/blaze3d/vertex/PoseStack.pushPose:()V
+      88: aload_1
+      89: getstatic     #837                // Field com/mojang/math/Axis.XP:Lcom/mojang/math/Axis;
+      92: fload         4
+      94: invokeinterface #840,  2          // InterfaceMethod com/mojang/math/Axis.rotation:(F)Lorg/joml/Quaternionf;
+      99: invokevirtual #834                // Method com/mojang/blaze3d/vertex/PoseStack.mulPose:(Lorg/joml/Quaternionfc;)V
+     102: aload_0
+     103: fload         7
+     105: aload_1
+     106: invokevirtual #854                // Method renderStars:(FLcom/mojang/blaze3d/vertex/PoseStack;)V
+     109: aload_1
+     110: invokevirtual #847                // Method com/mojang/blaze3d/vertex/PoseStack.popPose:()V
+     113: aload_1
+     114: invokevirtual #847                // Method com/mojang/blaze3d/vertex/PoseStack.popPose:()V
+     117: return
+
+  private void renderSun(float, com.mojang.blaze3d.vertex.PoseStack);
+    Code:
+       0: invokestatic  #788                // Method com/mojang/blaze3d/systems/RenderSystem.getModelViewStack:()Lorg/joml/Matrix4fStack;
+       3: astore_3
+       4: aload_3
+       5: invokevirtual #793                // Method org/joml/Matrix4fStack.pushMatrix:()Lorg/joml/Matrix4fStack;
+       8: pop
+       9: aload_3
+      10: aload_2
+      11: invokevirtual #859                // Method com/mojang/blaze3d/vertex/PoseStack.last:()Lcom/mojang/blaze3d/vertex/PoseStack$Pose;
+      14: invokevirtual #862                // Method com/mojang/blaze3d/vertex/PoseStack$Pose.pose:()Lorg/joml/Matrix4f;
+      17: invokevirtual #865                // Method org/joml/Matrix4fStack.mul:(Lorg/joml/Matrix4fc;)Lorg/joml/Matrix4f;
+      20: pop
+      21: aload_3
+      22: fconst_0
+      23: ldc           #65                 // float 100.0f
+      25: fconst_0
+      26: invokevirtual #798                // Method org/joml/Matrix4fStack.translate:(FFF)Lorg/joml/Matrix4f;
+      29: pop
+      30: aload_3
+      31: ldc           #63                 // float 30.0f
+      33: fconst_1
+      34: ldc           #63                 // float 30.0f
+      36: invokevirtual #868                // Method org/joml/Matrix4fStack.scale:(FFF)Lorg/joml/Matrix4f;
+      39: pop
+      40: invokestatic  #528                // Method com/mojang/blaze3d/systems/RenderSystem.getDynamicUniforms:()Lnet/minecraft/client/renderer/DynamicUniforms;
+      43: aload_3
+      44: new           #800                // class org/joml/Vector4f
+      47: dup
+      48: fconst_1
+      49: fconst_1
+      50: fconst_1
+      51: fload_1
+      52: invokespecial #803                // Method org/joml/Vector4f."<init>":(FFFF)V
+      55: new           #420                // class org/joml/Vector3f
+      58: dup
+      59: invokespecial #537                // Method org/joml/Vector3f."<init>":()V
+      62: new           #499                // class org/joml/Matrix4f
+      65: dup
+      66: invokespecial #500                // Method org/joml/Matrix4f."<init>":()V
+      69: invokevirtual #543                // Method net/minecraft/client/renderer/DynamicUniforms.writeTransform:(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;
+      72: astore        4
+      74: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      77: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      80: invokevirtual #559                // Method com/mojang/blaze3d/pipeline/RenderTarget.getColorTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      83: astore        5
+      85: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      88: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      91: invokevirtual #562                // Method com/mojang/blaze3d/pipeline/RenderTarget.getDepthTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      94: astore        6
+      96: aload_0
+      97: getfield      #110                // Field quadIndices:Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+     100: bipush        6
+     102: invokevirtual #872                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.getBuffer:(I)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     105: astore        7
+     107: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     110: invokeinterface #566,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+     115: invokedynamic #877,  0            // InvokeDynamic #10:get:()Ljava/util/function/Supplier;
+     120: aload         5
+     122: invokestatic  #577                // Method java/util/OptionalInt.empty:()Ljava/util/OptionalInt;
+     125: aload         6
+     127: invokestatic  #582                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+     130: invokeinterface #588,  6          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.createRenderPass:(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPass;
+     135: astore        8
+     137: aload         8
+     139: getstatic     #880                // Field net/minecraft/client/renderer/RenderPipelines.CELESTIAL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+     142: invokeinterface #600,  2          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setPipeline:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V
+     147: aload         8
+     149: invokestatic  #604                // Method com/mojang/blaze3d/systems/RenderSystem.bindDefaultUniforms:(Lcom/mojang/blaze3d/systems/RenderPass;)V
+     152: aload         8
+     154: ldc_w         #606                // String DynamicTransforms
+     157: aload         4
+     159: invokeinterface #610,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setUniform:(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+     164: aload         8
+     166: ldc_w         #882                // String Sampler0
+     169: aload_0
+     170: getfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+     173: invokevirtual #885                // Method net/minecraft/client/renderer/texture/TextureAtlas.getTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+     176: aload_0
+     177: getfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+     180: invokevirtual #889                // Method net/minecraft/client/renderer/texture/TextureAtlas.getSampler:()Lcom/mojang/blaze3d/textures/GpuSampler;
+     183: invokeinterface #893,  4          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.bindTexture:(Ljava/lang/String;Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;)V
+     188: aload         8
+     190: iconst_0
+     191: aload_0
+     192: getfield      #153                // Field sunBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     195: invokeinterface #614,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setVertexBuffer:(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V
+     200: aload         8
+     202: aload         7
+     204: aload_0
+     205: getfield      #110                // Field quadIndices:Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+     208: invokevirtual #897                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.type:()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+     211: invokeinterface #901,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setIndexBuffer:(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V
+     216: aload         8
+     218: iconst_0
+     219: iconst_0
+     220: bipush        6
+     222: iconst_1
+     223: invokeinterface #905,  5          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.drawIndexed:(IIII)V
+     228: aload         8
+     230: ifnull        272
+     233: aload         8
+     235: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     240: goto          272
+     243: astore        9
+     245: aload         8
+     247: ifnull        269
+     250: aload         8
+     252: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     257: goto          269
+     260: astore        10
+     262: aload         9
+     264: aload         10
+     266: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     269: aload         9
+     271: athrow
+     272: aload_3
+     273: invokevirtual #811                // Method org/joml/Matrix4fStack.popMatrix:()Lorg/joml/Matrix4fStack;
+     276: pop
+     277: return
+    Exception table:
+       from    to  target type
+         137   228   243   Class java/lang/Throwable
+         250   257   260   Class java/lang/Throwable
+
+  private void renderMoon(net.minecraft.world.level.MoonPhase, float, com.mojang.blaze3d.vertex.PoseStack);
+    Code:
+       0: aload_1
+       1: invokevirtual #909                // Method net/minecraft/world/level/MoonPhase.index:()I
+       4: iconst_4
+       5: imul
+       6: istore        4
+       8: invokestatic  #788                // Method com/mojang/blaze3d/systems/RenderSystem.getModelViewStack:()Lorg/joml/Matrix4fStack;
+      11: astore        5
+      13: aload         5
+      15: invokevirtual #793                // Method org/joml/Matrix4fStack.pushMatrix:()Lorg/joml/Matrix4fStack;
+      18: pop
+      19: aload         5
+      21: aload_3
+      22: invokevirtual #859                // Method com/mojang/blaze3d/vertex/PoseStack.last:()Lcom/mojang/blaze3d/vertex/PoseStack$Pose;
+      25: invokevirtual #862                // Method com/mojang/blaze3d/vertex/PoseStack$Pose.pose:()Lorg/joml/Matrix4f;
+      28: invokevirtual #865                // Method org/joml/Matrix4fStack.mul:(Lorg/joml/Matrix4fc;)Lorg/joml/Matrix4f;
+      31: pop
+      32: aload         5
+      34: fconst_0
+      35: ldc           #65                 // float 100.0f
+      37: fconst_0
+      38: invokevirtual #798                // Method org/joml/Matrix4fStack.translate:(FFF)Lorg/joml/Matrix4f;
+      41: pop
+      42: aload         5
+      44: ldc           #67                 // float 20.0f
+      46: fconst_1
+      47: ldc           #67                 // float 20.0f
+      49: invokevirtual #868                // Method org/joml/Matrix4fStack.scale:(FFF)Lorg/joml/Matrix4f;
+      52: pop
+      53: invokestatic  #528                // Method com/mojang/blaze3d/systems/RenderSystem.getDynamicUniforms:()Lnet/minecraft/client/renderer/DynamicUniforms;
+      56: aload         5
+      58: new           #800                // class org/joml/Vector4f
+      61: dup
+      62: fconst_1
+      63: fconst_1
+      64: fconst_1
+      65: fload_2
+      66: invokespecial #803                // Method org/joml/Vector4f."<init>":(FFFF)V
+      69: new           #420                // class org/joml/Vector3f
+      72: dup
+      73: invokespecial #537                // Method org/joml/Vector3f."<init>":()V
+      76: new           #499                // class org/joml/Matrix4f
+      79: dup
+      80: invokespecial #500                // Method org/joml/Matrix4f."<init>":()V
+      83: invokevirtual #543                // Method net/minecraft/client/renderer/DynamicUniforms.writeTransform:(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;
+      86: astore        6
+      88: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      91: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      94: invokevirtual #559                // Method com/mojang/blaze3d/pipeline/RenderTarget.getColorTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      97: astore        7
+      99: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+     102: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+     105: invokevirtual #562                // Method com/mojang/blaze3d/pipeline/RenderTarget.getDepthTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+     108: astore        8
+     110: aload_0
+     111: getfield      #110                // Field quadIndices:Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+     114: bipush        6
+     116: invokevirtual #872                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.getBuffer:(I)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     119: astore        9
+     121: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     124: invokeinterface #566,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+     129: invokedynamic #914,  0            // InvokeDynamic #11:get:()Ljava/util/function/Supplier;
+     134: aload         7
+     136: invokestatic  #577                // Method java/util/OptionalInt.empty:()Ljava/util/OptionalInt;
+     139: aload         8
+     141: invokestatic  #582                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+     144: invokeinterface #588,  6          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.createRenderPass:(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPass;
+     149: astore        10
+     151: aload         10
+     153: getstatic     #880                // Field net/minecraft/client/renderer/RenderPipelines.CELESTIAL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+     156: invokeinterface #600,  2          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setPipeline:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V
+     161: aload         10
+     163: invokestatic  #604                // Method com/mojang/blaze3d/systems/RenderSystem.bindDefaultUniforms:(Lcom/mojang/blaze3d/systems/RenderPass;)V
+     166: aload         10
+     168: ldc_w         #606                // String DynamicTransforms
+     171: aload         6
+     173: invokeinterface #610,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setUniform:(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+     178: aload         10
+     180: ldc_w         #882                // String Sampler0
+     183: aload_0
+     184: getfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+     187: invokevirtual #885                // Method net/minecraft/client/renderer/texture/TextureAtlas.getTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+     190: aload_0
+     191: getfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+     194: invokevirtual #889                // Method net/minecraft/client/renderer/texture/TextureAtlas.getSampler:()Lcom/mojang/blaze3d/textures/GpuSampler;
+     197: invokeinterface #893,  4          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.bindTexture:(Ljava/lang/String;Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;)V
+     202: aload         10
+     204: iconst_0
+     205: aload_0
+     206: getfield      #158                // Field moonBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     209: invokeinterface #614,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setVertexBuffer:(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V
+     214: aload         10
+     216: aload         9
+     218: aload_0
+     219: getfield      #110                // Field quadIndices:Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+     222: invokevirtual #897                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.type:()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+     225: invokeinterface #901,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setIndexBuffer:(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V
+     230: aload         10
+     232: iload         4
+     234: iconst_0
+     235: bipush        6
+     237: iconst_1
+     238: invokeinterface #905,  5          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.drawIndexed:(IIII)V
+     243: aload         10
+     245: ifnull        287
+     248: aload         10
+     250: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     255: goto          287
+     258: astore        11
+     260: aload         10
+     262: ifnull        284
+     265: aload         10
+     267: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     272: goto          284
+     275: astore        12
+     277: aload         11
+     279: aload         12
+     281: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     284: aload         11
+     286: athrow
+     287: aload         5
+     289: invokevirtual #811                // Method org/joml/Matrix4fStack.popMatrix:()Lorg/joml/Matrix4fStack;
+     292: pop
+     293: return
+    Exception table:
+       from    to  target type
+         151   243   258   Class java/lang/Throwable
+         265   272   275   Class java/lang/Throwable
+
+  private void renderStars(float, com.mojang.blaze3d.vertex.PoseStack);
+    Code:
+       0: invokestatic  #788                // Method com/mojang/blaze3d/systems/RenderSystem.getModelViewStack:()Lorg/joml/Matrix4fStack;
+       3: astore_3
+       4: aload_3
+       5: invokevirtual #793                // Method org/joml/Matrix4fStack.pushMatrix:()Lorg/joml/Matrix4fStack;
+       8: pop
+       9: aload_3
+      10: aload_2
+      11: invokevirtual #859                // Method com/mojang/blaze3d/vertex/PoseStack.last:()Lcom/mojang/blaze3d/vertex/PoseStack$Pose;
+      14: invokevirtual #862                // Method com/mojang/blaze3d/vertex/PoseStack$Pose.pose:()Lorg/joml/Matrix4f;
+      17: invokevirtual #865                // Method org/joml/Matrix4fStack.mul:(Lorg/joml/Matrix4fc;)Lorg/joml/Matrix4f;
+      20: pop
+      21: getstatic     #917                // Field net/minecraft/client/renderer/RenderPipelines.STARS:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      24: astore        4
+      26: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      29: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      32: invokevirtual #559                // Method com/mojang/blaze3d/pipeline/RenderTarget.getColorTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      35: astore        5
+      37: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      40: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      43: invokevirtual #562                // Method com/mojang/blaze3d/pipeline/RenderTarget.getDepthTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      46: astore        6
+      48: aload_0
+      49: getfield      #110                // Field quadIndices:Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+      52: aload_0
+      53: getfield      #473                // Field starIndexCount:I
+      56: invokevirtual #872                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.getBuffer:(I)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      59: astore        7
+      61: invokestatic  #528                // Method com/mojang/blaze3d/systems/RenderSystem.getDynamicUniforms:()Lnet/minecraft/client/renderer/DynamicUniforms;
+      64: aload_3
+      65: new           #800                // class org/joml/Vector4f
+      68: dup
+      69: fload_1
+      70: fload_1
+      71: fload_1
+      72: fload_1
+      73: invokespecial #803                // Method org/joml/Vector4f."<init>":(FFFF)V
+      76: new           #420                // class org/joml/Vector3f
+      79: dup
+      80: invokespecial #537                // Method org/joml/Vector3f."<init>":()V
+      83: new           #499                // class org/joml/Matrix4f
+      86: dup
+      87: invokespecial #500                // Method org/joml/Matrix4f."<init>":()V
+      90: invokevirtual #543                // Method net/minecraft/client/renderer/DynamicUniforms.writeTransform:(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;
+      93: astore        8
+      95: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+      98: invokeinterface #566,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+     103: invokedynamic #922,  0            // InvokeDynamic #12:get:()Ljava/util/function/Supplier;
+     108: aload         5
+     110: invokestatic  #577                // Method java/util/OptionalInt.empty:()Ljava/util/OptionalInt;
+     113: aload         6
+     115: invokestatic  #582                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+     118: invokeinterface #588,  6          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.createRenderPass:(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPass;
+     123: astore        9
+     125: aload         9
+     127: aload         4
+     129: invokeinterface #600,  2          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setPipeline:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V
+     134: aload         9
+     136: invokestatic  #604                // Method com/mojang/blaze3d/systems/RenderSystem.bindDefaultUniforms:(Lcom/mojang/blaze3d/systems/RenderPass;)V
+     139: aload         9
+     141: ldc_w         #606                // String DynamicTransforms
+     144: aload         8
+     146: invokeinterface #610,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setUniform:(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+     151: aload         9
+     153: iconst_0
+     154: aload_0
+     155: getfield      #129                // Field starBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     158: invokeinterface #614,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setVertexBuffer:(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V
+     163: aload         9
+     165: aload         7
+     167: aload_0
+     168: getfield      #110                // Field quadIndices:Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+     171: invokevirtual #897                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.type:()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+     174: invokeinterface #901,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setIndexBuffer:(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V
+     179: aload         9
+     181: iconst_0
+     182: iconst_0
+     183: aload_0
+     184: getfield      #473                // Field starIndexCount:I
+     187: iconst_1
+     188: invokeinterface #905,  5          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.drawIndexed:(IIII)V
+     193: aload         9
+     195: ifnull        237
+     198: aload         9
+     200: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     205: goto          237
+     208: astore        10
+     210: aload         9
+     212: ifnull        234
+     215: aload         9
+     217: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     222: goto          234
+     225: astore        11
+     227: aload         10
+     229: aload         11
+     231: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     234: aload         10
+     236: athrow
+     237: aload_3
+     238: invokevirtual #811                // Method org/joml/Matrix4fStack.popMatrix:()Lorg/joml/Matrix4fStack;
+     241: pop
+     242: return
+    Exception table:
+       from    to  target type
+         125   193   208   Class java/lang/Throwable
+         215   222   225   Class java/lang/Throwable
+
+  public void renderSunriseAndSunset(com.mojang.blaze3d.vertex.PoseStack, float, int);
+    Code:
+       0: iload_3
+       1: invokestatic  #929                // Method net/minecraft/util/ARGB.alphaFloat:(I)F
+       4: fstore        4
+       6: fload         4
+       8: ldc_w         #930                // float 0.001f
+      11: fcmpg
+      12: ifgt          16
+      15: return
+      16: aload_1
+      17: invokevirtual #819                // Method com/mojang/blaze3d/vertex/PoseStack.pushPose:()V
+      20: aload_1
+      21: getstatic     #837                // Field com/mojang/math/Axis.XP:Lcom/mojang/math/Axis;
+      24: ldc_w         #931                // float 90.0f
+      27: invokeinterface #830,  2          // InterfaceMethod com/mojang/math/Axis.rotationDegrees:(F)Lorg/joml/Quaternionf;
+      32: invokevirtual #834                // Method com/mojang/blaze3d/vertex/PoseStack.mulPose:(Lorg/joml/Quaternionfc;)V
+      35: fload_2
+      36: f2d
+      37: invokestatic  #289                // Method net/minecraft/util/Mth.sin:(D)F
+      40: fconst_0
+      41: fcmpg
+      42: ifge          51
+      45: ldc_w         #932                // float 180.0f
+      48: goto          52
+      51: fconst_0
+      52: fstore        5
+      54: aload_1
+      55: getstatic     #935                // Field com/mojang/math/Axis.ZP:Lcom/mojang/math/Axis;
+      58: fload         5
+      60: ldc_w         #931                // float 90.0f
+      63: fadd
+      64: invokeinterface #830,  2          // InterfaceMethod com/mojang/math/Axis.rotationDegrees:(F)Lorg/joml/Quaternionf;
+      69: invokevirtual #834                // Method com/mojang/blaze3d/vertex/PoseStack.mulPose:(Lorg/joml/Quaternionfc;)V
+      72: invokestatic  #788                // Method com/mojang/blaze3d/systems/RenderSystem.getModelViewStack:()Lorg/joml/Matrix4fStack;
+      75: astore        6
+      77: aload         6
+      79: invokevirtual #793                // Method org/joml/Matrix4fStack.pushMatrix:()Lorg/joml/Matrix4fStack;
+      82: pop
+      83: aload         6
+      85: aload_1
+      86: invokevirtual #859                // Method com/mojang/blaze3d/vertex/PoseStack.last:()Lcom/mojang/blaze3d/vertex/PoseStack$Pose;
+      89: invokevirtual #862                // Method com/mojang/blaze3d/vertex/PoseStack$Pose.pose:()Lorg/joml/Matrix4f;
+      92: invokevirtual #865                // Method org/joml/Matrix4fStack.mul:(Lorg/joml/Matrix4fc;)Lorg/joml/Matrix4f;
+      95: pop
+      96: aload         6
+      98: fconst_1
+      99: fconst_1
+     100: fload         4
+     102: invokevirtual #868                // Method org/joml/Matrix4fStack.scale:(FFF)Lorg/joml/Matrix4f;
+     105: pop
+     106: invokestatic  #528                // Method com/mojang/blaze3d/systems/RenderSystem.getDynamicUniforms:()Lnet/minecraft/client/renderer/DynamicUniforms;
+     109: aload         6
+     111: iload_3
+     112: invokestatic  #536                // Method net/minecraft/util/ARGB.vector4fFromARGB32:(I)Lorg/joml/Vector4f;
+     115: new           #420                // class org/joml/Vector3f
+     118: dup
+     119: invokespecial #537                // Method org/joml/Vector3f."<init>":()V
+     122: new           #499                // class org/joml/Matrix4f
+     125: dup
+     126: invokespecial #500                // Method org/joml/Matrix4f."<init>":()V
+     129: invokevirtual #543                // Method net/minecraft/client/renderer/DynamicUniforms.writeTransform:(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;
+     132: astore        7
+     134: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+     137: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+     140: invokevirtual #559                // Method com/mojang/blaze3d/pipeline/RenderTarget.getColorTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+     143: astore        8
+     145: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+     148: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+     151: invokevirtual #562                // Method com/mojang/blaze3d/pipeline/RenderTarget.getDepthTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+     154: astore        9
+     156: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     159: invokeinterface #566,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+     164: invokedynamic #940,  0            // InvokeDynamic #13:get:()Ljava/util/function/Supplier;
+     169: aload         8
+     171: invokestatic  #577                // Method java/util/OptionalInt.empty:()Ljava/util/OptionalInt;
+     174: aload         9
+     176: invokestatic  #582                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+     179: invokeinterface #588,  6          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.createRenderPass:(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPass;
+     184: astore        10
+     186: aload         10
+     188: getstatic     #943                // Field net/minecraft/client/renderer/RenderPipelines.SUNRISE_SUNSET:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+     191: invokeinterface #600,  2          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setPipeline:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V
+     196: aload         10
+     198: invokestatic  #604                // Method com/mojang/blaze3d/systems/RenderSystem.bindDefaultUniforms:(Lcom/mojang/blaze3d/systems/RenderPass;)V
+     201: aload         10
+     203: ldc_w         #606                // String DynamicTransforms
+     206: aload         7
+     208: invokeinterface #610,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setUniform:(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+     213: aload         10
+     215: iconst_0
+     216: aload_0
+     217: getfield      #163                // Field sunriseBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     220: invokeinterface #614,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setVertexBuffer:(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V
+     225: aload         10
+     227: iconst_0
+     228: bipush        18
+     230: invokeinterface #618,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.draw:(II)V
+     235: aload         10
+     237: ifnull        279
+     240: aload         10
+     242: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     247: goto          279
+     250: astore        11
+     252: aload         10
+     254: ifnull        276
+     257: aload         10
+     259: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     264: goto          276
+     267: astore        12
+     269: aload         11
+     271: aload         12
+     273: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     276: aload         11
+     278: athrow
+     279: aload         6
+     281: invokevirtual #811                // Method org/joml/Matrix4fStack.popMatrix:()Lorg/joml/Matrix4fStack;
+     284: pop
+     285: aload_1
+     286: invokevirtual #847                // Method com/mojang/blaze3d/vertex/PoseStack.popPose:()V
+     289: return
+    Exception table:
+       from    to  target type
+         186   235   250   Class java/lang/Throwable
+         257   264   267   Class java/lang/Throwable
+
+  public void renderEndSky();
+    Code:
+       0: getstatic     #104                // Field com/mojang/blaze3d/vertex/VertexFormat$Mode.QUADS:Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+       3: invokestatic  #108                // Method com/mojang/blaze3d/systems/RenderSystem.getSequentialBuffer:(Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;)Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+       6: astore_1
+       7: aload_1
+       8: bipush        36
+      10: invokevirtual #872                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.getBuffer:(I)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      13: astore_2
+      14: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      17: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      20: invokevirtual #559                // Method com/mojang/blaze3d/pipeline/RenderTarget.getColorTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      23: astore_3
+      24: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+      27: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+      30: invokevirtual #562                // Method com/mojang/blaze3d/pipeline/RenderTarget.getDepthTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+      33: astore        4
+      35: invokestatic  #528                // Method com/mojang/blaze3d/systems/RenderSystem.getDynamicUniforms:()Lnet/minecraft/client/renderer/DynamicUniforms;
+      38: invokestatic  #532                // Method com/mojang/blaze3d/systems/RenderSystem.getModelViewMatrix:()Lorg/joml/Matrix4f;
+      41: new           #800                // class org/joml/Vector4f
+      44: dup
+      45: fconst_1
+      46: fconst_1
+      47: fconst_1
+      48: fconst_1
+      49: invokespecial #803                // Method org/joml/Vector4f."<init>":(FFFF)V
+      52: new           #420                // class org/joml/Vector3f
+      55: dup
+      56: invokespecial #537                // Method org/joml/Vector3f."<init>":()V
+      59: new           #499                // class org/joml/Matrix4f
+      62: dup
+      63: invokespecial #500                // Method org/joml/Matrix4f."<init>":()V
+      66: invokevirtual #543                // Method net/minecraft/client/renderer/DynamicUniforms.writeTransform:(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;
+      69: astore        5
+      71: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+      74: invokeinterface #566,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+      79: invokedynamic #949,  0            // InvokeDynamic #14:get:()Ljava/util/function/Supplier;
+      84: aload_3
+      85: invokestatic  #577                // Method java/util/OptionalInt.empty:()Ljava/util/OptionalInt;
+      88: aload         4
+      90: invokestatic  #582                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+      93: invokeinterface #588,  6          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.createRenderPass:(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPass;
+      98: astore        6
+     100: aload         6
+     102: getstatic     #952                // Field net/minecraft/client/renderer/RenderPipelines.END_SKY:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+     105: invokeinterface #600,  2          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setPipeline:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V
+     110: aload         6
+     112: invokestatic  #604                // Method com/mojang/blaze3d/systems/RenderSystem.bindDefaultUniforms:(Lcom/mojang/blaze3d/systems/RenderPass;)V
+     115: aload         6
+     117: ldc_w         #606                // String DynamicTransforms
+     120: aload         5
+     122: invokeinterface #610,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setUniform:(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+     127: aload         6
+     129: ldc_w         #882                // String Sampler0
+     132: aload_0
+     133: getfield      #142                // Field endSkyTexture:Lnet/minecraft/client/renderer/texture/AbstractTexture;
+     136: invokevirtual #955                // Method net/minecraft/client/renderer/texture/AbstractTexture.getTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+     139: aload_0
+     140: getfield      #142                // Field endSkyTexture:Lnet/minecraft/client/renderer/texture/AbstractTexture;
+     143: invokevirtual #956                // Method net/minecraft/client/renderer/texture/AbstractTexture.getSampler:()Lcom/mojang/blaze3d/textures/GpuSampler;
+     146: invokeinterface #893,  4          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.bindTexture:(Ljava/lang/String;Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;)V
+     151: aload         6
+     153: iconst_0
+     154: aload_0
+     155: getfield      #134                // Field endSkyBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     158: invokeinterface #614,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setVertexBuffer:(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V
+     163: aload         6
+     165: aload_2
+     166: aload_1
+     167: invokevirtual #897                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.type:()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+     170: invokeinterface #901,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setIndexBuffer:(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V
+     175: aload         6
+     177: iconst_0
+     178: iconst_0
+     179: bipush        36
+     181: iconst_1
+     182: invokeinterface #905,  5          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.drawIndexed:(IIII)V
+     187: aload         6
+     189: ifnull        231
+     192: aload         6
+     194: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     199: goto          231
+     202: astore        7
+     204: aload         6
+     206: ifnull        228
+     209: aload         6
+     211: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     216: goto          228
+     219: astore        8
+     221: aload         7
+     223: aload         8
+     225: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     228: aload         7
+     230: athrow
+     231: return
+    Exception table:
+       from    to  target type
+         100   187   202   Class java/lang/Throwable
+         209   216   219   Class java/lang/Throwable
+
+  public void renderEndFlash(com.mojang.blaze3d.vertex.PoseStack, float, float, float);
+    Code:
+       0: aload_1
+       1: getstatic     #825                // Field com/mojang/math/Axis.YP:Lcom/mojang/math/Axis;
+       4: ldc_w         #932                // float 180.0f
+       7: fload         4
+       9: fsub
+      10: invokeinterface #830,  2          // InterfaceMethod com/mojang/math/Axis.rotationDegrees:(F)Lorg/joml/Quaternionf;
+      15: invokevirtual #834                // Method com/mojang/blaze3d/vertex/PoseStack.mulPose:(Lorg/joml/Quaternionfc;)V
+      18: aload_1
+      19: getstatic     #837                // Field com/mojang/math/Axis.XP:Lcom/mojang/math/Axis;
+      22: ldc_w         #826                // float -90.0f
+      25: fload_3
+      26: fsub
+      27: invokeinterface #830,  2          // InterfaceMethod com/mojang/math/Axis.rotationDegrees:(F)Lorg/joml/Quaternionf;
+      32: invokevirtual #834                // Method com/mojang/blaze3d/vertex/PoseStack.mulPose:(Lorg/joml/Quaternionfc;)V
+      35: invokestatic  #788                // Method com/mojang/blaze3d/systems/RenderSystem.getModelViewStack:()Lorg/joml/Matrix4fStack;
+      38: astore        5
+      40: aload         5
+      42: invokevirtual #793                // Method org/joml/Matrix4fStack.pushMatrix:()Lorg/joml/Matrix4fStack;
+      45: pop
+      46: aload         5
+      48: aload_1
+      49: invokevirtual #859                // Method com/mojang/blaze3d/vertex/PoseStack.last:()Lcom/mojang/blaze3d/vertex/PoseStack$Pose;
+      52: invokevirtual #862                // Method com/mojang/blaze3d/vertex/PoseStack$Pose.pose:()Lorg/joml/Matrix4f;
+      55: invokevirtual #865                // Method org/joml/Matrix4fStack.mul:(Lorg/joml/Matrix4fc;)Lorg/joml/Matrix4f;
+      58: pop
+      59: aload         5
+      61: fconst_0
+      62: ldc           #65                 // float 100.0f
+      64: fconst_0
+      65: invokevirtual #798                // Method org/joml/Matrix4fStack.translate:(FFF)Lorg/joml/Matrix4f;
+      68: pop
+      69: aload         5
+      71: ldc           #75                 // float 60.0f
+      73: fconst_1
+      74: ldc           #75                 // float 60.0f
+      76: invokevirtual #868                // Method org/joml/Matrix4fStack.scale:(FFF)Lorg/joml/Matrix4f;
+      79: pop
+      80: invokestatic  #528                // Method com/mojang/blaze3d/systems/RenderSystem.getDynamicUniforms:()Lnet/minecraft/client/renderer/DynamicUniforms;
+      83: aload         5
+      85: new           #800                // class org/joml/Vector4f
+      88: dup
+      89: fload_2
+      90: fload_2
+      91: fload_2
+      92: fload_2
+      93: invokespecial #803                // Method org/joml/Vector4f."<init>":(FFFF)V
+      96: new           #420                // class org/joml/Vector3f
+      99: dup
+     100: invokespecial #537                // Method org/joml/Vector3f."<init>":()V
+     103: new           #499                // class org/joml/Matrix4f
+     106: dup
+     107: invokespecial #500                // Method org/joml/Matrix4f."<init>":()V
+     110: invokevirtual #543                // Method net/minecraft/client/renderer/DynamicUniforms.writeTransform:(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;
+     113: astore        6
+     115: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+     118: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+     121: invokevirtual #559                // Method com/mojang/blaze3d/pipeline/RenderTarget.getColorTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+     124: astore        7
+     126: invokestatic  #549                // Method net/minecraft/client/Minecraft.getInstance:()Lnet/minecraft/client/Minecraft;
+     129: invokevirtual #553                // Method net/minecraft/client/Minecraft.getMainRenderTarget:()Lcom/mojang/blaze3d/pipeline/RenderTarget;
+     132: invokevirtual #562                // Method com/mojang/blaze3d/pipeline/RenderTarget.getDepthTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+     135: astore        8
+     137: aload_0
+     138: getfield      #110                // Field quadIndices:Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+     141: bipush        6
+     143: invokevirtual #872                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.getBuffer:(I)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     146: astore        9
+     148: invokestatic  #200                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+     151: invokeinterface #566,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+     156: invokedynamic #964,  0            // InvokeDynamic #15:get:()Ljava/util/function/Supplier;
+     161: aload         7
+     163: invokestatic  #577                // Method java/util/OptionalInt.empty:()Ljava/util/OptionalInt;
+     166: aload         8
+     168: invokestatic  #582                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+     171: invokeinterface #588,  6          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.createRenderPass:(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPass;
+     176: astore        10
+     178: aload         10
+     180: getstatic     #880                // Field net/minecraft/client/renderer/RenderPipelines.CELESTIAL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+     183: invokeinterface #600,  2          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setPipeline:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V
+     188: aload         10
+     190: invokestatic  #604                // Method com/mojang/blaze3d/systems/RenderSystem.bindDefaultUniforms:(Lcom/mojang/blaze3d/systems/RenderPass;)V
+     193: aload         10
+     195: ldc_w         #606                // String DynamicTransforms
+     198: aload         6
+     200: invokeinterface #610,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setUniform:(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+     205: aload         10
+     207: ldc_w         #882                // String Sampler0
+     210: aload_0
+     211: getfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+     214: invokevirtual #885                // Method net/minecraft/client/renderer/texture/TextureAtlas.getTextureView:()Lcom/mojang/blaze3d/textures/GpuTextureView;
+     217: aload_0
+     218: getfield      #123                // Field celestialsAtlas:Lnet/minecraft/client/renderer/texture/TextureAtlas;
+     221: invokevirtual #889                // Method net/minecraft/client/renderer/texture/TextureAtlas.getSampler:()Lcom/mojang/blaze3d/textures/GpuSampler;
+     224: invokeinterface #893,  4          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.bindTexture:(Ljava/lang/String;Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;)V
+     229: aload         10
+     231: iconst_0
+     232: aload_0
+     233: getfield      #148                // Field endFlashBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+     236: invokeinterface #614,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setVertexBuffer:(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V
+     241: aload         10
+     243: aload         9
+     245: aload_0
+     246: getfield      #110                // Field quadIndices:Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+     249: invokevirtual #897                // Method com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.type:()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+     252: invokeinterface #901,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setIndexBuffer:(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V
+     257: aload         10
+     259: iconst_0
+     260: iconst_0
+     261: bipush        6
+     263: iconst_1
+     264: invokeinterface #905,  5          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.drawIndexed:(IIII)V
+     269: aload         10
+     271: ifnull        313
+     274: aload         10
+     276: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     281: goto          313
+     284: astore        11
+     286: aload         10
+     288: ifnull        310
+     291: aload         10
+     293: invokeinterface #619,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     298: goto          310
+     301: astore        12
+     303: aload         11
+     305: aload         12
+     307: invokevirtual #238                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     310: aload         11
+     312: athrow
+     313: aload         5
+     315: invokevirtual #811                // Method org/joml/Matrix4fStack.popMatrix:()Lorg/joml/Matrix4fStack;
+     318: pop
+     319: return
+    Exception table:
+       from    to  target type
+         178   269   284   Class java/lang/Throwable
+         291   298   301   Class java/lang/Throwable
+
+  public void close();
+    Code:
+       0: aload_0
+       1: getfield      #153                // Field sunBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+       4: invokevirtual #965                // Method com/mojang/blaze3d/buffers/GpuBuffer.close:()V
+       7: aload_0
+       8: getfield      #158                // Field moonBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      11: invokevirtual #965                // Method com/mojang/blaze3d/buffers/GpuBuffer.close:()V
+      14: aload_0
+      15: getfield      #129                // Field starBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      18: invokevirtual #965                // Method com/mojang/blaze3d/buffers/GpuBuffer.close:()V
+      21: aload_0
+      22: getfield      #231                // Field topSkyBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      25: invokevirtual #965                // Method com/mojang/blaze3d/buffers/GpuBuffer.close:()V
+      28: aload_0
+      29: getfield      #246                // Field bottomSkyBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      32: invokevirtual #965                // Method com/mojang/blaze3d/buffers/GpuBuffer.close:()V
+      35: aload_0
+      36: getfield      #134                // Field endSkyBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      39: invokevirtual #965                // Method com/mojang/blaze3d/buffers/GpuBuffer.close:()V
+      42: aload_0
+      43: getfield      #163                // Field sunriseBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      46: invokevirtual #965                // Method com/mojang/blaze3d/buffers/GpuBuffer.close:()V
+      49: aload_0
+      50: getfield      #148                // Field endFlashBuffer:Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      53: invokevirtual #965                // Method com/mojang/blaze3d/buffers/GpuBuffer.close:()V
+      56: return
+
+  private static java.lang.String method_74762();
+    Code:
+       0: ldc_w         #967                // String End flash
+       3: areturn
+
+  private static java.lang.String method_71316();
+    Code:
+       0: ldc_w         #969                // String End sky
+       3: areturn
+
+  private static java.lang.String method_74763();
+    Code:
+       0: ldc_w         #971                // String Sunrise sunset
+       3: areturn
+
+  private static java.lang.String method_71317();
+    Code:
+       0: ldc_w         #973                // String Stars
+       3: areturn
+
+  private static java.lang.String method_74764();
+    Code:
+       0: ldc_w         #975                // String Sky moon
+       3: areturn
+
+  private static java.lang.String method_74765();
+    Code:
+       0: ldc_w         #977                // String Sky sun
+       3: areturn
+
+  private static java.lang.String method_71318();
+    Code:
+       0: ldc_w         #979                // String Sky dark
+       3: areturn
+
+  private static java.lang.String method_71319();
+    Code:
+       0: ldc_w         #981                // String Sky disc
+       3: areturn
+
+  private static java.lang.String method_68499();
+    Code:
+       0: ldc_w         #983                // String End sky vertex buffer
+       3: areturn
+
+  private static java.lang.String method_68500();
+    Code:
+       0: ldc_w         #985                // String Stars vertex buffer
+       3: areturn
+
+  private static java.lang.String method_74767();
+    Code:
+       0: ldc_w         #987                // String Moon phases
+       3: areturn
+
+  private static java.lang.String method_75417(java.lang.String);
+    Code:
+       0: aload_0
+       1: areturn
+
+  private static java.lang.String method_74769();
+    Code:
+       0: ldc_w         #989                // String Sunrise/Sunset fan
+       3: areturn
+
+  private static java.lang.String method_75419();
+    Code:
+       0: ldc_w         #991                // String Bottom sky vertex buffer
+       3: areturn
+
+  private static java.lang.String method_75420();
+    Code:
+       0: ldc_w         #993                // String Top sky vertex buffer
+       3: areturn
+
+  static {};
+    Code:
+       0: ldc_w         #996                // String sun
+       3: invokestatic  #392                // Method net/minecraft/resources/Identifier.withDefaultNamespace:(Ljava/lang/String;)Lnet/minecraft/resources/Identifier;
+       6: putstatic     #314                // Field SUN_SPRITE:Lnet/minecraft/resources/Identifier;
+       9: ldc_w         #998                // String end_flash
+      12: invokestatic  #392                // Method net/minecraft/resources/Identifier.withDefaultNamespace:(Ljava/lang/String;)Lnet/minecraft/resources/Identifier;
+      15: putstatic     #328                // Field END_FLASH_SPRITE:Lnet/minecraft/resources/Identifier;
+      18: ldc_w         #1000               // String textures/environment/end_sky.png
+      21: invokestatic  #392                // Method net/minecraft/resources/Identifier.withDefaultNamespace:(Ljava/lang/String;)Lnet/minecraft/resources/Identifier;
+      24: putstatic     #136                // Field END_SKY_LOCATION:Lnet/minecraft/resources/Identifier;
+      27: return
+}

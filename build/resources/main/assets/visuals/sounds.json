@@ -1,0 +1,34 @@
+{
+  "ambient.wind": {
+    "sounds": [
+      {
+        "name": "visuals:ambient/wind",
+        "stream": false
+      }
+    ]
+  },
+  "ambient.rain": {
+    "sounds": [
+      {
+        "name": "visuals:ambient/rain",
+        "stream": false
+      }
+    ]
+  },
+  "ambient.snow": {
+    "sounds": [
+      {
+        "name": "visuals:ambient/snow",
+        "stream": false
+      }
+    ]
+  },
+  "ambient.crickets": {
+    "sounds": [
+      {
+        "name": "visuals:ambient/crickets",
+        "stream": false
+      }
+    ]
+  }
+}
