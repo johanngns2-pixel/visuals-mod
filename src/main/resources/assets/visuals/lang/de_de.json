@@ -627,5 +627,7 @@
   "visuals.option.afk.musicVolume.name": "Musik-Lautstärke",
   "visuals.option.afk.musicVolume.tooltip": "Lautstärke der AFK-Musik.",
   "visuals.option.puddles.damp.name": "Nasser Boden",
-  "visuals.option.puddles.damp.tooltip": "Wie stark der feuchte Boden außerhalb der Pfützen spiegelt. 0 = nur die Pfützen spiegeln."
+  "visuals.option.puddles.damp.tooltip": "Wie stark der feuchte Boden außerhalb der Pfützen spiegelt. 0 = nur die Pfützen spiegeln.",
+  "visuals.puddles.running": "Pfützen-Shader läuft.",
+  "visuals.puddles.failed": "[Visuals] Pfützen-Shader Fehler: %s (die einfachen Pfützen übernehmen, Details in logs/latest.log)"
 }

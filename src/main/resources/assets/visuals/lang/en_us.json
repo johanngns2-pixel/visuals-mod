@@ -627,5 +627,7 @@
   "visuals.option.afk.musicVolume.name": "Music volume",
   "visuals.option.afk.musicVolume.tooltip": "Volume of the AFK music.",
   "visuals.option.puddles.damp.name": "Wet ground",
-  "visuals.option.puddles.damp.tooltip": "How strongly damp ground outside the puddles reflects. 0 = only puddles reflect."
+  "visuals.option.puddles.damp.tooltip": "How strongly damp ground outside the puddles reflects. 0 = only puddles reflect.",
+  "visuals.puddles.running": "Puddle shader is running.",
+  "visuals.puddles.failed": "[Visuals] Puddle shader error: %s (simple puddles take over, details in logs/latest.log)"
 }
