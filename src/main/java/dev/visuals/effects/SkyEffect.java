@@ -7,6 +7,8 @@ import dev.visuals.util.Log;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.state.SkyRenderState;
 import net.minecraft.world.level.MoonPhase;
+import org.joml.Vector4f;
+import org.joml.Vector4fc;
 
 /**
  * Himmel: ändert die Werte, die Minecraft pro Frame für den Himmel berechnet (Himmelsfarbe, Sternhelligkeit,
@@ -84,6 +86,19 @@ public final class SkyEffect {
         double amount = Opts.num("sky.starAmount");
         double f = Math.max(0.0, Math.min(1.0, amount));
         return ((int) (original * f) / 6) * 6;
+    }
+
+    /**
+     * Färbt Sonne, Mond oder Sterne: multipliziert den Farbwert, den Minecraft übergibt, mit der gewählten Farbe.
+     * Nur wenn die Farbe vom Standard abweicht, sonst bleibt alles wie in Minecraft.
+     */
+    public static Vector4fc tint(Vector4fc original, String optionId) {
+        if (!enabled() || !dev.visuals.VisualsMod.config().isModified(optionId)) {
+            return original;
+        }
+        int c = Opts.color(optionId);
+        return new Vector4f(original.x() * ((c >> 16) & 255) / 255f, original.y() * ((c >> 8) & 255) / 255f,
+                original.z() * (c & 255) / 255f, original.w());
     }
 
     public static float sunScale() {

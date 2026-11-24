@@ -13,7 +13,8 @@
     "LevelRendererMixin",
     "EntityRendererMixin",
     "AvatarRendererMixin",
-    "EquipmentLayerRendererMixin"
+    "EquipmentLayerRendererMixin",
+    "LightTextureMixin"
   ],
   "injectors": {
     "defaultRequire": 1
