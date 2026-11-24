@@ -14,7 +14,8 @@
     "EntityRendererMixin",
     "AvatarRendererMixin",
     "EquipmentLayerRendererMixin",
-    "LightTextureMixin"
+    "LightTextureMixin",
+    "ParticleAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

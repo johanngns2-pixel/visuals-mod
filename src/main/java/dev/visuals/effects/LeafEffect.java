@@ -1,8 +1,10 @@
 package dev.visuals.effects;
 
 import dev.visuals.config.def.Tabs;
+import dev.visuals.mixin.ParticleAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ColorParticleOption;
@@ -15,7 +17,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 /**
  * Fallendes Laub: erzeugt Laub-Partikel an der Unterseite von Blättern in der Nähe des Spielers.
  * Nutzt den Vanilla-Partikel "tinted_leaves" mit Farbe aus dem Biom (oder eigener Farbe).
- * Fallgeschwindigkeit und Drehung bestimmt Vanilla, diese beiden Regler wirken hier noch nicht.
+ * Die Fallgeschwindigkeit wirkt über die Schwerkraft des Partikels. Die Drehung bestimmt Vanilla, dieser Regler wirkt noch nicht.
  */
 public final class LeafEffect {
     private static final double BASE_RATE_PER_TICK = 0.7;
@@ -80,8 +82,12 @@ public final class LeafEffect {
         double x = pos.getX() + rnd.nextDouble();
         double y = pos.getY() - 0.05;
         double z = pos.getZ() + rnd.nextDouble();
-        mc.particleEngine.createParticle(ColorParticleOption.create(ParticleTypes.TINTED_LEAVES, 0xFF000000 | rgb),
+        Particle leaf = mc.particleEngine.createParticle(ColorParticleOption.create(ParticleTypes.TINTED_LEAVES, 0xFF000000 | rgb),
                 x, y, z, 0.0, 0.0, 0.0);
+        double speed = Opts.num("foliage.fallSpeed");
+        if (leaf instanceof ParticleAccessor acc && Math.abs(speed - 1.0) > 0.001) {
+            acc.visuals$setGravity((float) (acc.visuals$getGravity() * speed));
+        }
     }
 
     private static int particleCount(Minecraft mc) {
