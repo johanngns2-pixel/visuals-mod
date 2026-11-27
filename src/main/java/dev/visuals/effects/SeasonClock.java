@@ -37,6 +37,42 @@ public final class SeasonClock {
         }
     }
 
+    private static double smooth(double e0, double e1, double x) {
+        double t = Math.max(0.0, Math.min(1.0, (x - e0) / (e1 - e0)));
+        return t * t * (3 - 2 * t);
+    }
+
+    /**
+     * Gewichte der vier Jahreszeiten (Frühling, Sommer, Herbst, Winter), die zusammen 1 ergeben. Am Ende einer
+     * Jahreszeit wird weich zur nächsten übergeblendet.
+     */
+    public static float[] weights() {
+        float[] w = new float[4];
+        switch (Opts.text("seasons.mode")) {
+            case "manual" -> w[indexOf(Opts.text("seasons.manual"))] = 1f;
+            case "cycle" -> {
+                double periodMs = Math.max(1, Opts.integer("seasons.cycleMinutes")) * 60_000.0;
+                double pos = (System.currentTimeMillis() / periodMs) % 4.0;
+                int idx = (int) pos;
+                double frac = pos - idx;
+                double trans = Math.min(0.5, Opts.integer("seasons.transitionSeconds") * 1000.0 / periodMs);
+                double t = trans <= 0.0 ? (frac > 0.9999 ? 1.0 : 0.0) : smooth(1.0 - trans, 1.0, frac);
+                w[idx] = (float) (1.0 - t);
+                w[(idx + 1) % 4] += (float) t;
+            }
+            default -> { // echtes Datum: Frühling ab 1. März, Übergang über etwa 10 Tage
+                double rel = ((LocalDate.now().getDayOfYear() - 60) % 365 + 365) % 365;
+                double pos = rel / 91.25;
+                int idx = ((int) pos) % 4;
+                double frac = pos - Math.floor(pos);
+                double t = smooth(1.0 - 0.11, 1.0, frac);
+                w[idx] = (float) (1.0 - t);
+                w[(idx + 1) % 4] += (float) t;
+            }
+        }
+        return w;
+    }
+
     private static int indexOf(String id) {
         for (int i = 0; i < IDS.length; i++) {
             if (IDS[i].equals(id)) {

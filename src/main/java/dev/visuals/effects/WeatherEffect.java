@@ -23,6 +23,12 @@ public final class WeatherEffect {
             return;
         }
         try {
+            if (!Opts.bool("weather.showRain")) {
+                clear(state.rainColumns);
+            }
+            if (!Opts.bool("weather.showSnow")) {
+                clear(state.snowColumns);
+            }
             boolean snow = !state.snowColumns.isEmpty();
             double a = Opts.num(snow ? "weather.snowAmount" : "weather.rainAmount");
             if (Math.abs(a - 1.0) > 0.001) {
@@ -30,6 +36,14 @@ public final class WeatherEffect {
             }
         } catch (RuntimeException e) {
             errors++;
+        }
+    }
+
+    private static void clear(java.util.List<?> list) {
+        try {
+            list.clear();
+        } catch (UnsupportedOperationException e) {
+            // unveränderliche Liste: dann bleibt es bei der Stärke-Regelung
         }
     }
 

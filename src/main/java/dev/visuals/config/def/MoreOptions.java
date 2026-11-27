@@ -32,6 +32,13 @@ public final class MoreOptions {
         r.register(OptionDef.dropdown("seasons.manual", "summer", "spring", "summer", "autumn", "winter").group("main").build());
         r.register(OptionDef.intSlider("seasons.cycleMinutes", 20, 1, 240).group("main").unit("min").build());
         r.register(OptionDef.intSlider("seasons.transitionSeconds", 10, 0, 120).group("main").unit("s").build());
+        r.register(OptionDef.toggle("seasons.foliageColors", true).group("visuals").build());
+        r.register(OptionDef.slider("seasons.foliageStrength", 0.85, 0.0, 1.0, 0.05).group("visuals").build());
+        r.register(OptionDef.toggle("seasons.groundLitter", true).group("visuals").build());
+        r.register(OptionDef.slider("seasons.litterAmount", 0.6, 0.0, 1.0, 0.05).group("visuals").build());
+        r.register(OptionDef.toggle("seasons.snowCover", true).group("visuals").build());
+        r.register(OptionDef.slider("seasons.snowAmount", 0.75, 0.0, 1.0, 0.05).group("visuals").build());
+        r.register(OptionDef.toggle("seasons.blossoms", true).group("visuals").build());
         r.register(OptionDef.toggle("seasons.leavesSpring", true).group("m_leaves").build());
         r.register(OptionDef.toggle("seasons.leavesSummer", true).group("m_leaves").build());
         r.register(OptionDef.toggle("seasons.leavesAutumn", true).group("m_leaves").build());
@@ -56,9 +63,11 @@ public final class MoreOptions {
         r.register(OptionDef.toggle("seasons.eventsSummer", true).group("m_events").build());
         r.register(OptionDef.toggle("seasons.eventsAutumn", true).group("m_events").build());
         r.register(OptionDef.toggle("seasons.eventsWinter", true).group("m_events").build());
+        r.register(OptionDef.toggle("weather.showRain", true).group("rain").build());
         r.register(OptionDef.slider("weather.rainAmount", 1.0, 0.0, 3.0, 0.05).group("rain").build());
         r.register(OptionDef.color("weather.rainColor", 0xFF7FA8D8).group("rain").build());
         r.register(OptionDef.slider("weather.rainSpeed", 1.0, 0.3, 3.0, 0.05).group("rain").build());
+        r.register(OptionDef.toggle("weather.showSnow", true).group("snow").build());
         r.register(OptionDef.slider("weather.snowAmount", 1.0, 0.0, 3.0, 0.05).group("snow").build());
         r.register(OptionDef.slider("weather.snowSize", 1.0, 0.5, 3.0, 0.05).group("snow").build());
         r.register(OptionDef.color("weather.snowColor", 0xFFFFFFFF).group("snow").build());
@@ -103,8 +112,9 @@ public final class MoreOptions {
         r.register(OptionDef.slider("puddles.reflection", 0.85, 0.0, 1.0, 0.05).group("look").build());
         r.register(OptionDef.slider("puddles.size", 1.0, 0.5, 3.0, 0.05).group("look").build());
         r.register(OptionDef.dropdown("puddles.mode", "reflect", "reflect", "simple").group("look").build());
-        r.register(OptionDef.slider("puddles.damp", 0.7, 0.0, 1.0, 0.05).group("look").build());
-        r.register(OptionDef.intSlider("puddles.coverage", 55, 0, 100).group("look").unit("%").build());
+        r.register(OptionDef.slider("puddles.damp", 0.2, 0.0, 1.0, 0.05).group("look").build());
+        r.register(OptionDef.dropdown("puddles.resolution", "half", "full", "half", "third").group("look").build());
+        r.register(OptionDef.intSlider("puddles.coverage", 35, 0, 100).group("look").unit("%").build());
         r.register(OptionDef.dropdown("puddles.quality", "medium", "low", "medium", "high").group("look").build());
         r.register(OptionDef.toggle("wildlife.butterflies", true).group("species").build());
         r.register(OptionDef.toggle("wildlife.birds", true).group("species").build());
